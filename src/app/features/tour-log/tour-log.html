@@ -1,0 +1,32 @@
+<div>
+  <h3>Create Tour Log</h3>
+
+  <input
+    type="text"
+    placeholder="Comment"
+    [value]="comment()"
+    (input)="onCommentInput($event)"
+  />
+
+  <input
+    type="number"
+    min="1"
+    max="5"
+    placeholder="Difficulty"
+    [value]="difficulty()"
+    (input)="onDifficultyInput($event)"
+  />
+
+  <input
+    type="number"
+    min="1"
+    max="5"
+    placeholder="Rating"
+    [value]="rating()"
+    (input)="onRatingInput($event)"
+  />
+
+  <button (click)="create()">
+    Create Log
+  </button>
+</div>

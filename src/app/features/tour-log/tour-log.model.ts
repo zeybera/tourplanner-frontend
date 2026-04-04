@@ -9,5 +9,5 @@ export interface TourLog {
   rating: number;
 
   totalDistance: number; // API
-  totalTime: number;     // API
+  totalTime: number; // API
 }

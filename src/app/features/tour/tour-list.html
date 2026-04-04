@@ -6,6 +6,7 @@
 
 @for (tour of service.tours(); track tour.id) {
   <div class="tour-item">
+
     <h3>{{ tour.description }}</h3>
 
     <p>
@@ -14,9 +15,14 @@
       <b>To:</b> {{ tour.to }}
     </p>
 
-    <p>
-      <b>Transport:</b> {{ tour.transportType }}
-    </p>
+    <p><b>Transport:</b> {{ tour.transportType }}</p>
+  
+    <div class="actions">
+      <button (click)="delete(tour.id)">Delete Tour</button>
+      <!-- tour = current item in the @for loop -->
+      <button (click)="edit(tour)">Edit Tour</button>
+    </div>
+
   </div>
 
   <hr />

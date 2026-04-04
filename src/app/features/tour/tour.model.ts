@@ -8,9 +8,8 @@ export interface Tour {
 
   transportType: string;
 
-routeInformation: string; 
+  routeInformation: string;
 
   distance: number; //OpenRouteservice.org api
   time: number; //OpenRouteservice.org api
-
 }

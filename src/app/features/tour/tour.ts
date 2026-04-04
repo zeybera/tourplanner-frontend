@@ -1,16 +1,14 @@
 import { Component, signal, inject } from '@angular/core';
 import { TourService } from './tour.service';
-import { Router } from '@angular/router'; 
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tour',
   standalone: true,
   templateUrl: './tour.html',
-  styleUrl: './tour.css'
+  styleUrl: './tour.css',
 })
-
 export class TourComponent {
-
   private service = inject(TourService);
   private router = inject(Router);
 
@@ -21,7 +19,6 @@ export class TourComponent {
   transportType = signal('');
   routeInformation = signal('');
 
-  
   // EVENT HANDLERS
   onDescriptionInput(event: Event): void {
     this.description.set((event.target as HTMLInputElement).value);
@@ -42,12 +39,18 @@ export class TourComponent {
   onRouteInput(event: Event): void {
     this.routeInformation.set((event.target as HTMLInputElement).value);
   }
-  
+
   // CREATE
   create(): void {
     if (!this.description() || !this.from() || !this.to() || !this.transportType()) {
+      alert('Please fill all required fields');
       return;
     }
+    if (this.from() == this.to()) {
+      alert('From and To cannot be the same');
+      return;
+    }
+
     //create() function within TourService is called
     this.service.create({
       description: this.description(),
@@ -56,7 +59,7 @@ export class TourComponent {
       transportType: this.transportType(),
       routeInformation: this.routeInformation(),
       distance: 0,
-      time: 0
+      time: 0,
     });
     this.router.navigate(['/tours']);
   }

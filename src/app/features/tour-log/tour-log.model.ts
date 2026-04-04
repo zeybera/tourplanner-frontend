@@ -1,7 +1,6 @@
 export interface TourLog {
   id: number;
   tourId: number;
-  userId: number;
 
   date: string;
   comment: string;

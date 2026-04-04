@@ -1,0 +1,47 @@
+/* container */
+.container {
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* title */
+h2 {
+  margin-bottom: 15px;
+}
+
+/* form */
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+/* inputs */
+input {
+  padding: 10px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* button */
+button {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: #3498db;
+  color: white;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #2980b9;
+}

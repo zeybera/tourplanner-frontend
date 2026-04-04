@@ -1,0 +1,22 @@
+<div class="container">
+  <h2>Create Tour</h2>
+
+  <form>
+    <input type="text" placeholder="Enter description"
+      [value]="description()" (input)="onDescriptionInput($event)" />
+
+    <input type="text" placeholder="From location"
+      [value]="from()" (input)="onFromInput($event)" />
+
+    <input type="text" placeholder="To location"
+      [value]="to()" (input)="onToInput($event)" />
+
+    <input type="text" placeholder="Transport Type"
+      [value]="transportType()" (input)="onTransportInput($event)" />
+
+    <input type="text" placeholder="Route Information"
+      [value]="routeInformation()" (input)="onRouteInput($event)" />
+
+    <button (click)="create()">Create Tour</button>
+  </form>
+</div>

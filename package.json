@@ -9,9 +9,6 @@
     "test": "ng test"
   },
 
-  "//": "dependencies sind alles, was die App zur Laufzeit im Browser braucht",
-  "//": "z.B. Angular Core, Router für Navigation, RxJS für async Daten",
-
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
@@ -38,15 +35,6 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
-
-   "//": "devDependencies sind nur für Entwicklung notwendig",
-   "//": "sie werden verwendet beim:",
-  "//": "- Schreiben von Code",
-  "//": "- beim Kompilieren der Anwendung",
-  "//": "- Durchführen von Tests",
-
-   "//": "TypeScript ist hier, weil wir Code in TypeScript schreiben",
-  "//": "Compiler (tsc) wandelt TS -> JavaScript um",
 
   "devDependencies": {
     "@angular/build": "^20.3.22",

@@ -1,83 +1,50 @@
-import { Injectable, signal } from '@angular/core';
+import { Injectable, signal, inject, computed } from '@angular/core';
 import { TourLog } from './tour-log.model';
 import { Observable, of } from 'rxjs';
+import {TourService} from '../tour/tour.service';
 //TO DO import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourLogService {
-  // MOCK DATAS
-  private mockLogs: TourLog[] = [
-    {
-      id: 1,
-      tourId: 1,
-      date: '2026-04-01',
-      comment: 'Nice city walk',
-      difficulty: 1,
-      totalDistance: 5.2,
-      totalTime: 40,
-      rating: 4,
-    },
-    {
-      id: 2,
-      tourId: 1,
-      date: '2026-04-02',
-      comment: 'Second time better',
-      difficulty: 2,
-      totalDistance: 5.5,
-      totalTime: 42,
-      rating: 5,
-    },
-    {
-      id: 3,
-      tourId: 2,
-      date: '2026-04-03',
-      comment: 'Mountain hike',
-      difficulty: 4,
-      totalDistance: 14.8,
-      totalTime: 130,
-      rating: 5,
-    },
-    {
-      id: 4,
-      tourId: 2,
-      date: '2026-04-04',
-      comment: 'Very exhausting',
-      difficulty: 5,
-      totalDistance: 15.2,
-      totalTime: 140,
-      rating: 4,
-    },
-    {
-      id: 5,
-      tourId: 3,
-      date: '2026-04-05',
-      comment: 'Lakeside run',
-      difficulty: 2,
-      totalDistance: 8.6,
-      totalTime: 65,
-      rating: 4,
-    },
-    {
-      id: 6,
-      tourId: 4,
-      date: '2026-04-06',
-      comment: 'Too hot',
-      difficulty: 3,
-      totalDistance: 10.1,
-      totalTime: 85,
-      rating: 3,
-    },
-    {
-      id: 7,
-      tourId: 6,
-      date: '2026-04-07',
-      comment: 'Short but nice',
-      difficulty: 1,
-      totalDistance: 4.3,
-      totalTime: 35,
-      rating: 4,
-    },
-  ];
+
+  //for selectedId in TourServcie
+  private tourService = inject(TourService);
+
+  private _logs = signal<TourLog[]>([]);
+  readonly logs = this._logs.asReadonly();
+
+  //to do:  for mock tourlogs, delete after backend
+  private nextLogId = 100;
+
+  //for json
+  constructor() {
+   void this.loadLogs();
+  }
+
+  async loadLogs() {
+    //TO DO: load from backend
+    const data = await fetch('/assets/logs.json').then(res => res.json());
+    this._logs.set(data);
+  }
+
+  //CREATE LOGS
+  create (log: Omit<TourLog, 'id'>): void{
+    const newLog: TourLog = {...log, id: this.nextLogId++};
+
+    this._logs.update(logs => [...logs, newLog]);
+  }
+
+
+  selectedLogs = computed (() => {
+    const tourId = this.tourService.selectedId();
+
+    if (tourId == null)return [];
+
+    return this._logs().filter(log => log.tourId === tourId);
+  });
+
+
+
 }

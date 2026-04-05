@@ -12,7 +12,7 @@ import { Router } from '@angular/router';
 })
 
 export class TourListComponent {
-  
+
   service = inject(TourService);
   private router = inject(Router);
 
@@ -25,7 +25,13 @@ export class TourListComponent {
 
   // UPDATE TOUR
   edit(tour: Tour) {
-  this.service.selectedId.set(tour.id);
-  this.router.navigate(['/edit']);
-}
+    this.service.selectedId.set(tour.id);
+    this.router.navigate(['/edit']);
+  }
+
+  // TOUR LOGS
+  openLogs(tour: Tour) {
+    this.service.selectedId.set(tour.id);
+    this.router.navigate(['/logs']);
+  }
 }

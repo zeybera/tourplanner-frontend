@@ -1,0 +1,18 @@
+<h2>Tour Logs</h2>
+
+@if (service.selectedLogs().length == 0) {
+  <p>No logs available.</p>
+}
+
+@for (log of service.selectedLogs(); track log.id) {
+  <div>
+
+    <p><b>Date:</b> {{ log.date }}</p>
+    <p><b>Comment:</b> {{ log.comment }}</p>
+    <p><b>Difficulty:</b> {{ log.difficulty }}</p>
+    <p><b>Rating:</b> {{ log.rating }}</p>
+
+  </div>
+
+  <hr />
+}

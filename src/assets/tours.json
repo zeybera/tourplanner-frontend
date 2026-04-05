@@ -1,0 +1,22 @@
+[
+  {
+    "id": 1,
+    "description": "Vienna Trip",
+    "from": "Vienna",
+    "to": "Graz",
+    "transportType": "bike",
+    "routeInformation": "Highway",
+    "distance": 200,
+    "time": 120
+  },
+  {
+    "id": 2,
+    "description": "Mountain Hike",
+    "from": "Salzburg",
+    "to": "Innsbruck",
+    "transportType": "hike",
+    "routeInformation": "Trail",
+    "distance": 150,
+    "time": 180
+  }
+]

@@ -10,7 +10,17 @@ export class TourService {
   private _tours = signal<Tour[]>([]);
   readonly tours = this._tours.asReadonly();
 
-  private nextId = 1;
+  private nextId = 15;
+
+  constructor() {
+    this.loadTours();
+  }
+
+  async loadTours() {
+  //TO DO: load from backend
+  const data = await fetch('/assets/tours.json').then(res => res.json());
+  this._tours.set(data);
+}
 
   // CREATE
 

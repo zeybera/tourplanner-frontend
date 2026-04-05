@@ -36,6 +36,10 @@ export class TourLogService {
     this._logs.update(logs => [...logs, newLog]);
   }
 
+  delete (id: number) {
+    this._logs.update(logs => logs.filter (log => log.id !== id));
+  }
+
 
   selectedLogs = computed (() => {
     const tourId = this.tourService.selectedId();

@@ -18,4 +18,8 @@ export class TourLogListComponent {
     this.router.navigate(['/logs/new']);
   }
 
+  delete(id: number) {
+    this.service.delete(id);
+  }
+
 }

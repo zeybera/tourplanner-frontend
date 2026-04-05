@@ -13,12 +13,12 @@
 
     <input type="text" placeholder="To location" [value]="to()" (input)="onToInput($event)" />
 
-    <input
-      type="text"
-      placeholder="Transport Type"
-      [value]="transportType()"
-      (input)="onTransportInput($event)"
-    />
+    <select (change)="onTransportInput($event)">
+      <option value="">Select transport</option>
+      <option value="bike">Bike</option>
+      <option value="hike">Hike</option>
+      <option value="run">Run</option>
+    </select>
 
     <input
       type="text"

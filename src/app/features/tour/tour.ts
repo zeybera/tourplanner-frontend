@@ -1,12 +1,13 @@
 import { Component, signal, inject } from '@angular/core';
 import { TourService } from './tour.service';
 import { Router } from '@angular/router';
+import { TransportType } from './tour.model';
 
 @Component({
   selector: 'app-tour',
   standalone: true,
   templateUrl: './tour.html',
-  styleUrl: './tour.css',
+  styleUrls: ['./tour.css'],
 })
 export class TourComponent {
   private service = inject(TourService);
@@ -16,7 +17,7 @@ export class TourComponent {
   description = signal('');
   from = signal('');
   to = signal('');
-  transportType = signal('');
+  transportType = signal<TransportType | ''>('');
   routeInformation = signal('');
 
   // EVENT HANDLERS
@@ -33,7 +34,7 @@ export class TourComponent {
   }
 
   onTransportInput(event: Event): void {
-    this.transportType.set((event.target as HTMLInputElement).value);
+    this.transportType.set((event.target as HTMLInputElement).value as TransportType);
   }
 
   onRouteInput(event: Event): void {
@@ -56,7 +57,7 @@ export class TourComponent {
       description: this.description(),
       from: this.from(),
       to: this.to(),
-      transportType: this.transportType(),
+      transportType: this.transportType() as TransportType,
       routeInformation: this.routeInformation(),
       distance: 0,
       time: 0,

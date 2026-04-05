@@ -1,7 +1,7 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TourService } from './tour.service';
-import { Tour } from './tour.model';
+import {Tour, TransportType} from './tour.model';
 
 @Component({
   selector: 'app-tour-edit',
@@ -43,7 +43,7 @@ export class TourEditComponent {
       description: this.description(),
       from: this.from(),
       to: this.to(),
-      transportType: this.transportType(),
+      transportType: this.transportType() as TransportType,
       routeInformation: this.routeInformation(),
       distance: 0,
       time: 0

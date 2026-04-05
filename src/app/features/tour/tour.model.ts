@@ -1,3 +1,5 @@
+export type TransportType = 'bike' | 'hike' | 'run';
+
 export interface Tour {
   id: number;
 
@@ -6,7 +8,7 @@ export interface Tour {
   from: string;
   to: string;
 
-  transportType: string;
+  transportType: TransportType;
 
   routeInformation: string;
 

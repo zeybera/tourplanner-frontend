@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourLogService } from './tour-log.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tour-log-list',
@@ -11,5 +12,10 @@ import { TourLogService } from './tour-log.service';
 export class TourLogListComponent {
 
   service = inject(TourLogService);
+  private router = inject(Router);
+
+  goToCreate() {
+    this.router.navigate(['/logs/new']);
+  }
 
 }

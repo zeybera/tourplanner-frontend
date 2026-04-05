@@ -1,5 +1,7 @@
 <h2>Tour Logs</h2>
 
+<button (click)="goToCreate()">+ Create Log</button>
+
 @if (service.selectedLogs().length == 0) {
   <p>No logs available.</p>
 }
@@ -15,4 +17,6 @@
   </div>
 
   <hr />
+
+
 }

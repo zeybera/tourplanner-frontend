@@ -14,16 +14,17 @@ export class TourService {
 
   // CREATE
 
-  create(tour: any): void {
+  create(tour: Omit<Tour,'id'>): void {
     const newTour: Tour = { ...tour, id: this.nextId++ };
 
     this._tours.update((tours) => [...tours, newTour]);
   }
 
-  // READ
-  read(): Tour[] {
-    return this._tours();
-  }
+  // READ is performed through the signal (tours)
+  // components consume the state directly instead of calling a read() function (not reactive)
+  //read(): Tour[] {
+  //  return this._tours();
+  //}
 
   // DELETE
   delete(id: number): void {
@@ -39,7 +40,7 @@ export class TourService {
 // shared state across components → keep in service
 selectedId = signal<number | null>(null);
 
-//derived tate
+//derived state
 selectedTour = computed(() => {
   const id = this.selectedId();
   if (id == null) {
@@ -53,6 +54,7 @@ selectedTour = computed(() => {
 });
 
 // UPDATE
+  //maybe partial for update
  update(updated: Tour): void {
   this._tours.update(tours => {
     const newTours: Tour[] = [];
@@ -66,5 +68,5 @@ selectedTour = computed(() => {
     return newTours;
   });
 }
-  
+
 }

@@ -18,7 +18,7 @@ export class TourService {
 
   async loadTours() {
   //TO DO: load from backend
-  const data = await fetch('/assets/tours.json').then(res => res.json());
+  const data : Tour[] = await fetch('/assets/tours.json').then(res => res.json());
   this._tours.set(data);
 }
 

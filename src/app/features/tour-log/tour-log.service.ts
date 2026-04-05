@@ -25,7 +25,7 @@ export class TourLogService {
 
   async loadLogs() {
     //TO DO: load from backend
-    const data = await fetch('/assets/logs.json').then(res => res.json());
+    const data: TourLog [] = await fetch('/assets/logs.json').then(res => res.json());
     this._logs.set(data);
   }
 

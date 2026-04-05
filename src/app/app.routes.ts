@@ -11,4 +11,5 @@ export const routes: Routes = [
   { path: 'edit', component: TourEditComponent },
   { path: 'logs', component: TourLogListComponent },
   { path: 'logs/new', component: TourLogFormComponent },
+  { path: 'logs/edit', component: TourLogFormComponent },
 ];

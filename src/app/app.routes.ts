@@ -1,9 +1,9 @@
 import { Routes } from '@angular/router';
 import { TourComponent } from './features/tour/tour';
-import { TourListComponent } from './features/tour/tour-list';
-import { TourEditComponent } from './features/tour/tour-edit';
-import {TourLogFormComponent} from './features/tour-log/tour-log-form';
-import {TourLogListComponent} from './features/tour-log/tour-log-list';
+import { TourListComponent } from './features/tour/tour-list/tour-list';
+import { TourEditComponent } from './features/tour/tour-edit/tour-edit';
+import {TourLogFormComponent} from './features/tour-log/tour-log-form/tour-log-form';
+import {TourLogListComponent} from './features/tour-log/tour-log-list/tour-log-list';
 import {TourOverviewComponent} from './features/tour/tour-overview/tour-overview';
 
 export const routes: Routes = [

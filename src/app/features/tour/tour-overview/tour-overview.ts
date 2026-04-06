@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { TourListComponent } from '../tour-list';
+import { TourListComponent } from '../tour-list/tour-list';
 import { TourService } from '../tour.service';
 
 @Component({

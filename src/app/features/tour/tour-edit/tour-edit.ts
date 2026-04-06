@@ -1,13 +1,13 @@
 import { Component, inject, signal, effect } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import { TourService } from './tour.service';
-import {Tour, TransportType} from './tour.model';
+import { TourService } from '../tour.service';
+import {Tour, TransportType} from '../tour.model';
 
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
   templateUrl: './tour-edit.html',
-  styleUrl: './tour.css'
+  styleUrl: '../tour.css'
 })
 
 export class TourEditComponent {

@@ -1,6 +1,6 @@
 import { Component, signal, input, computed, inject, effect } from '@angular/core';
-import { TourLogService } from './tour-log.service';
-import { TourService } from '../tour/tour.service';
+import { TourLogService } from '../tour-log.service';
+import { TourService } from '../../tour/tour.service';
 import { Router } from '@angular/router';
 
 @Component({

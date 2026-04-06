@@ -1,7 +1,7 @@
 import { Component, signal, inject } from '@angular/core';
-import { TourService } from './tour.service';
+import { TourService } from '../tour.service';
 import { Router } from '@angular/router';
-import { TransportType } from './tour.model';
+import { TransportType } from '../tour.model';
 
 @Component({
   selector: 'app-tour',

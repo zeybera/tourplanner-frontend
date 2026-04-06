@@ -7,7 +7,7 @@ import {Tour, TransportType} from '../tour.model';
   selector: 'app-tour-edit',
   standalone: true,
   templateUrl: './tour-edit.html',
-  styleUrl: '../tour.css'
+  styleUrl: '../tour/tour.css'
 })
 
 export class TourEditComponent {

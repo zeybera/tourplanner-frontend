@@ -1,0 +1,35 @@
+<div class="container">
+
+  <!-- LEFT: LIST -->
+  <div class="left">
+    <app-tour-list></app-tour-list>
+  </div>
+
+  <!-- RIGHT: DETAILS -->
+  <div class="right">
+
+    <!-- MAP -->
+    <div class="map">
+      Map Placeholder
+    </div>
+
+    <!-- DETAILS -->
+    @if (service.selectedTour()) {
+      <div class="details">
+        <h3>{{ service.selectedTour()?.description }}</h3>
+
+        <p>
+          {{ service.selectedTour()?.from }}
+          →
+          {{ service.selectedTour()?.to }}
+        </p>
+
+        <p>{{ service.selectedTour()?.transportType }}</p>
+      </div>
+    } @else {
+      <p>Select a tour</p>
+    }
+
+  </div>
+
+</div>

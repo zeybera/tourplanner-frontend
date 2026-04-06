@@ -5,7 +5,7 @@
 }
 
 @for (tour of service.tours(); track tour.id) {
-  <div class="tour-item">
+  <div class="tour-item" (click)="select(tour)">
 
     <h3>{{ tour.description }}</h3>
 

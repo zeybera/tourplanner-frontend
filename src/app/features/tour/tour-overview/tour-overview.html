@@ -25,6 +25,18 @@
         </p>
 
         <p>{{ service.selectedTour()?.transportType }}</p>
+
+        <p>
+          <b>Distance:</b> {{ service.selectedTour()?.distance }} km
+        </p>
+
+        <p>
+          <b>Estimated Time:</b> {{ service.selectedTour()?.time }} min
+        </p>
+
+        <p>
+          <b>Route Info:</b> {{ service.selectedTour()?.routeInformation }}
+        </p>
       </div>
     } @else {
       <p>Select a tour</p>

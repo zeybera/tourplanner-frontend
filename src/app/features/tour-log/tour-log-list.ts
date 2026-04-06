@@ -16,6 +16,7 @@ export class TourLogListComponent {
   private router = inject(Router);
 
   goToCreate() {
+    this.service.selectedLogId.set(null);
     this.router.navigate(['/logs/new']);
   }
 

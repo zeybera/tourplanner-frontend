@@ -40,7 +40,7 @@ export class TourLogService {
     this._logs.update(logs => logs.filter (log => log.id !== id));
   }
 
-
+  // for list of logs
   selectedLogs = computed (() => {
     const tourId = this.tourService.selectedId();
 
@@ -48,6 +48,21 @@ export class TourLogService {
 
     return this._logs().filter(log => log.tourId === tourId);
   });
+
+  //just one  log for edit/update
+  selectedLogId = signal<number | null>(null);
+  selectedLog = computed(() => {
+    const id = this.selectedLogId();
+    if (id == null) return null;
+
+    return this._logs().find(log => log.id === id) ?? null;
+  });
+
+  update(updated: TourLog): void {
+    this._logs.update(logs =>
+      logs.map(log => log.id === updated.id ? updated : log)
+    );
+  }
 
 
 

@@ -1,5 +1,11 @@
 <div>
-  <h3>Create Tour Log</h3>
+  <h3>
+    @if (isEditMode()) {
+      Edit Tour Log
+    } @else {
+      Create Tour Log
+    }
+  </h3>
 
   <input type="text" placeholder="Comment" [value]="comment()" (input)="onCommentInput($event)" />
 
@@ -21,5 +27,11 @@
     (input)="onRatingInput($event)"
   />
 
-  <button (click)="create()">Create Log</button>
+  <button (click)="create()">
+    @if (isEditMode()) {
+      Update Log
+    } @else {
+      Create Log
+    }
+  </button>
 </div>

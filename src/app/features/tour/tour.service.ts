@@ -18,8 +18,10 @@ export class TourService {
 
   async loadTours() {
   //TO DO: load from backend
-  const data : Tour[] = await fetch('/assets/tours.json').then(res => res.json());
+  const data : Tour[] = await fetch('../../../assets/tours.json').then(res => res.json());
+ console.log("loading tours from json");
   this._tours.set(data);
+
 }
 
   // CREATE
@@ -47,7 +49,7 @@ export class TourService {
   }
 
 
-// shared state across components → keep in service
+// shared state across components, so we keep in service
 selectedId = signal<number | null>(null);
 
 //derived state

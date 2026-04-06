@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { TourComponent } from './features/tour/tour/tour';
+import { TourComponent } from './features/tour/tour-creation/tour';
 import { TourListComponent } from './features/tour/tour-list/tour-list';
 import { TourEditComponent } from './features/tour/tour-edit/tour-edit';
 import {TourLogFormComponent} from './features/tour-log/tour-log-form/tour-log-form';

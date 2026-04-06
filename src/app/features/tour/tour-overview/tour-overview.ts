@@ -2,6 +2,7 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourListComponent } from '../tour-list/tour-list';
 import { TourService } from '../tour.service';
+import { Router } from '@angular/router';
 
 @Component({
   selector: 'app-tour-overview',
@@ -13,5 +14,10 @@ import { TourService } from '../tour.service';
 export class TourOverviewComponent {
 
   service = inject(TourService);
+  private router = inject(Router);
 
+  goToCreate() {
+    this.router.navigate(['/create']);
+  }
+  
 }

@@ -5,7 +5,7 @@
 }
 
 @for (tour of service.tours(); track tour.id) {
-  <div class="tour-item" (click)="select(tour)">
+  <div class="tour-item" (click)="select(tour) "[class.active]="service.selectedId() === tour.id" ]>
 
     <h3>{{ tour.description }}</h3>
 

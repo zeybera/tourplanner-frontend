@@ -9,6 +9,7 @@ import { Router } from '@angular/router';
   standalone: true,
   imports: [CommonModule],
   templateUrl: './tour-list.html',
+  styleUrl: './tour-list.css'
 })
 
 export class TourListComponent {

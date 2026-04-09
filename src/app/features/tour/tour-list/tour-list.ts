@@ -36,7 +36,7 @@ export class TourListComponent {
     this.router.navigate(['/logs']);
   }
 
-  //for detailed view of  selected tour in overview
+  //for detailed view of selected tour in overview
   select(tour: Tour) {
     this.service.selectedId.set(tour.id);
   }

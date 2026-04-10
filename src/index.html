@@ -11,3 +11,24 @@
   <app-root></app-root>
 </body>
 </html>
+
+<!--
+1.
+When the application starts,
+browser first loads the index.html file
+Inside this file, there is a <app-root></app-root>
+At this point, the browser does not yet know anything about Angular.
+
+2.
+Then Angular starts from main.ts.
+There is a line like:
+bootstrapApplication(App);
+This tells Angular: “Start the application using the App component.”
+
+3.
+Next, Angular checks the App component definition:
+@Component({
+  selector: 'app-root', (So Angular does this internally: Find <app-root> in index.html )
+  templateUrl: './app.html'
+})
+-->

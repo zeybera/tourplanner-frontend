@@ -1,0 +1,14 @@
+.tour-item {
+  padding: 10px;
+  border-bottom: 1px solid #ccc;
+}
+
+.tour-item:hover {
+  background: #eee;
+  cursor: pointer;
+}
+
+.tour-item.active {
+  background: #ddd;
+  font-weight: bold;
+}

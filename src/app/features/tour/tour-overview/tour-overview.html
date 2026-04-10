@@ -1,0 +1,55 @@
+<div class="container">
+
+  <!-- LEFT: LIST -->
+  <div class="left">
+    <div class="list-header">
+      <h2>My Tours</h2>
+      <div class="icons">
+        <button (click)="goToCreate()">＋</button>
+        <button>★</button>
+      </div>
+    </div>
+     <!-- LIST -->
+    <app-tour-list></app-tour-list>
+  </div>
+
+  <!-- RIGHT: DETAILS -->
+  <div class="right">
+
+    <!-- MAP -->
+    <div class="map">
+      Map Placeholder
+    </div>
+
+    <!-- DETAILS -->
+    @if (service.selectedTour()) {
+      <div class="details">
+        <h3>{{ service.selectedTour()?.description }}</h3>
+
+        <p>
+          {{ service.selectedTour()?.from }}
+          →
+          {{ service.selectedTour()?.to }}
+        </p>
+
+        <p>{{ service.selectedTour()?.transportType }}</p>
+
+        <p>
+          <b>Distance:</b> {{ service.selectedTour()?.distance }} km
+        </p>
+
+        <p>
+          <b>Estimated Time:</b> {{ service.selectedTour()?.time }} min
+        </p>
+
+        <p>
+          <b>Route Info:</b> {{ service.selectedTour()?.routeInformation }}
+        </p>
+      </div>
+    } @else {
+      <p>Select a tour</p>
+    }
+
+  </div>
+
+</div>

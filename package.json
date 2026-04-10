@@ -8,6 +8,7 @@
     "watch": "ng build --watch --configuration development",
     "test": "ng test"
   },
+
   "prettier": {
     "printWidth": 100,
     "singleQuote": true,
@@ -21,7 +22,9 @@
     ]
   },
   "private": true,
+
   "dependencies": {
+
     "@angular/common": "^20.3.0",
     "@angular/compiler": "^20.3.0",
     "@angular/core": "^20.3.0",
@@ -32,6 +35,7 @@
     "tslib": "^2.3.0",
     "zone.js": "~0.15.0"
   },
+
   "devDependencies": {
     "@angular/build": "^20.3.22",
     "@angular/cli": "^20.3.22",

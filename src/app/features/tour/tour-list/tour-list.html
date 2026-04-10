@@ -1,0 +1,46 @@
+
+@if (service.tours().length == 0) {
+  <p>No tours available.</p>
+}
+
+@for (tour of service.tours(); track tour.id) {
+  <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() == tour.id">
+
+    <h3>{{ tour.description }}</h3>
+
+    <p>
+      <b>From:</b> {{ tour.from }}
+      →
+      <b>To:</b> {{ tour.to }}
+    </p>
+
+    <p>
+      <b>Transport:</b>
+
+      @switch (tour.transportType) {
+        @case ('bike') {
+          <span>Bike</span>
+        }
+        @case ('hike') {
+          <span>Hike</span>
+        }
+        @case ('run') {
+          <span>Run</span>
+        }
+        @default {
+          <span>{{ tour.transportType }}</span>
+        }
+      }
+    </p>
+
+    <div class="actions">
+      <button (click)="delete(tour.id)">Delete Tour</button>
+      <!-- tour = current item in the @for loop -->
+      <button (click)="edit(tour)">Edit Tour</button>
+      <button (click)="openLogs(tour)">Logs</button>
+    </div>
+
+  </div>
+
+  <hr />
+}

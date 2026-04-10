@@ -34,6 +34,18 @@ export class TourEditComponent {
     this.routeInformation.set(tour.routeInformation);
   }
 
+  logEffect = effect(() => {
+    console.log('Form changed:', {
+      description: this.description(),
+      from: this.from(),
+      to: this.to(),
+    });
+  });
+
+  Effect = effect(() => {
+    console.log('Editing tour is:', this.service.selectedTour());
+  });
+
   onDescriptionInput(event: Event): void {
     this.description.set((event.target as HTMLInputElement).value);
   }

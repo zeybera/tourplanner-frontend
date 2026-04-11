@@ -16,17 +16,27 @@
   <!-- RIGHT: DETAILS -->
   <div class="right">
 
-
-
-
     <!-- DETAILS -->
     @if (service.selectedTour(); as tour) {
       <app-card>
         <app-tour-details [tour]="tour"></app-tour-details>
       </app-card>
     } @else {
-      <p>Select a tour to see details</p>
-    }
+        <div class="empty-state">
+
+          <img src="assets/images/map-icon.png" />
+
+          <h3>No tour selected</h3>
+
+          <p>Select a tour from the list to see details.</p>
+
+          <p class="hint">
+            or
+            <a routerLink="/create" class="create-link">create a new tour</a>
+          </p>
+
+        </div>
+      }
 
   </div>
 

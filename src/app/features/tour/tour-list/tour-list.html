@@ -4,37 +4,40 @@
 }
 
 @for (tour of service.tours(); track tour.id) {
+
   <div class="tour-item"
        (click)="select(tour)"
        [class.active]="service.selectedId() === tour.id">
+
     <app-card>
-    <h3>{{ tour.description }}</h3>
 
-    <p>
-      <b>From:</b> {{ tour.from }}
-      →
-      <b>To:</b> {{ tour.to }}
-    </p>
+      <!-- 🔥 IMMER SICHTBAR -->
+      <h3>{{ tour.description }}</h3>
 
-    <p>
-      <b>Transport:</b>
+      <p>
+        <b>From:</b> {{ tour.from }}
+        →
+        <b>To:</b> {{ tour.to }}
+      </p>
 
-      @switch (tour.transportType) {
-        @case ('bike') {
-          <span>Bike</span>
+      <p>
+        <b>Transport:</b>
+        @switch (tour.transportType) {
+          @case ('bike') { <span>Bike</span> }
+          @case ('hike') { <span>Hike</span> }
+          @case ('run') { <span>Run</span> }
+          @default { <span>{{ tour.transportType }}</span> }
         }
-        @case ('hike') {
-          <span>Hike</span>
-        }
-        @case ('run') {
-          <span>Run</span>
-        }
-        @default {
-          <span>{{ tour.transportType }}</span>
-        }
+      </p>
+
+      @if (service.selectedId() === tour.id) {
+        <div class="mobile-only">
+          <app-tour-details [tour]="tour" [compact]="true"></app-tour-details>
+        </div>
       }
-    </p>
-  </app-card>
+
+    </app-card>
+
   </div>
 
   <hr />

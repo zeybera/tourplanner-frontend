@@ -38,7 +38,11 @@
   }
 
   .right {
-    width: 100%;
+    display: none;
+  }
+
+  .mobile-details{
+    display: block;
   }
 }
 
@@ -110,4 +114,8 @@
   display: flex;
   flex-direction: column;
   gap: 6px;
+}
+
+.mobile-details {
+  display: none; /* ❌ standardmäßig aus */
 }

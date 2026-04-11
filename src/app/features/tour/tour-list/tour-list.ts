@@ -4,11 +4,12 @@ import { TourService } from '../tour.service';
 import { Tour } from '../tour.model';
 import { Router } from '@angular/router';
 import {CardComponent} from '../../../shared/card/card';
+import {TourDetailsComponent} from '../tour-details/tour-details';
 
 @Component({
   selector: 'app-tour-list',
   standalone: true,
-  imports: [CommonModule, CardComponent],
+  imports: [CommonModule, CardComponent, TourDetailsComponent],
   templateUrl: './tour-list.html',
   styleUrl: './tour-list.css'
 })
@@ -16,7 +17,7 @@ import {CardComponent} from '../../../shared/card/card';
 export class TourListComponent {
 
   service = inject(TourService);
-  private router = inject(Router);
+  router = inject(Router);
 
   editingTour = signal<Tour | null>(null);
 

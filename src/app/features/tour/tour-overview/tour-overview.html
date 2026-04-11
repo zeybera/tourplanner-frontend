@@ -26,37 +26,7 @@
     <!-- DETAILS -->
     @if (service.selectedTour(); as tour) {
       <app-card>
-      <div class="details">
-        <h3>{{ tour.description }}</h3>
-
-        <p>
-          {{ tour.from }}
-          →
-          {{ tour.to }}
-        </p>
-
-        <p>
-          <b>Transport:</b>
-          @switch (tour.transportType) {
-            @case ('bike') { <span>Bike</span> }
-            @case ('hike') { <span>Hike</span> }
-            @case ('run') { <span>Run</span> }
-            @default { <span>-</span> }
-          }
-        </p>
-
-        <p><b>Distance:</b> {{ tour.distance }} km</p>
-        <p><b>Estimated Time:</b> {{ tour.time }} min</p>
-        <p><b>Route Info:</b> {{ tour.routeInformation }}</p>
-
-
-        <div class="actions">
-          <button class="btn delete" (click)="delete(tour.id)">Delete</button>
-          <button class="btn edit" (click)="edit(tour)">Edit</button>
-          <button class="btn logs" (click)="openLogs(tour)">Logs</button>
-        </div>
-
-      </div>
+        <app-tour-details [tour]="tour"></app-tour-details>
       </app-card>
     } @else {
       <p>Select a tour to see details</p>

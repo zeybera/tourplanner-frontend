@@ -2,13 +2,14 @@ import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourListComponent } from '../tour-list/tour-list';
 import { TourService } from '../tour.service';
+import { TourDetailsComponent} from '../tour-details/tour-details';
 import { Router } from '@angular/router';
 import {CardComponent} from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-overview',
   standalone: true,
-  imports: [CommonModule, TourListComponent, CardComponent],
+  imports: [CommonModule, TourListComponent, CardComponent, TourDetailsComponent],
   templateUrl: './tour-overview.html',
   styleUrls: ['./tour-overview.css']
 })

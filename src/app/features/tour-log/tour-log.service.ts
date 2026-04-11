@@ -1,6 +1,5 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
 import { TourLog } from './tour-log.model';
-import { Observable, of } from 'rxjs';
 import {TourService} from '../tour/tour.service';
 //TO DO import { HttpClient } from '@angular/common/http';
 
@@ -9,13 +8,13 @@ import {TourService} from '../tour/tour.service';
 })
 export class TourLogService {
 
-  //for selectedId in TourServcie
+  //for selectedId in TourService
   private tourService = inject(TourService);
 
   private _logs = signal<TourLog[]>([]);
   readonly logs = this._logs.asReadonly();
 
-  //to do:  for mock tourlogs, delete after backend
+  //to do:  for mock tour-logs, delete after backend
   private nextLogId = 100;
 
   //for json

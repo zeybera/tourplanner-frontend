@@ -1,5 +1,5 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import {  Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { Tour, TransportType } from '../tour.model';
 import {CardComponent} from '../../../shared/card/card';

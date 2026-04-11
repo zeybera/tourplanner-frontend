@@ -1,18 +1,55 @@
-<div class="container">
-  <h2>Edit Tour</h2>
+@if (selectedTour(); as tour) {
 
-  <input [value]="description()" (input)="onDescriptionInput($event)" />
-  <input [value]="from()" (input)="onFromInput($event)" />
-  <input [value]="to()" (input)="onToInput($event)" />
-  <select [value]="transportType()" (change)="onTransportInput($event)">
-    <option value="">Select transport</option>
-    <option value="bike">Bike</option>
-    <option value="hike">Hike</option>
-    <option value="run">Run</option>
-  </select>
-  <input [value]="routeInformation()" (input)="onRouteInput($event)" />
+  <div class="container">
 
-  <button type="button" (click)="update()" [disabled]="!isValid()">
-    Save
-  </button>
-</div>
+
+    <h2>Edit: {{ tour.description }}</h2>
+
+    <app-card>
+
+      <div class="form">
+
+        <div class="form-row">
+          <div class="field">
+            <label>Description</label>
+            <input [value]="description()" (input)="onDescriptionInput($event)" />
+          </div>
+
+          <div class="field">
+            <label>From</label>
+            <input [value]="from()" (input)="onFromInput($event)" />
+          </div>
+
+          <div class="field">
+            <label>To</label>
+            <input [value]="to()" (input)="onToInput($event)" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="field">
+            <label>Transport</label>
+            <select [value]="transportType()" (change)="onTransportInput($event)">
+              <option value="">Select</option>
+              <option value="bike">Bike</option>
+              <option value="hike">Hike</option>
+              <option value="run">Run</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Route Info</label>
+            <input [value]="routeInformation()" (input)="onRouteInput($event)" />
+          </div>
+
+          <button class="save-btn" (click)="update()" [disabled]="!isValid()">
+            Save
+          </button>
+        </div>
+
+      </div>
+
+    </app-card>
+
+  </div>
+}

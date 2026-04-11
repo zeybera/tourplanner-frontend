@@ -2,16 +2,20 @@ import { Component, inject, signal, effect, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { Tour, TransportType } from '../tour.model';
+import {CardComponent} from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
+  imports: [CardComponent],
   templateUrl: './tour-edit.html',
   styleUrl: '../tour-creation/tour.css',
 })
 export class TourEditComponent {
-  private service = inject(TourService);
+  private _service = inject(TourService);
   private router = inject(Router);
+
+  selectedTour = this._service.selectedTour;
 
   description = signal('');
   from = signal('');
@@ -34,7 +38,7 @@ export class TourEditComponent {
   }
 
   initFormFromTour() {
-    const tour = this.service.selectedTour();
+    const tour = this._service.selectedTour();
     if (!tour) return;
 
     this.description.set(tour.description);
@@ -53,7 +57,7 @@ export class TourEditComponent {
   });
 
   Effect = effect(() => {
-    console.log('Editing tour is:', this.service.selectedTour());
+    console.log('Editing tour is:', this._service.selectedTour());
   });
 
   onDescriptionInput(event: Event): void {
@@ -80,7 +84,7 @@ export class TourEditComponent {
 
     if (!this.isValid()) return;
 
-    const tour = this.service.selectedTour();
+    const tour = this._service.selectedTour();
     if (!tour) return;
 
     const updated_tour: Tour = {
@@ -94,7 +98,7 @@ export class TourEditComponent {
       time: 0,
     };
 
-    this.service.update(updated_tour);
+    this._service.update(updated_tour);
 
     this.router.navigate(['/tours']);
   }

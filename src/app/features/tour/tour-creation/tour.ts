@@ -27,6 +27,7 @@ export class TourComponent {
     this.from().trim() !== '' &&
     this.to().trim() !== '' &&
     this.transportType() !== '' &&
+    this.routeInformation().trim() !== '' &&
     this.from().trim() !== this.to().trim()
   );
 
@@ -54,17 +55,8 @@ export class TourComponent {
 
   // CREATE
   create(): void {
-    if (
-      this.description().trim() === '' ||
-      this.from().trim() === '' ||
-      this.to().trim() === '' ||
-      this.transportType() === ''
-    ) {
+    if ( !this.isValid()) {
       alert('Please fill all required fields');
-      return;
-    }
-    if (this.from() == this.to()) {
-      alert('From and To cannot be the same');
       return;
     }
 

@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect } from '@angular/core';
+import { Component, inject, signal, effect, computed } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { Tour, TransportType } from '../tour.model';

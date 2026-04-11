@@ -27,6 +27,8 @@
       (input)="onRouteInput($event)"
     />
 
-    <button (click)="create()">Create Tour</button>
+    <button type="button" (click)="create()" [disabled]="!isValid()">
+      Create Tour
+    </button>
   </form>
 </div>

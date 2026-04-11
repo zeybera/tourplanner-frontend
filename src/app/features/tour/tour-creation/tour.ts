@@ -1,7 +1,8 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
 import { TourService } from '../tour.service';
 import { Router } from '@angular/router';
 import { TransportType } from '../tour.model';
+//import { }
 
 @Component({
   selector: 'app-tour',
@@ -19,6 +20,16 @@ export class TourComponent {
   to = signal('');
   transportType = signal<TransportType | ''>('');
   routeInformation = signal('');
+
+
+  isValid = computed(() =>
+    this.description().trim() !== '' &&
+    this.from().trim() !== '' &&
+    this.to().trim() !== '' &&
+    this.transportType() !== '' &&
+    this.from().trim() !== this.to().trim()
+  );
+
 
   // EVENT HANDLERS
   onDescriptionInput(event: Event): void {
@@ -43,7 +54,12 @@ export class TourComponent {
 
   // CREATE
   create(): void {
-    if (!this.description() || !this.from() || !this.to() || !this.transportType()) {
+    if (
+      this.description().trim() === '' ||
+      this.from().trim() === '' ||
+      this.to().trim() === '' ||
+      this.transportType() === ''
+    ) {
       alert('Please fill all required fields');
       return;
     }

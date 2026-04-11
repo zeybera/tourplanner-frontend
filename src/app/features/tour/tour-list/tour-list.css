@@ -1,14 +1,16 @@
 .tour-item {
   padding: 10px;
-  border-bottom: 1px solid #ccc;
+  transition: 0.2s;
+  background: white;
 }
 
-.tour-item:hover {
+/* SELECTED (bleibt grau) */
+.tour-item.active {
+  background: #e0e0e0;
+}
+
+/* HOVER NUR wenn NICHT selected */
+.tour-item:not(.active):hover {
   background: #eee;
   cursor: pointer;
-}
-
-.tour-item.active {
-  background: #ddd;
-  font-weight: bold;
 }

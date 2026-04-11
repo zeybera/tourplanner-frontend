@@ -5,7 +5,7 @@
     <div class="list-header">
       <h2>My Tours</h2>
       <div class="icons">
-        <button (click)="goToCreate()">＋</button>
+        <button type="button" (click)="goToCreate()">＋</button>
         <button>★</button>
       </div>
     </div>
@@ -17,37 +17,49 @@
   <div class="right">
 
     <!-- MAP -->
-    <div class="map">
-      Map Placeholder
-    </div>
+    <app-card>
+      <div class="map">
+        Map Placeholder
+      </div>
+    </app-card>
 
     <!-- DETAILS -->
-    @if (service.selectedTour()) {
+    @if (service.selectedTour(); as tour) {
+      <app-card>
       <div class="details">
-        <h3>{{ service.selectedTour()?.description }}</h3>
+        <h3>{{ tour.description }}</h3>
 
         <p>
-          {{ service.selectedTour()?.from }}
+          {{ tour.from }}
           →
-          {{ service.selectedTour()?.to }}
-        </p>
-
-        <p>{{ service.selectedTour()?.transportType }}</p>
-
-        <p>
-          <b>Distance:</b> {{ service.selectedTour()?.distance }} km
+          {{ tour.to }}
         </p>
 
         <p>
-          <b>Estimated Time:</b> {{ service.selectedTour()?.time }} min
+          <b>Transport:</b>
+          @switch (tour.transportType) {
+            @case ('bike') { <span>Bike</span> }
+            @case ('hike') { <span>Hike</span> }
+            @case ('run') { <span>Run</span> }
+            @default { <span>-</span> }
+          }
         </p>
 
-        <p>
-          <b>Route Info:</b> {{ service.selectedTour()?.routeInformation }}
-        </p>
+        <p><b>Distance:</b> {{ tour.distance }} km</p>
+        <p><b>Estimated Time:</b> {{ tour.time }} min</p>
+        <p><b>Route Info:</b> {{ tour.routeInformation }}</p>
+
+
+        <div class="actions">
+          <button class="btn delete" (click)="delete(tour.id)">Delete</button>
+          <button class="btn edit" (click)="edit(tour)">Edit</button>
+          <button class="btn logs" (click)="openLogs(tour)">Logs</button>
+        </div>
+
       </div>
+      </app-card>
     } @else {
-      <p>Select a tour</p>
+      <p>Select a tour to see details</p>
     }
 
   </div>

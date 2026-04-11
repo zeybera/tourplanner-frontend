@@ -19,6 +19,16 @@ export class TourEditComponent {
   transportType = signal('');
   routeInformation = signal('');
 
+
+  isValid = computed(() =>
+    this.description().trim() !== '' &&
+    this.from().trim() !== '' &&
+    this.to().trim() !== '' &&
+    this.transportType().trim() !== '' &&
+    this.routeInformation().trim() !== '' &&
+    this.from().trim() !== this.to().trim()
+  );
+
   constructor() {
     this.initFormFromTour();
   }
@@ -67,6 +77,9 @@ export class TourEditComponent {
   }
 
   update(): void {
+
+    if (!this.isValid()) return;
+
     const tour = this.service.selectedTour();
     if (!tour) return;
 

@@ -1,37 +1,60 @@
-<div>
-  <h3>
+<app-card>
+
+  <h2>
     @if (isEditMode()) {
       Edit Tour Log
     } @else {
       Create Tour Log
     }
-  </h3>
+  </h2>
 
-  <input type="text" placeholder="Comment" [value]="comment()" (input)="onCommentInput($event)" />
+  <div class="form">
 
-  <input
-    type="number"
-    min="1"
-    max="5"
-    placeholder="Difficulty"
-    [value]="difficulty()"
-    (input)="onDifficultyInput($event)"
-  />
+    <div class="row">
+      <div class="field full">
+        <label>Comment</label>
+        <input type="text"
+               [value]="comment()"
+               (input)="onCommentInput($event)" />
+      </div>
+    </div>
 
-  <input
-    type="number"
-    min="1"
-    max="5"
-    placeholder="Rating"
-    [value]="rating()"
-    (input)="onRatingInput($event)"
-  />
+    <div class="row">
+      <div class="field">
+        <label>Difficulty</label>
+        <input type="number"
+               min="1"
+               max="5"
+               [value]="difficulty()"
+               (input)="onDifficultyInput($event)" />
+      </div>
 
-  <button (click)="create()">
-    @if (isEditMode()) {
-      Update Log
-    } @else {
-      Create Log
+      <div class="field">
+        <label>Rating</label>
+        <input type="number"
+               min="1"
+               max="5"
+               [value]="rating()"
+               (input)="onRatingInput($event)" />
+      </div>
+    </div>
+
+    @if (!isValid()) {
+      <p class="error">Please fill all fields correctly.</p>
     }
-  </button>
-</div>
+
+    <div class="actions">
+      <button class="btn primary"
+              (click)="create()"
+              [disabled]="!isValid()">
+        @if (isEditMode()) {
+          Save
+        } @else {
+          Create
+        }
+      </button>
+    </div>
+
+  </div>
+
+</app-card>

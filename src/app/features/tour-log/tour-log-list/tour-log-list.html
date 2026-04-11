@@ -7,18 +7,26 @@
 }
 
 @for (log of service.selectedLogs(); track log.id) {
-  <div>
+  <app-card>
 
     <p><b>Date:</b> {{ log.date }}</p>
     <p><b>Comment:</b> {{ log.comment }}</p>
     <p><b>Difficulty:</b> {{ log.difficulty }}</p>
     <p><b>Rating:</b> {{ log.rating }}</p>
 
-    <button (click)="edit(log)">Edit</button>
-    <button (click)="delete(log.id)">Delete</button>
+    <div class="actions">
 
+      <button class="btn edit" (click)="edit(log)">
+        Edit
+      </button>
 
-  </div>
+      <button class="btn delete" (click)="delete(log.id)">
+        Delete
+      </button>
+
+    </div>
+
+    </app-card>
 
   <hr />
 

@@ -27,12 +27,12 @@ export class TourOverviewComponent {
   }
 
   edit(tour: any) {
-    this.service.selectedId.set(tour.id);
+    this.service.selectTour(tour.id);
     this.router.navigate(['/edit']);
   }
 
   openLogs(tour: any) {
-    this.service.selectedId.set(tour.id);
+    this.service.selectTour(tour.id);
     this.router.navigate(['/logs']);
   }
 }

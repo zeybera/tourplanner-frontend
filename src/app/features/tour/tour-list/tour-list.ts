@@ -1,4 +1,4 @@
-import { Component, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourService } from '../tour.service';
 import { Tour } from '../tour.model';
@@ -19,11 +19,11 @@ export class TourListComponent {
   service = inject(TourService);
   router = inject(Router);
 
-  editingTour = signal<Tour | null>(null);
+  //editingTour = signal<Tour | null>(null);
 
 
   //for detailed view of selected tour in overview
   select(tour: Tour) {
-    this.service.selectedId.set(tour.id);
+    this.service.selectTour(tour.id);
   }
 }

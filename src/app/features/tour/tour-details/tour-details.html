@@ -26,12 +26,12 @@
     </button>
 
     <button class="btn edit"
-            (click)="service.selectedId.set(tour.id); router.navigate(['/edit'])">
+            (click)="service.selectTour(tour.id); router.navigate(['/edit'])">
       Edit
     </button>
 
     <button class="btn logs"
-            (click)="service.selectedId.set(tour.id); router.navigate(['/logs'])">
+            (click)="service.selectTour(tour.id); router.navigate(['/logs'])">
       Logs
     </button>
 

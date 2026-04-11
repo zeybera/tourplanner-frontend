@@ -18,5 +18,35 @@
     "routeInformation": "Trail",
     "distance": 150,
     "time": 180
+  },
+  {
+    "id": 3,
+    "description": "City Run",
+    "from": "Linz",
+    "to": "Linz Center",
+    "transportType": "run",
+    "routeInformation": "City route",
+    "distance": 8,
+    "time": 50
+  },
+  {
+    "id": 4,
+    "description": "Lake Tour",
+    "from": "Hallstatt",
+    "to": "Bad Ischl",
+    "transportType": "bike",
+    "routeInformation": "Lake road",
+    "distance": 35,
+    "time": 90
+  },
+  {
+    "id": 5,
+    "description": "Forest Walk",
+    "from": "Graz",
+    "to": "Schöckl",
+    "transportType": "hike",
+    "routeInformation": "Forest trail",
+    "distance": 12,
+    "time": 100
   }
 ]

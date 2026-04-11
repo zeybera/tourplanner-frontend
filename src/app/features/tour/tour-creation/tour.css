@@ -63,7 +63,13 @@ select {
 .form-row {
   display: flex;
   gap: 10px;
-  margin-bottom: 10px;
+  flex-wrap: wrap; 
+}
+
+@media (max-width: 600px) {
+  .form-row {
+    flex-direction: column;
+  }
 }
 
 .field {

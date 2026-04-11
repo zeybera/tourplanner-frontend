@@ -2,6 +2,7 @@
   padding: 10px;
   transition: 0.2s;
   background: white;
+  border-radius: 8px;
 }
 
 /* SELECTED (bleibt grau) */
@@ -30,5 +31,11 @@
 @media (max-width: 800px) {
   .mobile-only {
     display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .tour-item {
+    padding: 8px;
   }
 }

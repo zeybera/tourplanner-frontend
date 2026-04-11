@@ -19,6 +19,11 @@ button:disabled {
   display: flex;
   gap: 10px;
 }
+@media (max-width: 600px) {
+  .row {
+    flex-direction: column;
+  }
+}
 
 .field {
   flex: 1;

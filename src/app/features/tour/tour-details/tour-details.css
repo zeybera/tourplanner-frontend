@@ -62,3 +62,9 @@
   background-color: #27ae60;
   transform: translateY(-1px);
 }
+
+@media (max-width: 600px) {
+  .actions {
+    flex-direction: column;
+  }
+}

@@ -15,6 +15,9 @@
         <input type="date"
                [value]="date()"
                (input)="onDateInput($event)" />
+        @if (dateError()) {
+          <p class="error">{{ dateError() }}</p>
+        }
       </div>
 
       <div class="field">
@@ -62,6 +65,9 @@
                min="0"
                [value]="totalDistance()"
                (input)="onDistanceInput($event)" />
+        @if (distanceError()) {
+          <p class="error">{{ distanceError() }}</p>
+        }
       </div>
 
       <div class="field">
@@ -70,6 +76,9 @@
                min="0"
                [value]="totalTime()"
                (input)="onTotalTimeInput($event)" />
+        @if (timeError()) {
+          <p class="error">{{ timeError() }}</p>
+        }
       </div>
     </div>
 

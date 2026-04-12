@@ -7,7 +7,6 @@ import { CardComponent } from '../../../shared/card/card';
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
-  imports: [CardComponent],
   templateUrl: './tour-edit.html',
   styleUrl: '../tour-creation/tour.css',
 })
@@ -27,17 +26,17 @@ export class TourEditComponent {
   time = signal<number | null>(null);
 
   isValid = computed(() =>
-      this.name().trim() != '' &&
-      this.description().trim() != '' &&
-      this.from().trim() != '' &&
-      this.to().trim() != '' &&
-      this.transportType().trim() != '' &&
-      this.routeInformation().trim() != '' &&
-      this.distance() != null &&
-      this.time() != null &&
-      this.distance()! > 0 &&
-      this.time()! > 0 &&
-      this.from().trim() != this.to().trim(),
+    this.name().trim() != '' &&
+    this.description().trim() != '' &&
+    this.from().trim() != '' &&
+    this.to().trim() != '' &&
+    this.transportType().trim() != '' &&
+    this.routeInformation().trim() != '' &&
+    this.distance() != null &&
+    this.time() != null &&
+    this.distance()! > 0 &&
+    this.time()! > 0 &&
+    this.from().trim() != this.to().trim(),
   );
 
   constructor() {

@@ -56,12 +56,7 @@ export class TourService {
 
 
 // shared state across components, so we keep in service
-private _selectedId = signal<number | null>(null);
-readonly selectedId = this._selectedId.asReadonly();
-
-selectTour(id: number){
-  this._selectedId.set(id);
-}
+selectedId = signal<number | null>(null);
 
 //derived state
 selectedTour = computed(() => {

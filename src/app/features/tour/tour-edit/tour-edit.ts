@@ -7,7 +7,6 @@ import { CardComponent } from '../../../shared/card/card';
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
-  imports: [CardComponent],
   templateUrl: './tour-edit.html',
   styleUrl: '../tour-creation/tour.css',
 })

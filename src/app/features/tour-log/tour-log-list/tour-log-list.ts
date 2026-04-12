@@ -1,6 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourLogService } from '../tour-log.service';
+import { TourService} from '../../tour/tour.service';
 import { TourLog } from '../tour-log.model';
 import { Router } from '@angular/router';
 import {CardComponent} from '../../../shared/card/card';
@@ -16,14 +17,15 @@ export class TourLogListComponent {
 
   service = inject(TourLogService);
   private router = inject(Router);
+  tourService = inject(TourService);
 
   goToCreate() {
-    this.service.selectedLogId.set(null);
+    this.service.setSelectedLogId(null);
     this.router.navigate(['/logs/new']);
   }
 
   edit(log: TourLog) {
-    this.service.selectedLogId.set(log.id);
+    this.service.setSelectedLogId(log.id);
     this.router.navigate(['/logs/edit']);
   }
 

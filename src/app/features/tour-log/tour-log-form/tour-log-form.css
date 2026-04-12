@@ -82,3 +82,9 @@ input:focus {
 .btn.primary:active {
   transform: scale(0.97);
 }
+
+.error {
+  color: #e74c3c;
+  font-size: 13px;
+  margin-top: 4px;
+}

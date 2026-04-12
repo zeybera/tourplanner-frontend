@@ -1,55 +1,54 @@
-@if (selectedTour(); as tour) {
+<div class="container">
+  <h2>Edit Tour</h2>
 
-  <div class="container">
+  <div class="form">
+    <div class="field">
+      <label>Name</label>
+      <input [value]="name()" (input)="onNameInput($event)" />
+    </div>
 
+    <div class="field">
+      <label>Description</label>
+      <input [value]="description()" (input)="onDescriptionInput($event)" />
+    </div>
 
-    <h2>Edit: {{ tour.description }}</h2>
+    <div class="field">
+      <label>From</label>
+      <input [value]="from()" (input)="onFromInput($event)" />
+    </div>
 
-    <app-card>
+    <div class="field">
+      <label>To</label>
+      <input [value]="to()" (input)="onToInput($event)" />
+    </div>
 
-      <div class="form">
+    <div class="field">
+      <label>Transport Type</label>
+      <select [value]="transportType()" (change)="onTransportInput($event)">
+        <option value="">Select transport</option>
+        <option value="bike">Bike</option>
+        <option value="hike">Hike</option>
+        <option value="run">Run</option>
+      </select>
+    </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label>Description</label>
-            <input [value]="description()" (input)="onDescriptionInput($event)" />
-          </div>
+    <div class="field">
+      <label>Route Info</label>
+      <input [value]="routeInformation()" (input)="onRouteInput($event)" />
+    </div>
 
-          <div class="field">
-            <label>From</label>
-            <input [value]="from()" (input)="onFromInput($event)" />
-          </div>
+    <div class="field">
+      <label>Distance (km)</label>
+      <input type="number" [value]="distance()" (input)="onDistanceInput($event)" min="1" />
+    </div>
 
-          <div class="field">
-            <label>To</label>
-            <input [value]="to()" (input)="onToInput($event)" />
-          </div>
-        </div>
+    <div class="field">
+      <label>Time (min)</label>
+      <input type="number" [value]="time()" (input)="onTimeInput($event)" min="1" />
+    </div>
 
-        <div class="form-row">
-          <div class="field">
-            <label>Transport</label>
-            <select [value]="transportType()" (change)="onTransportInput($event)">
-              <option value="">Select</option>
-              <option value="bike">Bike</option>
-              <option value="hike">Hike</option>
-              <option value="run">Run</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Route Info</label>
-            <input [value]="routeInformation()" (input)="onRouteInput($event)" />
-          </div>
-
-          <button class="save-btn" (click)="update()" [disabled]="!isValid()">
-            Save
-          </button>
-        </div>
-
-      </div>
-
-    </app-card>
-
+    <div class="actions">
+      <button (click)="update()">Save</button>
+    </div>
   </div>
-}
+</div>

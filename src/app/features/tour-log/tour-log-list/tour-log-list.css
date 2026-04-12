@@ -25,6 +25,21 @@
   gap: 10px;
 }
 
+
+.tour-header {
+  margin-bottom: 15px;
+}
+
+.tour-info h3 {
+  margin: 5px 0;
+}
+
+.route {
+  color: #777;
+  font-size: 14px;
+}
+
+
 /* Basis */
 .btn {
   padding: 8px 14px;

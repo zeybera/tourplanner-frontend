@@ -6,12 +6,18 @@ import { Tour } from './tour.model';
 })
 
 export class TourService {
-  //inside the signal there is an array of tours
+  //inside this signal there is an array of tours
+  // private bedeutet: signal wird nur im Service erreichbar, zb. außerhalb "this.service._tours" nicht erreichbar
+  // Wie wird der State trotzdem verändert?  Nicht direkt, sondern über Methoden im Service. Komponenten greifen nicht direkt auf das Signal zu, sondern rufen Funktionen im Service auf.
   private _tours = signal<Tour[]>([]);
+  // warum brauchen wir readonly signal? Components den State sehen, aber NICHT verändern könne
+  // Component darf nur: this.service.tours() für lesen aufrufen, aber nicht this.service.tours.set() oder this.service.tours.update() 
   readonly tours = this._tours.asReadonly();
 
   private nextId = 15;
 
+  //TourService wird erzeugt, constructor wird ausgeführt, loadTours() wird aufgerufen
+  //Der constructor wird ausgeführt, wenn das Objekt erstellt wird.
   constructor() {
     this.loadTours();
   }
@@ -50,12 +56,7 @@ export class TourService {
 
 
 // shared state across components, so we keep in service
-private _selectedId = signal<number | null>(null);
-readonly selectedId = this._selectedId.asReadonly();
-
-selectTour(id: number){
-  this._selectedId.set(id);
-}
+selectedId = signal<number | null>(null);
 
 //derived state
 selectedTour = computed(() => {

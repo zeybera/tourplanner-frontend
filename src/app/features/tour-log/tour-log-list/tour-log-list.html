@@ -1,4 +1,13 @@
-<h2>Tour Logs</h2>
+<div class="tour-header">
+  <h2>Tour Logs</h2>
+
+  @if (tourService.selectedTour(); as tour) {
+    <div class="tour-info">
+      <h3>{{ tour.description }}</h3>
+      <p class="route">{{ tour.from }} → {{ tour.to }}</p>
+    </div>
+  }
+</div>
 
 <button class="btn create" (click)="goToCreate()"> + Create Log</button>
 
@@ -9,10 +18,15 @@
 @for (log of service.selectedLogs(); track log.id) {
   <app-card>
 
-    <p><b>Date:</b> {{ log.date }}</p>
+     <!--       <p><b>Date:</b> {{ log.date }}</p>       damit T aus dem log veschwindet,  todo: besser machen ?-->
+    <p><b>Date:</b> {{ log.date.split('T')[0] }} – {{ log.date.split('T')[1]?.substring(0,5) }}</p>
+
     <p><b>Comment:</b> {{ log.comment }}</p>
     <p><b>Difficulty:</b> {{ log.difficulty }}</p>
     <p><b>Rating:</b> {{ log.rating }}</p>
+
+    <p><b>Distance:</b> {{ log.totalDistance }} km</p>
+    <p><b>Time:</b> {{ log.totalTime }} min</p>
 
     <div class="actions">
 

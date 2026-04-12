@@ -49,9 +49,16 @@ export class TourLogService {
   });
 
   //just one  log for edit/update
-  selectedLogId = signal<number | null>(null);
+  private _selectedLogId = signal<number | null>(null);
+
+  //optional: selectedLogId for UI
+  //readonly selectedLogId = this._selectedLogId.asReadonly();
+
+  setSelectedLogId(id: number | null) {
+    this._selectedLogId.set(id);
+  }
   selectedLog = computed(() => {
-    const id = this.selectedLogId();
+    const id = this._selectedLogId();
     if (id == null) return null;
 
     return this._logs().find(log => log.id === id) ?? null;

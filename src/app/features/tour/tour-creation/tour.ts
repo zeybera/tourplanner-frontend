@@ -21,18 +21,21 @@ export class TourComponent {
   to = signal('');
   transportType = signal<TransportType | ''>('');
   routeInformation = signal('');
+  distance = signal<number | null>(null);
+  time = signal<number | null>(null);
 
-
-  isValid = computed(() =>
-    this.name().trim() !== '' &&
-    this.description().trim() !== '' &&
-    this.from().trim() !== '' &&
-    this.to().trim() !== '' &&
-    this.transportType() !== '' &&
-    this.routeInformation().trim() !== '' &&
-    this.from().trim() !== this.to().trim()
+  isValid = computed(
+    () =>
+      this.name().trim() !== '' &&
+      this.description().trim() !== '' &&
+      this.from().trim() !== '' &&
+      this.to().trim() !== '' &&
+      this.transportType() !== '' &&
+      this.routeInformation().trim() !== '' &&
+      this.distance()! > 0 &&
+      this.time()! > 0 &&
+      this.from().trim() !== this.to().trim(),
   );
-
 
   // EVENT HANDLERS
   onNameInput(event: Event): void {
@@ -52,16 +55,41 @@ export class TourComponent {
   }
 
   onTransportInput(event: Event): void {
-    this.transportType.set((event.target as HTMLInputElement).value as TransportType);
+    this.transportType.set((event.target as HTMLSelectElement).value as TransportType);
   }
-
   onRouteInput(event: Event): void {
     this.routeInformation.set((event.target as HTMLInputElement).value);
   }
 
+  onDistanceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = Number(input.value);
+
+    if (input.value == '') {
+      this.distance.set(null);
+    } else if (!isNaN(value) && value > 0) {
+      this.distance.set(value);
+    } else {
+      this.distance.set(null);
+    }
+  }
+
+  onTimeInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = Number(input.value);
+
+    if (input.value == '') {
+      this.time.set(null);
+    } else if (!isNaN(value) && value > 0) {
+      this.time.set(value);
+    } else {
+      this.time.set(null);
+    }
+  }
+
   // CREATE
   create(): void {
-    if ( !this.isValid()) {
+    if (!this.isValid()) {
       alert('Please fill all required fields');
       return;
     }
@@ -74,8 +102,8 @@ export class TourComponent {
       to: this.to(),
       transportType: this.transportType() as TransportType,
       routeInformation: this.routeInformation(),
-      distance: 0,
-      time: 0,
+      distance: this.distance()!,
+      time: this.time()!,
     });
     this.router.navigate(['/tours']);
   }

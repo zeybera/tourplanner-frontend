@@ -1,21 +1,26 @@
 .container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   gap: 10px;
 }
 
-/* LEFT */
+/* LEFT = tour list*/
 .left {
   flex: 1;
   min-width: 250px;
   border-right: 1px solid #ccc;
   padding: 10px;
+
+  overflow-y: auto;
 }
 
-/* RIGHT */
+/* RIGHT = tour details*/
 .right {
   flex: 2;
   padding: 10px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* MAP */
@@ -28,10 +33,10 @@
   margin-bottom: 10px;
 }
 
-/* MOBILE */
+/* MOBILE LAYOUT*/
 @media (max-width: 800px) {
   .container {
-    flex-direction: column;
+    flex-direction: column;  /*stack list+details vertically */
   }
 
   .left {
@@ -39,20 +44,30 @@
     border-right: none;
   }
 
-  @media (max-width: 800px) {
-  .container {
-    flex-direction: column;
-  }
-
+  /*  !! hide right side on mobile (details already shown in .mobile-detials)*/
   .right {
+    display: none;
+  }
+
+  /*inline details inside list item*/
+  .mobile-details {
     display: block;
   }
+}
+/*dekstoo details styling*/
+.details {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
 }
 
-  .mobile-details{
-    display: block;
-  }
+/* hodden by desktop*/
+.mobile-details {
+  display: none;
 }
+
+
+
 
 .list-header {
   display: flex;
@@ -84,7 +99,7 @@
   flex-wrap: wrap;
 }
 
-
+/* BUTTONS */
 .btn {
   padding: 8px 14px;
   border: none;
@@ -119,25 +134,15 @@
   background-color: #27ae60;
 }
 
-.details {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
 
-.mobile-details {
-  display: none;
-}
-
-
-
+/* EMPTY STATE */
 .empty-state {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  height: 100%;
   text-align: center;
   color: #777;
 }
@@ -148,6 +153,7 @@
   opacity: 0.8;
 }
 
+/* CREATE LINK ON EMPTY STATE */
 .create-link {
   color: #3498db;
   text-decoration: none;

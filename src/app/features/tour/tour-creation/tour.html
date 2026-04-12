@@ -8,7 +8,7 @@
       [value]="name()"
       (input)="onNameInput($event)"
     />
-    
+
     <input
       type="text"
       placeholder="Enter description"
@@ -34,8 +34,10 @@
       (input)="onRouteInput($event)"
     />
 
-    <button type="button" (click)="create()" [disabled]="!isValid()">
-      Create Tour
-    </button>
+    <input type="number" placeholder="Distance (km)" (input)="onDistanceInput($event)" min="1" />
+
+    <input type="number" placeholder="Time (min)" (input)="onTimeInput($event)" min="1" />
+
+    <button type="button" (click)="create()" [disabled]="!isValid()">Create Tour</button>
   </form>
 </div>

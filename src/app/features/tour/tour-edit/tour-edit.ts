@@ -1,8 +1,8 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
-import {  Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { Tour, TransportType } from '../tour.model';
-import {CardComponent} from '../../../shared/card/card';
+import { CardComponent } from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-edit',
@@ -23,16 +23,21 @@ export class TourEditComponent {
   to = signal('');
   transportType = signal('');
   routeInformation = signal('');
-
+  distance = signal<number | null>(null);
+  time = signal<number | null>(null);
 
   isValid = computed(() =>
-    this.name().trim() !== '' &&
-    this.description().trim() !== '' &&
-    this.from().trim() !== '' &&
-    this.to().trim() !== '' &&
-    this.transportType().trim() !== '' &&
-    this.routeInformation().trim() !== '' &&
-    this.from().trim() !== this.to().trim()
+      this.name().trim() != '' &&
+      this.description().trim() != '' &&
+      this.from().trim() != '' &&
+      this.to().trim() != '' &&
+      this.transportType().trim() != '' &&
+      this.routeInformation().trim() != '' &&
+      this.distance() != null &&
+      this.time() != null &&
+      this.distance()! > 0 &&
+      this.time()! > 0 &&
+      this.from().trim() != this.to().trim(),
   );
 
   constructor() {
@@ -49,6 +54,8 @@ export class TourEditComponent {
     this.to.set(tour.to);
     this.transportType.set(tour.transportType);
     this.routeInformation.set(tour.routeInformation);
+    this.distance.set(tour.distance);
+    this.time.set(tour.time);
   }
 
   logEffect = effect(() => {
@@ -80,15 +87,40 @@ export class TourEditComponent {
   }
 
   onTransportInput(event: Event): void {
-    this.transportType.set((event.target as HTMLInputElement).value);
+    this.transportType.set((event.target as HTMLSelectElement).value as TransportType);
   }
 
   onRouteInput(event: Event): void {
     this.routeInformation.set((event.target as HTMLInputElement).value);
   }
 
-  update(): void {
+  onDistanceInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = Number(input.value);
 
+    if (input.value == '') {
+      this.distance.set(null);
+    } else if (!isNaN(value) && value > 0) {
+      this.distance.set(value);
+    } else {
+      this.distance.set(null);
+    }
+  }
+
+  onTimeInput(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const value = Number(input.value);
+
+    if (input.value == '') {
+      this.time.set(null);
+    } else if (!isNaN(value) && value > 0) {
+      this.time.set(value);
+    } else {
+      this.time.set(null);
+    }
+  }
+
+  update(): void {
     if (!this.isValid()) return;
 
     const tour = this._service.selectedTour();
@@ -102,8 +134,8 @@ export class TourEditComponent {
       to: this.to(),
       transportType: this.transportType() as TransportType,
       routeInformation: this.routeInformation(),
-      distance: 0,
-      time: 0,
+      distance: this.distance()!,
+      time: this.time()!,
     };
 
     this._service.update(updated_tour);

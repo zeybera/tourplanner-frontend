@@ -17,6 +17,7 @@ export class TourEditComponent {
 
   selectedTour = this._service.selectedTour;
 
+  name = signal('');
   description = signal('');
   from = signal('');
   to = signal('');
@@ -25,6 +26,7 @@ export class TourEditComponent {
 
 
   isValid = computed(() =>
+    this.name().trim() !== '' &&
     this.description().trim() !== '' &&
     this.from().trim() !== '' &&
     this.to().trim() !== '' &&
@@ -41,6 +43,7 @@ export class TourEditComponent {
     const tour = this._service.selectedTour();
     if (!tour) return;
 
+    this.name.set(tour.name);
     this.description.set(tour.description);
     this.from.set(tour.from);
     this.to.set(tour.to);
@@ -59,6 +62,10 @@ export class TourEditComponent {
   Effect = effect(() => {
     console.log('Editing tour is:', this._service.selectedTour());
   });
+
+  onNameInput(event: Event): void {
+    this.name.set((event.target as HTMLInputElement).value);
+  }
 
   onDescriptionInput(event: Event): void {
     this.description.set((event.target as HTMLInputElement).value);
@@ -89,6 +96,7 @@ export class TourEditComponent {
 
     const updated_tour: Tour = {
       id: tour.id,
+      name: this.name(),
       description: this.description(),
       from: this.from(),
       to: this.to(),

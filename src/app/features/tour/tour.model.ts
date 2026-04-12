@@ -3,6 +3,8 @@ export type TransportType = 'bike' | 'hike' | 'run';
 export interface Tour {
   id: number;
 
+  name: string; 
+  
   description: string;
 
   from: string;

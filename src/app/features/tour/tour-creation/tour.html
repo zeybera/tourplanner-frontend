@@ -4,6 +4,13 @@
   <form>
     <input
       type="text"
+      placeholder="Enter tour name"
+      [value]="name()"
+      (input)="onNameInput($event)"
+    />
+    
+    <input
+      type="text"
       placeholder="Enter description"
       [value]="description()"
       (input)="onDescriptionInput($event)"

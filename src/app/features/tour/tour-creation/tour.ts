@@ -15,6 +15,7 @@ export class TourComponent {
   private router = inject(Router);
 
   // FORM STATE (signals)
+  name = signal('');
   description = signal('');
   from = signal('');
   to = signal('');
@@ -23,6 +24,7 @@ export class TourComponent {
 
 
   isValid = computed(() =>
+    this.name().trim() !== '' &&
     this.description().trim() !== '' &&
     this.from().trim() !== '' &&
     this.to().trim() !== '' &&
@@ -33,6 +35,10 @@ export class TourComponent {
 
 
   // EVENT HANDLERS
+  onNameInput(event: Event): void {
+    this.name.set((event.target as HTMLInputElement).value);
+  }
+
   onDescriptionInput(event: Event): void {
     this.description.set((event.target as HTMLInputElement).value);
   }
@@ -62,6 +68,7 @@ export class TourComponent {
 
     //create() function within TourService is called
     this.service.create({
+      name: this.name(),
       description: this.description(),
       from: this.from(),
       to: this.to(),

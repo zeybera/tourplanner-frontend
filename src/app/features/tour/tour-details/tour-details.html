@@ -3,8 +3,10 @@
     <img src="assets/images/map-placeholder.png" alt="Map" />
   </div>
   @if (!compact) {
-    <h3>{{ tour.description }}</h3>
+    <h3>{{ tour.name }}</h3>
 
+    <p><b>Description:</b> {{ tour.description }}</p>
+    
     <p>
       {{ tour.from }} → {{ tour.to }}
     </p>

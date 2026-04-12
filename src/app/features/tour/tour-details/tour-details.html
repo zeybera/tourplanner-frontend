@@ -1,0 +1,42 @@
+<div class="details">
+  <div class="mobile-map">
+    <img src="assets/images/map-placeholder.png" alt="Map" />
+  </div>
+  @if (!compact) {
+    <h3>{{ tour.name }}</h3>
+
+    <p><b>Description:</b> {{ tour.description }}</p>
+    
+    <p>
+      {{ tour.from }} → {{ tour.to }}
+    </p>
+
+    <p>
+      <b>Transport:</b> {{ tour.transportType }}
+    </p>
+  }
+
+  <p><b>Distance:</b> {{ tour.distance }} km</p>
+  <p><b>Estimated Time:</b> {{ tour.time }} min</p>
+  <p><b>Route Info:</b> {{ tour.routeInformation }}</p>
+
+  <div class="actions">
+
+    <button class="btn delete"
+            (click)="service.delete(tour.id)">
+      Delete
+    </button>
+
+    <button class="btn edit"
+            (click)="service.selectTour(tour.id); router.navigate(['/edit'])">
+      Edit
+    </button>
+
+    <button class="btn logs"
+            (click)="service.selectTour(tour.id); router.navigate(['/logs'])">
+      Logs
+    </button>
+
+  </div>
+
+</div>

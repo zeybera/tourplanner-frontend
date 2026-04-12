@@ -5,7 +5,7 @@
     <div class="list-header">
       <h2>My Tours</h2>
       <div class="icons">
-        <button (click)="goToCreate()">＋</button>
+        <button type="button" (click)="goToCreate()">＋</button>
         <button>★</button>
       </div>
     </div>
@@ -16,39 +16,27 @@
   <!-- RIGHT: DETAILS -->
   <div class="right">
 
-    <!-- MAP -->
-    <div class="map">
-      Map Placeholder
-    </div>
-
     <!-- DETAILS -->
-    @if (service.selectedTour()) {
-      <div class="details">
-        <h3>{{ service.selectedTour()?.description }}</h3>
-
-        <p>
-          {{ service.selectedTour()?.from }}
-          →
-          {{ service.selectedTour()?.to }}
-        </p>
-
-        <p>{{ service.selectedTour()?.transportType }}</p>
-
-        <p>
-          <b>Distance:</b> {{ service.selectedTour()?.distance }} km
-        </p>
-
-        <p>
-          <b>Estimated Time:</b> {{ service.selectedTour()?.time }} min
-        </p>
-
-        <p>
-          <b>Route Info:</b> {{ service.selectedTour()?.routeInformation }}
-        </p>
-      </div>
+    @if (service.selectedTour(); as tour) {
+      <app-card>
+        <app-tour-details [tour]="tour"></app-tour-details>
+      </app-card>
     } @else {
-      <p>Select a tour</p>
-    }
+        <div class="empty-state">
+
+          <img src="assets/images/map-icon.png" />
+
+          <h3>No tour selected</h3>
+
+          <p>Select a tour from the list to see details.</p>
+
+          <p class="hint">
+            or
+            <a routerLink="/create" class="create-link">create a new tour</a>
+          </p>
+
+        </div>
+      }
 
   </div>
 

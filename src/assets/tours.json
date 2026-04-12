@@ -1,7 +1,8 @@
 [
   {
     "id": 1,
-    "description": "Vienna Trip",
+    "name": "Vienna Trip",
+    "description": "A bike tour from Vienna to Graz with a longer road route.",
     "from": "Vienna",
     "to": "Graz",
     "transportType": "bike",
@@ -11,12 +12,46 @@
   },
   {
     "id": 2,
-    "description": "Mountain Hike",
+    "name": "Mountain Hike",
+    "description": "A scenic hiking tour through the mountain area between Salzburg and Innsbruck.",
     "from": "Salzburg",
     "to": "Innsbruck",
     "transportType": "hike",
     "routeInformation": "Trail",
     "distance": 150,
     "time": 180
+  },
+  {
+    "id": 3,
+    "name": "City Run",
+    "description": "A short running route through the center of Linz.",
+    "from": "Linz",
+    "to": "Linz Center",
+    "transportType": "run",
+    "routeInformation": "City route",
+    "distance": 8,
+    "time": 50
+  },
+  {
+    "id": 4,
+    "name": "Lake Tour",
+    "description": "A bike tour along the lake road from Hallstatt to Bad Ischl.",
+    "from": "Hallstatt",
+    "to": "Bad Ischl",
+    "transportType": "bike",
+    "routeInformation": "Lake road",
+    "distance": 35,
+    "time": 90
+  },
+  {
+    "id": 5,
+    "name": "Forest Walk",
+    "description": "A quiet hiking route through forest paths near Graz and Schöckl.",
+    "from": "Graz",
+    "to": "Schöckl",
+    "transportType": "hike",
+    "routeInformation": "Forest trail",
+    "distance": 12,
+    "time": 100
   }
 ]

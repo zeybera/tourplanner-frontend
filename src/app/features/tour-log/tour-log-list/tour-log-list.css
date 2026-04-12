@@ -1,0 +1,73 @@
+.log-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: bold;
+}
+
+.rating {
+  color: #f39c12;
+}
+
+.comment {
+  margin: 8px 0;
+}
+
+.log-info {
+  display: flex;
+  gap: 10px;
+  font-size: 14px;
+  color: #555;
+}
+
+.actions {
+  margin-top: 10px;
+  display: flex;
+  gap: 10px;
+}
+
+/* Basis */
+.btn {
+  padding: 8px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+  color: white;
+  font-weight: 500;
+}
+
+/* CREATE */
+.btn.create {
+  background-color: #2ecc71;
+  margin-bottom: 10px;
+}
+
+.btn.create:hover {
+  background-color: #27ae60;
+}
+
+/* EDIT */
+.btn.edit {
+  background-color: #3498db;
+}
+
+.btn.edit:hover {
+  background-color: #2980b9;
+  transform: translateY(-1px);
+}
+
+/* DELETE */
+.btn.delete {
+  background-color: #e74c3c;
+}
+
+.btn.delete:hover {
+  background-color: #c0392b;
+  transform: translateY(-1px);
+}
+
+/* CLICK EFFECT */
+.btn:active {
+  transform: scale(0.97);
+}

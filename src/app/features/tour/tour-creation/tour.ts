@@ -1,7 +1,8 @@
-import { Component, signal, inject } from '@angular/core';
+import { Component, signal, inject, computed } from '@angular/core';
 import { TourService } from '../tour.service';
 import { Router } from '@angular/router';
 import { TransportType } from '../tour.model';
+//import { }
 
 @Component({
   selector: 'app-tour',
@@ -14,13 +15,30 @@ export class TourComponent {
   private router = inject(Router);
 
   // FORM STATE (signals)
+  name = signal('');
   description = signal('');
   from = signal('');
   to = signal('');
   transportType = signal<TransportType | ''>('');
   routeInformation = signal('');
 
+
+  isValid = computed(() =>
+    this.name().trim() !== '' &&
+    this.description().trim() !== '' &&
+    this.from().trim() !== '' &&
+    this.to().trim() !== '' &&
+    this.transportType() !== '' &&
+    this.routeInformation().trim() !== '' &&
+    this.from().trim() !== this.to().trim()
+  );
+
+
   // EVENT HANDLERS
+  onNameInput(event: Event): void {
+    this.name.set((event.target as HTMLInputElement).value);
+  }
+
   onDescriptionInput(event: Event): void {
     this.description.set((event.target as HTMLInputElement).value);
   }
@@ -43,17 +61,14 @@ export class TourComponent {
 
   // CREATE
   create(): void {
-    if (!this.description() || !this.from() || !this.to() || !this.transportType()) {
+    if ( !this.isValid()) {
       alert('Please fill all required fields');
-      return;
-    }
-    if (this.from() == this.to()) {
-      alert('From and To cannot be the same');
       return;
     }
 
     //create() function within TourService is called
     this.service.create({
+      name: this.name(),
       description: this.description(),
       from: this.from(),
       to: this.to(),

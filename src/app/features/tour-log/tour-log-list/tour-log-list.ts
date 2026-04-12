@@ -3,12 +3,14 @@ import { CommonModule } from '@angular/common';
 import { TourLogService } from '../tour-log.service';
 import { TourLog } from '../tour-log.model';
 import { Router } from '@angular/router';
+import {CardComponent} from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-log-list',
   standalone: true,
-  imports: [CommonModule],
-  templateUrl: './tour-log-list.html'
+  imports: [CommonModule, CardComponent],
+  templateUrl: './tour-log-list.html',
+  styleUrls: ['./tour-log-list.css']
 })
 export class TourLogListComponent {
 

@@ -3,32 +3,60 @@
     "id": 1,
     "tourId": 1,
     "date": "2026-04-01",
-    "comment": "Nice city walk",
-    "difficulty": 1,
+    "comment": "Nice city ride",
+    "difficulty": 2,
     "rating": 4,
-    "totalDistance": 5.2,
-    "totalTime": 40
+    "totalDistance": 200,
+    "totalTime": 120
   },
   {
     "id": 2,
     "tourId": 1,
     "date": "2026-04-02",
-    "comment": "Second time better",
+    "comment": "Better pacing this time",
     "difficulty": 2,
     "rating": 5,
-    "totalDistance": 5.5,
-    "totalTime": 42
-
+    "totalDistance": 205,
+    "totalTime": 115
+  },
+  {
+    "id": 3,
+    "tourId": 2,
+    "date": "2026-04-03",
+    "comment": "Very exhausting hike",
+    "difficulty": 5,
+    "rating": 4,
+    "totalDistance": 150,
+    "totalTime": 180
   },
   {
     "id": 4,
-    "tourId": 2,
-    "date": "2026-04-04",
-    "comment": "Very exhausting",
-    "difficulty": 5,
+    "tourId": 3,
+    "date": "2026-04-05",
+    "comment": "Quick morning run",
+    "difficulty": 3,
     "rating": 4,
-    "totalDistance": 15.2,
-    "totalTime": 140
+    "totalDistance": 8,
+    "totalTime": 50
+  },
+  {
+    "id": 5,
+    "tourId": 4,
+    "date": "2026-04-06",
+    "comment": "Beautiful lake view",
+    "difficulty": 2,
+    "rating": 5,
+    "totalDistance": 35,
+    "totalTime": 90
+  },
+  {
+    "id": 6,
+    "tourId": 5,
+    "date": "2026-04-07",
+    "comment": "Relaxing forest walk",
+    "difficulty": 1,
+    "rating": 5,
+    "totalDistance": 12,
+    "totalTime": 100
   }
 ]
-

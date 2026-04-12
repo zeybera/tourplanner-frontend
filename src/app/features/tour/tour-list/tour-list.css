@@ -1,14 +1,41 @@
 .tour-item {
   padding: 10px;
-  border-bottom: 1px solid #ccc;
+  transition: 0.2s;
+  background: white;
+  border-radius: 8px;
 }
 
-.tour-item:hover {
+/* SELECTED (bleibt grau) */
+.tour-item.active {
+  background: #e0e0e0;
+}
+
+/* HOVER NUR wenn NICHT selected */
+.tour-item:not(.active):hover {
   background: #eee;
   cursor: pointer;
 }
 
-.tour-item.active {
-  background: #ddd;
-  font-weight: bold;
+.mobile-details {
+  margin-top: 10px;
+  padding: 10px;
+  background: #f9f9f9;
+  border-radius: 8px;
+}
+
+
+.mobile-only {
+  display: none;
+}
+
+@media (max-width: 800px) {
+  .mobile-only {
+    display: block;
+  }
+}
+
+@media (max-width: 600px) {
+  .tour-item {
+    padding: 8px;
+  }
 }

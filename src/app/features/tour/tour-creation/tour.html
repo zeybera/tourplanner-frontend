@@ -4,6 +4,13 @@
   <form>
     <input
       type="text"
+      placeholder="Enter tour name"
+      [value]="name()"
+      (input)="onNameInput($event)"
+    />
+    
+    <input
+      type="text"
       placeholder="Enter description"
       [value]="description()"
       (input)="onDescriptionInput($event)"
@@ -27,6 +34,8 @@
       (input)="onRouteInput($event)"
     />
 
-    <button (click)="create()">Create Tour</button>
+    <button type="button" (click)="create()" [disabled]="!isValid()">
+      Create Tour
+    </button>
   </form>
 </div>

@@ -1,12 +1,15 @@
-import { Component, signal, input, computed, inject, effect } from '@angular/core';
+import { Component, signal, computed, inject, effect } from '@angular/core';
 import { TourLogService } from '../tour-log.service';
 import { TourService } from '../../tour/tour.service';
 import { Router } from '@angular/router';
+import {CardComponent} from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-log-form',
   standalone: true,
-  templateUrl: './tour-log-form.html'
+  imports: [CardComponent],
+  templateUrl: './tour-log-form.html',
+  styleUrls: ['./tour-log-form.css']
 })
 
 export class TourLogFormComponent {
@@ -53,15 +56,22 @@ export class TourLogFormComponent {
     });
 
 
-  create(): void {
-    const tour = this.tourService.selectedTour();
+  isValid = computed(() =>
+    this.comment().trim() !== '' &&
+    this.difficulty() >= 1 && this.difficulty() <= 5 &&
+    this.rating() >= 1 && this.rating() <= 5
+  );
 
+  create(): void {
+
+    if (!this.isValid()) return;
+
+    const tour = this.tourService.selectedTour();
     if (!tour) return;
 
     const existing = this.service.selectedLog();
 
     if (existing) {
-      //UPDATE / EDIT
       this.service.update({
         ...existing,
         comment: this.comment(),
@@ -69,7 +79,6 @@ export class TourLogFormComponent {
         rating: this.rating()
       });
     } else {
-      //CREATE
       this.service.create({
         tourId: tour.id,
         date: new Date().toISOString(),
@@ -80,12 +89,7 @@ export class TourLogFormComponent {
         totalTime: 0
       });
     }
-      //back to list
-      this.router.navigate(['/logs']);
 
-    // optional reset
-    this.comment.set('');
-    this.difficulty.set(0);
-    this.rating.set(0);
-    }
+    this.router.navigate(['/logs']);
+  }
 }

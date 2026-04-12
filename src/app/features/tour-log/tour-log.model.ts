@@ -2,12 +2,13 @@ export interface TourLog {
   id: number;
   tourId: number;
 
-  date: string;
+  date: string;  //date + time
+  //time: number;
   comment: string;
 
   difficulty: number;
   rating: number;
 
-  totalDistance: number; // API
-  totalTime: number; // API
+  totalDistance: number;
+  totalTime: number;
 }

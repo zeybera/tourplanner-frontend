@@ -9,6 +9,21 @@
   </h2>
 
   <div class="form">
+    <div class="row">
+      <div class="field">
+        <label>Date</label>
+        <input type="date"
+               [value]="date()"
+               (input)="onDateInput($event)" />
+      </div>
+
+      <div class="field">
+        <label>Time</label>
+        <input type="time"
+               [value]="time()"
+               (input)="onTimeInput($event)" />
+      </div>
+    </div>
 
     <div class="row">
       <div class="field full">
@@ -36,6 +51,25 @@
                max="5"
                [value]="rating()"
                (input)="onRatingInput($event)" />
+      </div>
+    </div>
+
+
+    <div class="row">
+      <div class="field">
+        <label>Total Distance (km)</label>
+        <input type="number"
+               min="0"
+               [value]="totalDistance()"
+               (input)="onDistanceInput($event)" />
+      </div>
+
+      <div class="field">
+        <label>Total Time (min)</label>
+        <input type="number"
+               min="0"
+               [value]="totalTime()"
+               (input)="onTotalTimeInput($event)" />
       </div>
     </div>
 

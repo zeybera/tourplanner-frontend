@@ -25,11 +25,23 @@ export class TourLogFormComponent {
   isEditMode = computed(() => this.service.selectedLog() !== null);
 
   // STATE
+  date = signal ('');
+  time = signal('');
   comment = signal('');
   difficulty = signal(0);
   rating = signal(0);
+  totalDistance = signal(0);
+  totalTime = signal(0);
 
   //event handler
+  onDateInput(event: Event) {
+    this.date.set((event.target as HTMLInputElement).value);
+  }
+
+  onTimeInput(event: Event) {
+    this.time.set((event.target as HTMLInputElement).value);
+  }
+
   onCommentInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
     this.comment.set(value);
@@ -45,6 +57,14 @@ export class TourLogFormComponent {
     this.rating.set(value);
   }
 
+  onDistanceInput(event: Event) {
+    this.totalDistance.set(Number((event.target as HTMLInputElement).value));
+  }
+
+  onTotalTimeInput(event: Event) {
+    this.totalTime.set(Number((event.target as HTMLInputElement).value));
+  }
+
   loadEffect = effect(() => {
     const log = this.service.selectedLog();
 
@@ -57,9 +77,13 @@ export class TourLogFormComponent {
 
 
   isValid = computed(() =>
+    this.date() !== '' &&
+    this.time() !== '' &&
     this.comment().trim() !== '' &&
     this.difficulty() >= 1 && this.difficulty() <= 5 &&
-    this.rating() >= 1 && this.rating() <= 5
+    this.rating() >= 1 && this.rating() <= 5 &&
+    this.totalDistance() > 0 &&
+    this.totalTime() > 0
   );
 
   create(): void {
@@ -81,12 +105,14 @@ export class TourLogFormComponent {
     } else {
       this.service.create({
         tourId: tour.id,
-        date: new Date().toISOString(),
+
+        date: this.date() + 'T' + this.time(),    // T nur zum speichern
+
         comment: this.comment(),
         difficulty: this.difficulty(),
         rating: this.rating(),
-        totalDistance: 0,
-        totalTime: 0
+        totalDistance: this.totalDistance(),
+        totalTime: this.totalTime()
       });
     }
 

@@ -124,7 +124,7 @@ export class TourLogFormComponent {
       this.service.update({
         ...existing,
 
-        date: this.date() + 'T' + this.time,
+        date: this.date() + 'T' + this.time(),
 
         comment: this.comment(),
         difficulty: this.difficulty(),
@@ -148,6 +148,8 @@ export class TourLogFormComponent {
     }
 
     this.router.navigate(['/logs']);
+    this.service.setSelectedLogId(null);
+
   }
 
 

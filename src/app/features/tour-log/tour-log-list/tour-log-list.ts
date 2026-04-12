@@ -20,12 +20,12 @@ export class TourLogListComponent {
   tourService = inject(TourService);
 
   goToCreate() {
-    this.service.selectedLogId.set(null);
+    this.service.setSelectedLogId(null);
     this.router.navigate(['/logs/new']);
   }
 
   edit(log: TourLog) {
-    this.service.selectedLogId.set(log.id);
+    this.service.setSelectedLogId(log.id);
     this.router.navigate(['/logs/edit']);
   }
 

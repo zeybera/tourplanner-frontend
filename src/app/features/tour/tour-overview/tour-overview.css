@@ -1,6 +1,6 @@
 .container {
   display: flex;
-  min-height: 100vh;
+  height: 100vh;
   gap: 10px;
 }
 
@@ -10,12 +10,17 @@
   min-width: 250px;
   border-right: 1px solid #ccc;
   padding: 10px;
+
+  overflow-y: auto;
 }
 
 /* RIGHT */
 .right {
   flex: 2;
   padding: 10px;
+
+  display: flex;
+  flex-direction: column;
 }
 
 /* MAP */
@@ -132,12 +137,12 @@
 
 
 .empty-state {
+  flex: 1;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  height: 100%;
   text-align: center;
   color: #777;
 }

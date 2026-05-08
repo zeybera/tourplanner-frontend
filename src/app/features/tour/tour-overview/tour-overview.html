@@ -1,5 +1,4 @@
 <div class="container">
-
   <!-- LEFT: LIST -->
   <div class="left">
     <div class="list-header">
@@ -9,35 +8,19 @@
         <button>★</button>
       </div>
     </div>
-     <!-- LIST -->
+    <!-- LIST -->
     <app-tour-list></app-tour-list>
   </div>
 
   <!-- RIGHT: DETAILS -->
   <div class="right">
-
     <!-- DETAILS -->
     @if (service.selectedTour(); as tour) {
       <app-card>
         <app-tour-details [tour]="tour"></app-tour-details>
       </app-card>
     } @else {
-        <div class="empty-state">
-
-          <img src="assets/images/map-icon.png" />
-
-          <h3>No tour selected</h3>
-
-          <p>Select a tour from the list to see details.</p>
-
-          <p class="hint">
-            or
-            <a routerLink="/create" class="create-link">create a new tour</a>
-          </p>
-
-        </div>
-      }
-
+      <p>Select a tour to see details</p>
+    }
   </div>
-
 </div>

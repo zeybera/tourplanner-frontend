@@ -1,20 +1,29 @@
-import { Injectable, signal, computed } from '@angular/core';
+import { Injectable, signal, computed, inject } from '@angular/core';
 import { TourResponse, TourRequest } from './tour.model';
+import { HttpClient } from '@angular/common/http';
+import { API } from '../../shared/api';
 
 @Injectable({
   providedIn: 'root',
 })
 
 export class TourService {
-  //inside this signal there is an array of tours
-  // private bedeutet: signal wird nur im Service erreichbar, zb. außerhalb "this.service._tours" nicht erreichbar
-  // Wie wird der State trotzdem verändert?  Nicht direkt, sondern über Methoden im Service. Komponenten greifen nicht direkt auf das Signal zu, sondern rufen Funktionen im Service auf.
+   // Angular HTTP client
+  private http = inject(HttpClient);
+
+  // Backend endpoint
+  private apiUrl =`${API.apiBaseUrl}/api/tours`;
+
+  // Stores all tours returned from backend
   private _tours = signal<TourResponse[]>([]);
   // warum brauchen wir readonly signal? Components den State sehen, aber NICHT verändern könne
   // Component darf nur: this.service.tours() für lesen aufrufen, aber nicht this.service.tours.set() oder this.service.tours.update() 
   readonly tours = this._tours.asReadonly();
 
-  private nextId = 15;
+  // Shared selected tour state
+  private _selectedId = signal<number | null>(null);
+  readonly selectedId = this._selectedId.asReadonly();
+
 
   //TourService wird erzeugt, constructor wird ausgeführt, loadTours() wird aufgerufen
   //Der constructor wird ausgeführt, wenn das Objekt erstellt wird.
@@ -22,48 +31,37 @@ export class TourService {
     this.loadTours();
   }
 
-  async loadTours() {
-  //TO DO: load from backend
-  const data : Tour[] = await fetch('../../../assets/tours.json').then(res => res.json());
- console.log("loading tours from json");
-  this._tours.set(data);
-
-}
-
-  // CREATE
-
-  create(tour: Omit<Tour,'id'>): void {
-    const newTour: Tour = { ...tour, id: this.nextId++ };
-
-    this._tours.update((tours) => [...tours, newTour]);
-  }
-
-  // READ is performed through the signal (tours)
-  // components consume the state directly instead of calling a read() function (not reactive)
-  //read(): Tour[] {
-  //  return this._tours();
-  //}
-
-  // DELETE
-  delete(id: number): void {
-    this._tours.update((tours) => {
-      const newTours = tours.filter((tour) => {
-        return tour.id != id;
+  // GET /api/tours
+  // Loads all tours from Spring Boot backend
+  loadTours(): void {
+    this.http
+      .get<TourResponse[]>(this.apiUrl)
+      .subscribe(data => {
+        this._tours.set(data);
       });
-      return newTours;
-    });
   }
 
+  // POST /api/tours
+  // Sends TourRequest to backend
+  // Receives TourResponse from backend
+  create(tour: TourRequest): void {
+    this.http
+      .post<TourResponse>(this.apiUrl, tour)
+      .subscribe(createdTour => {
+        this._tours.update(tours => [
+          ...tours,
+          createdTour
+        ]);
+      });
+  }
 
-// shared state across components, so we keep in service
-private _selectedId = signal<number | null>(null);
-readonly selectedId = this._selectedId.asReadonly();
-
+ // Stores selected tour ID
 selectTour(id: number){
   this._selectedId.set(id);
 }
 
 //derived state
+// Returns the currently selected tour based on the selected ID
 selectedTour = computed(() => {
   const id = this.selectedId();
   if (id == null) {
@@ -76,16 +74,23 @@ selectedTour = computed(() => {
   return tour;
 });
 
-// UPDATE
-  //maybe partial for update
- update(updated: Tour): void {
-  this._tours.update(tours => {
-    const newTours: Tour[] = [];
-    for (let t of tours) {
-      if (t.id == updated.id) {
+// Temporary local delete
+delete(id: number): void {
+  this._tours.update(tours =>
+    tours.filter(tour => tour.id != id)
+  );
+}
+
+// Temporary local update
+update(updated: TourResponse): void {
+  this._tours.update((tours) => {
+    const newTours: TourResponse[] = [];
+
+    for (let tour of tours) {
+      if (tour.id == updated.id) {
         newTours.push(updated);
       } else {
-        newTours.push(t);
+        newTours.push(tour);
       }
     }
     return newTours;
@@ -94,20 +99,3 @@ selectedTour = computed(() => {
 
 }
 
-
-// Why do we store TourResponse in signals
-// but not TourRequest?
-// TourResponse represents the actual  application state retrieved from backend.
-// TourRequest, however, only represents temporary form input entered by the user.
-// It exists only during form submission and is sent once to the backend.
-
-
-// Why do we still need a TourRequest interface if it is not stored inside a signal?
-// Even without reactive state management, the interface is important for:
-// - type safety
-// - API contracts
-// - compile-time validation
-// - autocomplete support
-// - maintainability
-// Therefore, DTO interfaces and reactive state
-// management solve different problems.

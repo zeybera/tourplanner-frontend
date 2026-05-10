@@ -98,12 +98,12 @@ export class TourComponent {
     this.service.create({
       name: this.name(),
       description: this.description(),
-      from: this.from(),
-      to: this.to(),
+      fromLocation: this.from(),
+      toLocation: this.to(),
       transportType: this.transportType() as TransportType,
       routeInformation: this.routeInformation(),
       distance: this.distance()!,
-      time: this.time()!,
+      estimatedTime: this.time()!,
     });
     this.router.navigate(['/tours']);
   }

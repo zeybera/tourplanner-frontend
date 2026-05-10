@@ -1,13 +1,12 @@
 import { Injectable, signal, inject, computed } from '@angular/core';
 import { TourLog } from './tour-log.model';
-import {TourService} from '../tour/tour.service';
+import { TourService } from '../tour/tour.service';
 //TO DO import { HttpClient } from '@angular/common/http';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TourLogService {
-
   //for selectedId in TourService
   private tourService = inject(TourService);
 
@@ -19,33 +18,33 @@ export class TourLogService {
 
   //for json
   constructor() {
-   void this.loadLogs();
+    void this.loadLogs();
   }
 
   async loadLogs() {
     //TO DO: load from backend
-    const data: TourLog [] = await fetch('/assets/logs.json').then(res => res.json());
+    const data: TourLog[] = await fetch('/assets/logs.json').then((res) => res.json());
     this._logs.set(data);
   }
 
   //CREATE LOGS
-  create (log: Omit<TourLog, 'id'>): void{
-    const newLog: TourLog = {...log, id: this.nextLogId++};
+  create(log: Omit<TourLog, 'id'>): void {
+    const newLog: TourLog = { ...log, id: this.nextLogId++ };
 
-    this._logs.update(logs => [...logs, newLog]);
+    this._logs.update((logs) => [...logs, newLog]);
   }
 
-  delete (id: number) {
-    this._logs.update(logs => logs.filter (log => log.id !== id));
+  delete(id: number) {
+    this._logs.update((logs) => logs.filter((log) => log.id !== id));
   }
 
   // for list of logs
-  selectedLogs = computed (() => {
+  selectedLogs = computed(() => {
     const tourId = this.tourService.selectedId();
 
-    if (tourId == null)return [];
+    if (tourId == null) return [];
 
-    return this._logs().filter(log => log.tourId === tourId);
+    return this._logs().filter((log) => log.tourId === tourId);
   });
 
   //just one  log for edit/update
@@ -57,19 +56,24 @@ export class TourLogService {
   setSelectedLogId(id: number | null) {
     this._selectedLogId.set(id);
   }
+
   selectedLog = computed(() => {
     const id = this._selectedLogId();
-    if (id == null) return null;
 
-    return this._logs().find(log => log.id === id) ?? null;
+    if (id == null) {
+      return null;
+    }
+
+    const log = this._logs().find((log) => log.id == id);
+
+    if (log == undefined) {
+      return null;
+    }
+
+    return log;
   });
 
   update(updated: TourLog): void {
-    this._logs.update(logs =>
-      logs.map(log => log.id === updated.id ? updated : log)
-    );
+    this._logs.update((logs) => logs.map((log) => (log.id == updated.id ? updated : log)));
   }
-
-
-
 }

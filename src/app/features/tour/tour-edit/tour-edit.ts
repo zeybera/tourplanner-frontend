@@ -7,7 +7,7 @@ import { CardComponent } from '../../../shared/card/card';
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
-  imports: [CardComponent],
+  imports: [],
   templateUrl: './tour-edit.html',
   styleUrl: '../tour-creation/tour.css',
 })
@@ -50,12 +50,12 @@ export class TourEditComponent {
 
     this.name.set(tour.name);
     this.description.set(tour.description);
-    this.from.set(tour.from);
-    this.to.set(tour.to);
+    this.from.set(tour.fromLocation);
+    this.to.set(tour.toLocation);
     this.transportType.set(tour.transportType);
     this.routeInformation.set(tour.routeInformation);
     this.distance.set(tour.distance);
-    this.time.set(tour.time);
+    this.time.set(tour.estimatedTime);
   }
 
   logEffect = effect(() => {
@@ -130,12 +130,12 @@ export class TourEditComponent {
       id: tour.id,
       name: this.name(),
       description: this.description(),
-      from: this.from(),
-      to: this.to(),
+      fromLocation: this.from(),
+      toLocation: this.to(),
       transportType: this.transportType() as TransportType,
       routeInformation: this.routeInformation(),
       distance: this.distance()!,
-      time: this.time()!,
+      estimatedTime: this.time()!,
     };
 
     this._service.update(updated_tour);

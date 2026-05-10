@@ -2,6 +2,6 @@
 // The REST endpoint paths (e.g. /api/tours)
 // are defined inside the corresponding services.
 
-export const environment = {
+export const API = {
   apiBaseUrl: 'http://localhost:8080'
 };

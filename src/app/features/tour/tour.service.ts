@@ -1,5 +1,5 @@
 import { Injectable, signal, computed } from '@angular/core';
-import { Tour } from './tour.model';
+import { TourResponse, TourRequest } from './tour.model';
 
 @Injectable({
   providedIn: 'root',
@@ -9,7 +9,7 @@ export class TourService {
   //inside this signal there is an array of tours
   // private bedeutet: signal wird nur im Service erreichbar, zb. außerhalb "this.service._tours" nicht erreichbar
   // Wie wird der State trotzdem verändert?  Nicht direkt, sondern über Methoden im Service. Komponenten greifen nicht direkt auf das Signal zu, sondern rufen Funktionen im Service auf.
-  private _tours = signal<Tour[]>([]);
+  private _tours = signal<TourResponse[]>([]);
   // warum brauchen wir readonly signal? Components den State sehen, aber NICHT verändern könne
   // Component darf nur: this.service.tours() für lesen aufrufen, aber nicht this.service.tours.set() oder this.service.tours.update() 
   readonly tours = this._tours.asReadonly();
@@ -93,3 +93,21 @@ selectedTour = computed(() => {
 }
 
 }
+
+
+// Why do we store TourResponse in signals
+// but not TourRequest?
+// TourResponse represents the actual  application state retrieved from backend.
+// TourRequest, however, only represents temporary form input entered by the user.
+// It exists only during form submission and is sent once to the backend.
+
+
+// Why do we still need a TourRequest interface if it is not stored inside a signal?
+// Even without reactive state management, the interface is important for:
+// - type safety
+// - API contracts
+// - compile-time validation
+// - autocomplete support
+// - maintainability
+// Therefore, DTO interfaces and reactive state
+// management solve different problems.

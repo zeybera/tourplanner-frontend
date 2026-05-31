@@ -1,7 +1,8 @@
-import { Injectable, signal, inject, computed } from '@angular/core';
+import { Injectable, signal, inject, computed, effect } from '@angular/core';
 import { TourLog } from './tour-log.model';
 import { TourService } from '../tour/tour.service';
-//TO DO import { HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
+import { API } from '../../shared/api';
 
 @Injectable({
   providedIn: 'root',
@@ -9,33 +10,59 @@ import { TourService } from '../tour/tour.service';
 export class TourLogService {
   //for selectedId in TourService
   private tourService = inject(TourService);
+  private http = inject(HttpClient);
+
+  private apiUrl = `${API.apiBaseUrl}/api/tours`;
 
   private _logs = signal<TourLog[]>([]);
   readonly logs = this._logs.asReadonly();
 
-  //to do:  for mock tour-logs, delete after backend
-  private nextLogId = 100;
-
-  //for json
   constructor() {
-    void this.loadLogs();
+    effect(() => {
+      const tourId = this.tourService.selectedId();
+
+      if (tourId == null) {
+        this._logs.set([]);
+        return;
+      }
+
+      this.loadLogs(tourId);
+    });
   }
 
-  async loadLogs() {
-    //TO DO: load from backend
-    const data: TourLog[] = await fetch('/assets/logs.json').then((res) => res.json());
-    this._logs.set(data);
+  // GET /api/tours/{tourId}/logs
+  loadLogs(tourId: number): void {
+    this.http
+      .get<TourLog[]>(`${this.apiUrl}/${tourId}/logs`)
+      .subscribe(data => {
+        this._logs.set(data);
+      });
   }
 
-  //CREATE LOGS
+  // POST /api/tours/{tourId}/logs
   create(log: Omit<TourLog, 'id'>): void {
-    const newLog: TourLog = { ...log, id: this.nextLogId++ };
+    const { tourId, ...request } = log;
 
-    this._logs.update((logs) => [...logs, newLog]);
+    this.http
+      .post<TourLog>(`${this.apiUrl}/${tourId}/logs`, request)
+      .subscribe(createdLog => {
+        this._logs.update((logs) => [...logs, createdLog]);
+      });
   }
 
+  // DELETE /api/tours/{tourId}/logs/{logId}
   delete(id: number) {
-    this._logs.update((logs) => logs.filter((log) => log.id !== id));
+    const tourId = this.tourService.selectedId();
+
+    if (tourId == null) {
+      return;
+    }
+
+    this.http
+      .delete<void>(`${this.apiUrl}/${tourId}/logs/${id}`)
+      .subscribe(() => {
+        this._logs.update((logs) => logs.filter((log) => log.id !== id));
+      });
   }
 
   // for list of logs
@@ -44,7 +71,7 @@ export class TourLogService {
 
     if (tourId == null) return [];
 
-    return this._logs().filter((log) => log.tourId === tourId);
+    return this._logs().filter((log) => log.tourId == tourId);
   });
 
   //just one  log for edit/update
@@ -73,7 +100,16 @@ export class TourLogService {
     return log;
   });
 
+  // PUT /api/tours/{tourId}/logs/{logId}
   update(updated: TourLog): void {
-    this._logs.update((logs) => logs.map((log) => (log.id == updated.id ? updated : log)));
+    const { id, tourId, ...request } = updated;
+
+    this.http
+      .put<TourLog>(`${this.apiUrl}/${tourId}/logs/${id}`, request)
+      .subscribe(savedLog => {
+        this._logs.update((logs) =>
+          logs.map((log) => (log.id == savedLog.id ? savedLog : log))
+        );
+      });
   }
 }

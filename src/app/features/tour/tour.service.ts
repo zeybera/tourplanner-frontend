@@ -74,28 +74,43 @@ selectedTour = computed(() => {
   return tour;
 });
 
-// Temporary local delete
-delete(id: number): void {
-  this._tours.update(tours =>
-    tours.filter(tour => tour.id != id)
-  );
+  // DELETE /api/tours/{id}
+  delete(id: number): void {
+    this.http
+      .delete<void>(`${this.apiUrl}/${id}`)
+      .subscribe(() => {
+        this._tours.update(tours =>
+          tours.filter(tour => tour.id != id)
+        );
+
+        if (this.selectedId() == id) {
+          this._selectedId.set(null);
+        }
+      });
+  }
+
+  // PUT /api/tours/{id}
+  update(updated: TourResponse): void {
+    this.http
+      .put<TourResponse>(`${this.apiUrl}/${updated.id}`, this.toRequest(updated))
+      .subscribe(savedTour => {
+        this._tours.update(tours =>
+          tours.map(tour => tour.id == savedTour.id ? savedTour : tour)
+        );
+      });
+  }
+
+  private toRequest(tour: TourResponse): TourRequest {
+    return {
+      name: tour.name,
+      description: tour.description,
+      fromLocation: tour.fromLocation,
+      toLocation: tour.toLocation,
+      transportType: tour.transportType,
+      routeInformation: tour.routeInformation,
+      distance: tour.distance,
+      estimatedTime: tour.estimatedTime,
+    };
+  }
+
 }
-
-// Temporary local update
-update(updated: TourResponse): void {
-  this._tours.update((tours) => {
-    const newTours: TourResponse[] = [];
-
-    for (let tour of tours) {
-      if (tour.id == updated.id) {
-        newTours.push(updated);
-      } else {
-        newTours.push(tour);
-      }
-    }
-    return newTours;
-  });
-}
-
-}
-

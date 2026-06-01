@@ -14,13 +14,41 @@
 
     <div class="field">
       <label>From</label>
-      <input [value]="from()" (input)="onFromInput($event)" />
+      <div class="geocode-field">
+        <input [value]="from()" (input)="onFromInput($event)" />
+        <button type="button" (click)="searchFrom()">Search</button>
+      </div>
     </div>
+
+    @if (fromResults().length > 0) {
+      <div class="geocode-results">
+        @for (result of fromResults(); track result.label + result.coordinates[0] + result.coordinates[1]) {
+          <button type="button" class="geocode-result" (click)="selectFrom(result)">
+            <strong>{{ result.label }}</strong>
+            <span>{{ result.neighbourhood || result.locality }} {{ result.country }}</span>
+          </button>
+        }
+      </div>
+    }
 
     <div class="field">
       <label>To</label>
-      <input [value]="to()" (input)="onToInput($event)" />
+      <div class="geocode-field">
+        <input [value]="to()" (input)="onToInput($event)" />
+        <button type="button" (click)="searchTo()">Search</button>
+      </div>
     </div>
+
+    @if (toResults().length > 0) {
+      <div class="geocode-results">
+        @for (result of toResults(); track result.label + result.coordinates[0] + result.coordinates[1]) {
+          <button type="button" class="geocode-result" (click)="selectTo(result)">
+            <strong>{{ result.label }}</strong>
+            <span>{{ result.neighbourhood || result.locality }} {{ result.country }}</span>
+          </button>
+        }
+      </div>
+    }
 
     <div class="field">
       <label>Transport Type</label>

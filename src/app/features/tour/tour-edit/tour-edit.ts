@@ -2,7 +2,8 @@ import { Component, inject, signal, effect, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { Tour, TransportType } from '../tour.model';
-import { CardComponent } from '../../../shared/card/card';
+import { RouteService } from '../../route/route.service';
+import { GeocodeFeature } from '../../route/geocode.model';
 
 @Component({
   selector: 'app-tour-edit',
@@ -13,6 +14,7 @@ import { CardComponent } from '../../../shared/card/card';
 })
 export class TourEditComponent {
   private _service = inject(TourService);
+  private routeService = inject(RouteService);
   private router = inject(Router);
 
   selectedTour = this._service.selectedTour;
@@ -25,6 +27,10 @@ export class TourEditComponent {
   routeInformation = signal('');
   distance = signal<number | null>(null);
   time = signal<number | null>(null);
+  fromResults = signal<GeocodeFeature[]>([]);
+  toResults = signal<GeocodeFeature[]>([]);
+  selectedFrom = signal<GeocodeFeature | null>(null);
+  selectedTo = signal<GeocodeFeature | null>(null);
 
   isValid = computed(() =>
       this.name().trim() != '' &&
@@ -80,14 +86,44 @@ export class TourEditComponent {
 
   onFromInput(event: Event): void {
     this.from.set((event.target as HTMLInputElement).value);
+    this.selectedFrom.set(null);
   }
 
   onToInput(event: Event): void {
     this.to.set((event.target as HTMLInputElement).value);
+    this.selectedTo.set(null);
   }
 
   onTransportInput(event: Event): void {
     this.transportType.set((event.target as HTMLSelectElement).value as TransportType);
+  }
+
+  searchFrom(): void {
+    if (this.from().trim() == '') return;
+
+    this.routeService.geocode(this.from()).subscribe(results => {
+      this.fromResults.set(results);
+    });
+  }
+
+  searchTo(): void {
+    if (this.to().trim() == '') return;
+
+    this.routeService.geocode(this.to()).subscribe(results => {
+      this.toResults.set(results);
+    });
+  }
+
+  selectFrom(result: GeocodeFeature): void {
+    this.selectedFrom.set(result);
+    this.from.set(result.label);
+    this.fromResults.set([]);
+  }
+
+  selectTo(result: GeocodeFeature): void {
+    this.selectedTo.set(result);
+    this.to.set(result.label);
+    this.toResults.set([]);
   }
 
   onRouteInput(event: Event): void {

@@ -107,9 +107,12 @@ selectedTour = computed(() => {
       fromLocation: tour.fromLocation,
       toLocation: tour.toLocation,
       transportType: tour.transportType,
-      routeInformation: tour.routeInformation,
-      distance: tour.distance,
-      estimatedTime: tour.estimatedTime,
+      fromLongitude: tour.fromLongitude,
+      fromLatitude: tour.fromLatitude,
+      toLongitude: tour.toLongitude,
+      toLatitude: tour.toLatitude,
+      fromFeatureJson: tour.fromFeatureJson,
+      toFeatureJson: tour.toFeatureJson,
     };
   }
 

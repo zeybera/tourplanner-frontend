@@ -23,9 +23,6 @@ export class TourComponent {
   from = signal('');
   to = signal('');
   transportType = signal<TransportType | ''>('');
-  routeInformation = signal('');
-  distance = signal<number | null>(null);
-  time = signal<number | null>(null);
   fromResults = signal<GeocodeFeature[]>([]);
   toResults = signal<GeocodeFeature[]>([]);
   selectedFrom = signal<GeocodeFeature | null>(null);
@@ -37,10 +34,9 @@ export class TourComponent {
       this.description().trim() !== '' &&
       this.from().trim() !== '' &&
       this.to().trim() !== '' &&
+      this.selectedFrom() !== null &&
+      this.selectedTo() !== null &&
       this.transportType() !== '' &&
-      this.routeInformation().trim() !== '' &&
-      this.distance()! > 0 &&
-      this.time()! > 0 &&
       this.from().trim() !== this.to().trim(),
   );
 
@@ -94,35 +90,6 @@ export class TourComponent {
     this.to.set(result.label);
     this.toResults.set([]);
   }
-  onRouteInput(event: Event): void {
-    this.routeInformation.set((event.target as HTMLInputElement).value);
-  }
-
-  onDistanceInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = Number(input.value);
-
-    if (input.value == '') {
-      this.distance.set(null);
-    } else if (!isNaN(value) && value > 0) {
-      this.distance.set(value);
-    } else {
-      this.distance.set(null);
-    }
-  }
-
-  onTimeInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = Number(input.value);
-
-    if (input.value == '') {
-      this.time.set(null);
-    } else if (!isNaN(value) && value > 0) {
-      this.time.set(value);
-    } else {
-      this.time.set(null);
-    }
-  }
 
   // CREATE
   create(): void {
@@ -138,9 +105,12 @@ export class TourComponent {
       fromLocation: this.from(),
       toLocation: this.to(),
       transportType: this.transportType() as TransportType,
-      routeInformation: this.routeInformation(),
-      distance: this.distance()!,
-      estimatedTime: this.time()!,
+      fromLongitude: this.selectedFrom()!.coordinates[0],
+      fromLatitude: this.selectedFrom()!.coordinates[1],
+      toLongitude: this.selectedTo()!.coordinates[0],
+      toLatitude: this.selectedTo()!.coordinates[1],
+      fromFeatureJson: JSON.stringify(this.selectedFrom()),
+      toFeatureJson: JSON.stringify(this.selectedTo()),
     });
     this.router.navigate(['/tours']);
   }

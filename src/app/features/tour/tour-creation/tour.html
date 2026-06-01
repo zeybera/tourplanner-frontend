@@ -55,17 +55,6 @@
       <option value="WALKING">Walking</option>
     </select>
 
-    <input
-      type="text"
-      placeholder="Route Information"
-      [value]="routeInformation()"
-      (input)="onRouteInput($event)"
-    />
-
-    <input type="number" placeholder="Distance (km)" (input)="onDistanceInput($event)" min="1" />
-
-    <input type="number" placeholder="Time (min)" (input)="onTimeInput($event)" min="1" />
-
     <button type="button" (click)="create()" [disabled]="!isValid()">Create Tour</button>
   </form>
 </div>

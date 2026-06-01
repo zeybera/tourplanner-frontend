@@ -23,10 +23,13 @@ export interface TourRequest {
   toLocation: string;
 
   transportType: TransportType;
-  routeInformation: string;
-  distance: number;
-  estimatedTime: number;
-  
+
+  fromLongitude: number | null;
+  fromLatitude: number | null;
+  toLongitude: number | null;
+  toLatitude: number | null;
+  fromFeatureJson: string | null;
+  toFeatureJson: string | null;
 }
 
 // Data returned from backend to frontend
@@ -44,14 +47,26 @@ export interface TourResponse {
 
   transportType: TransportType;
 
-  // Retrieved from OpenRouteService API
-  distance: number;
+  fromLongitude: number | null;
+
+  fromLatitude: number | null;
+
+  toLongitude: number | null;
+
+  toLatitude: number | null;
+
+  fromFeatureJson: string | null;
+
+  toFeatureJson: string | null;
 
   // Retrieved from OpenRouteService API
-  estimatedTime: number;
+  distance: number | null;
+
+  // Retrieved from OpenRouteService API
+  estimatedTime: number | null;
 
   // Graphical route information
-  routeInformation: string;
+  routeInformation: string | null;
 }
 
 

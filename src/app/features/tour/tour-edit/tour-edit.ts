@@ -38,11 +38,6 @@ export class TourEditComponent {
       this.from().trim() != '' &&
       this.to().trim() != '' &&
       this.transportType().trim() != '' &&
-      this.routeInformation().trim() != '' &&
-      this.distance() != null &&
-      this.time() != null &&
-      this.distance()! > 0 &&
-      this.time()! > 0 &&
       this.from().trim() != this.to().trim(),
   );
 
@@ -59,7 +54,7 @@ export class TourEditComponent {
     this.from.set(tour.fromLocation);
     this.to.set(tour.toLocation);
     this.transportType.set(tour.transportType);
-    this.routeInformation.set(tour.routeInformation);
+    this.routeInformation.set(tour.routeInformation ?? '');
     this.distance.set(tour.distance);
     this.time.set(tour.estimatedTime);
   }
@@ -169,9 +164,15 @@ export class TourEditComponent {
       fromLocation: this.from(),
       toLocation: this.to(),
       transportType: this.transportType() as TransportType,
-      routeInformation: this.routeInformation(),
-      distance: this.distance()!,
-      estimatedTime: this.time()!,
+      fromLongitude: this.selectedFrom()?.coordinates[0] ?? tour.fromLongitude,
+      fromLatitude: this.selectedFrom()?.coordinates[1] ?? tour.fromLatitude,
+      toLongitude: this.selectedTo()?.coordinates[0] ?? tour.toLongitude,
+      toLatitude: this.selectedTo()?.coordinates[1] ?? tour.toLatitude,
+      fromFeatureJson: this.selectedFrom() ? JSON.stringify(this.selectedFrom()) : tour.fromFeatureJson,
+      toFeatureJson: this.selectedTo() ? JSON.stringify(this.selectedTo()) : tour.toFeatureJson,
+      routeInformation: tour.routeInformation,
+      distance: tour.distance,
+      estimatedTime: tour.estimatedTime,
     };
 
     this._service.update(updated_tour);

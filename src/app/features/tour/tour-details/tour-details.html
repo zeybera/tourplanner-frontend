@@ -1,7 +1,10 @@
 <div class="details">
-  <div class="mobile-map">
-    <img src="assets/images/map-placeholder.png" alt="Map" />
-  </div>
+  @if (!compact) {
+    <div class="tour-map-wrapper">
+      <app-tour-map [tour]="tour"></app-tour-map>
+    </div>
+  }
+
   @if (!compact) {
     <h3>{{ tour.name }}</h3>
 

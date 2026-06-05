@@ -24,7 +24,6 @@ export class TourEditComponent {
   from = signal('');
   to = signal('');
   transportType = signal('');
-  routeInformation = signal('');
   distance = signal<number | null>(null);
   time = signal<number | null>(null);
   fromResults = signal<GeocodeFeature[]>([]);
@@ -54,7 +53,6 @@ export class TourEditComponent {
     this.from.set(tour.fromLocation);
     this.to.set(tour.toLocation);
     this.transportType.set(tour.transportType);
-    this.routeInformation.set(tour.routeInformation ?? '');
     this.distance.set(tour.distance);
     this.time.set(tour.estimatedTime);
   }
@@ -119,10 +117,6 @@ export class TourEditComponent {
     this.selectedTo.set(result);
     this.to.set(result.label);
     this.toResults.set([]);
-  }
-
-  onRouteInput(event: Event): void {
-    this.routeInformation.set((event.target as HTMLInputElement).value);
   }
 
   onDistanceInput(event: Event): void {

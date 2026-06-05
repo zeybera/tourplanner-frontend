@@ -98,8 +98,7 @@ export class TourComponent {
       return;
     }
 
-    //create() function within TourService is called
-    this.service.create({
+    const request = {
       name: this.name(),
       description: this.description(),
       fromLocation: this.from(),
@@ -111,7 +110,14 @@ export class TourComponent {
       toLatitude: this.selectedTo()!.coordinates[1],
       fromFeatureJson: JSON.stringify(this.selectedFrom()),
       toFeatureJson: JSON.stringify(this.selectedTo()),
+    };
+
+    this.service.create(request).subscribe({
+      next: () => this.router.navigate(['/tours']),
+      error: error => {
+        console.error('Could not create tour', error);
+        alert('Tour could not be created. Please check backend logs.');
+      },
     });
-    this.router.navigate(['/tours']);
   }
 }

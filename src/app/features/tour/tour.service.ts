@@ -2,6 +2,7 @@ import { Injectable, signal, computed, inject } from '@angular/core';
 import { TourResponse, TourRequest } from './tour.model';
 import { HttpClient } from '@angular/common/http';
 import { API } from '../../shared/api';
+import { tap } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -44,15 +45,17 @@ export class TourService {
   // POST /api/tours
   // Sends TourRequest to backend
   // Receives TourResponse from backend
-  create(tour: TourRequest): void {
-    this.http
+  create(tour: TourRequest) {
+    return this.http
       .post<TourResponse>(this.apiUrl, tour)
-      .subscribe(createdTour => {
+      .pipe(
+        tap(createdTour => {
         this._tours.update(tours => [
           ...tours,
           createdTour
         ]);
-      });
+        })
+      );
   }
 
  // Stores selected tour ID

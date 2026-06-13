@@ -12,4 +12,14 @@
 
   </div>
 
+  <div class="right">
+    <ng-container *ngIf="authService.isLoggedIn; else loginBtn">
+      <span class="username">{{ authService.username }}</span>
+      <button (click)="authService.logout()">Logout</button>
+    </ng-container>
+    <ng-template #loginBtn>
+      <button (click)="authService.login()">Login</button>
+    </ng-template>
+  </div>
+
 </nav>

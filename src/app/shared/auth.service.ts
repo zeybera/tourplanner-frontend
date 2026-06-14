@@ -1,49 +1,52 @@
 import { Injectable } from '@angular/core';
-import { OAuthService } from 'angular-oauth2-oidc';
-import { authConfig } from './auth.config';
+import { HttpClient } from '@angular/common/http';
+import { firstValueFrom } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class AuthService {
 
-  constructor(private oauthService: OAuthService) {
-    this.configure();
+  constructor(private http: HttpClient) {}
+
+  async login(username: string, password: string): Promise<boolean> {
+    try {
+      const response: any = await firstValueFrom(
+        this.http.post('http://localhost:8080/api/auth/login', { username, password })
+      );
+      localStorage.setItem('token', response.token);
+      localStorage.setItem('username', response.username);
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  private configure() {
-    // Apply the OIDC configuration
-    this.oauthService.configure(authConfig);
-
-    // Load the OIDC discovery document from Authentik
-    // This fetches the list of endpoints (authorization, token, userinfo, etc.)
-    // tryLogin() handles the redirect callback after Authentik sends the user back
-    this.oauthService.loadDiscoveryDocumentAndTryLogin();
+  async register(username: string, password: string): Promise<boolean> {
+    try {
+      await firstValueFrom(
+        this.http.post('http://localhost:8080/api/auth/register', { username, password }, { responseType: 'text' })
+      );
+      return true;
+    } catch {
+      return false;
+    }
   }
 
-  // Redirects the user to the Authentik login/registration page
-  login() {
-    this.oauthService.initCodeFlow();
-  }
-
-  // Logs the user out and clears the stored tokens
   logout() {
-    this.oauthService.logOut();
+    localStorage.removeItem('token');
+    localStorage.removeItem('username');
   }
 
-  // Returns true if the user has a valid access token
   get isLoggedIn(): boolean {
-    return this.oauthService.hasValidAccessToken();
+    return localStorage.getItem('token') !== null;
   }
 
-  // Returns the raw access token (sent to Spring Boot as Bearer token)
-  get accessToken(): string {
-    return this.oauthService.getAccessToken();
+  get token(): string {
+    return localStorage.getItem('token') ?? '';
   }
 
-  // Returns the username from the identity token claims
   get username(): string {
-    const claims = this.oauthService.getIdentityClaims() as Record<string, string>;
-    return claims?.['preferred_username'] ?? '';
+    return localStorage.getItem('username') ?? '';
   }
 }

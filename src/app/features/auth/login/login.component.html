@@ -1,0 +1,36 @@
+<div>
+  @if (showRegister) {
+    <h2>Register</h2>
+  } @else {
+    <h2>Login</h2>
+  }
+
+  <input type="text" placeholder="Username" [(ngModel)]="username" [disabled]="isLoading" /> <br />
+  <input type="password" placeholder="Password" [(ngModel)]="password" [disabled]="isLoading" /> <br />
+
+  @if (!showRegister) {
+    <button (click)="login()" [disabled]="isLoading">
+      {{ isLoading ? 'Logging in...' : 'Login' }}
+    </button>
+  } @else {
+    <button (click)="register()" [disabled]="isLoading">
+      {{ isLoading ? 'Registering...' : 'Register' }}
+    </button>
+  }
+
+  @if (successMessage) {
+    <p style="color: green">{{ successMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p style="color: red">{{ errorMessage }}</p>
+  }
+
+  <p>
+    @if (!showRegister) {
+      No account? <a style="cursor:pointer" (click)="showRegister = true">Register</a>
+    } @else {
+      Have an account? <a style="cursor:pointer" (click)="showRegister = false">Login</a>
+    }
+  </p>
+</div>

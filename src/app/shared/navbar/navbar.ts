@@ -1,5 +1,5 @@
 import { Component, inject } from '@angular/core';
-import { RouterModule } from '@angular/router';
+import { Router, RouterModule } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { AuthService } from '../auth.service';
 
@@ -12,4 +12,14 @@ import { AuthService } from '../auth.service';
 })
 export class NavbarComponent {
   authService = inject(AuthService);
+  router = inject(Router);
+
+  goToLogin() {
+    this.router.navigate(['/login']);
+  }
+
+  logout() {
+    this.authService.logout();
+    this.router.navigate(['/login']);
+  }
 }

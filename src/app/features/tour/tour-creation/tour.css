@@ -123,3 +123,30 @@ input, select {
   color: #5b6777;
 }
 
+/* Shown below the input when the user has selected a location */
+.selected-label {
+  color: #16a34a;
+  font-size: 13px;
+  margin: -4px 0 0 0;
+}
+
+/* Shown while the route is being calculated */
+.route-calculating {
+  color: #6b7280;
+  font-size: 13px;
+}
+
+/* Box that shows distance and estimated time */
+.route-preview {
+  background-color: #f0fdf4;
+  border: 1px solid #86efac;
+  border-radius: 6px;
+  padding: 10px 14px;
+}
+
+.route-preview p {
+  margin: 4px 0;
+  font-size: 14px;
+  color: #15803d;
+}
+

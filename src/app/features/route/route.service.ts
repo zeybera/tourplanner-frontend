@@ -26,6 +26,20 @@ export class RouteService {
 
   // --- METHODS ---
 
+  // POST /api/routes/calculate
+  // Sends the from/to coordinates and transport type to the backend.
+  // The backend calls OpenRouteService and returns distance, time and route geometry.
+  calculateRoute(
+    fromLongitude: number, fromLatitude: number,
+    toLongitude: number, toLatitude: number,
+    transportType: string
+  ): Observable<{ distance: number; estimatedTime: number; routeInformation: string }> {
+    return this.http.post<{ distance: number; estimatedTime: number; routeInformation: string }>(
+      `${this.apiUrl}/calculate`,
+      { fromLongitude, fromLatitude, toLongitude, toLatitude, transportType }
+    );
+  }
+
   // GET /api/routes/geocode?text=...
   // Sends a text query to the backend which calls OpenRouteService.
   // Returns the Observable directly — tap() updates our signals as a side effect

@@ -3,7 +3,7 @@
 }
 
 @for (tour of service.filteredTours(); track tour.id) {
-  <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() === tour.id">
+  <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() == tour.id">
     <app-card>
       <h3>{{ tour.name }}</h3>
 
@@ -35,6 +35,8 @@
 
       <p><b>Distance:</b> {{ tour.distance }} km</p>
       <p><b>Estimated Time:</b> {{ tour.estimatedTime }} min</p>
+      <p><b>Popularity:</b> {{ tour.popularity }}</p>
+      <p><b>Child Friendliness:</b> {{ tour.childFriendliness }}</p>
 
       @if (service.selectedId() == tour.id) {
         <div class="mobile-only">

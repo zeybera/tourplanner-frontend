@@ -173,7 +173,7 @@ export class TourLogFormComponent {
 
 
   dateError = computed(() => {
-    if (this.date() === '' || this.time() === '') return 'Please select date and time';
+    if (this.date() == '' || this.time() == '') return 'Please select date and time';
 
     const selected = new Date(this.date() + 'T' + this.time());
     const now = new Date();

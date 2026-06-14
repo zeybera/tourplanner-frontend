@@ -167,6 +167,8 @@ export class TourEditComponent {
       routeInformation: tour.routeInformation,
       distance: tour.distance,
       estimatedTime: tour.estimatedTime,
+      popularity: tour.popularity,
+      childFriendliness: tour.childFriendliness,
     };
 
     this._service.update(updatedTour).subscribe(() => {

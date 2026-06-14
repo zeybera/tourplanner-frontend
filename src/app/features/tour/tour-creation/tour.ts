@@ -78,7 +78,7 @@ export class TourComponent {
 
   // Search for "From" location suggestions using the geocoding API
   searchFrom(): void {
-    if (this.from().trim() === '') return;
+    if (this.from().trim() == '') return;
     this.routeService.geocode(this.from()).subscribe(results => {
       this.fromResults.set(results);
     });
@@ -86,7 +86,7 @@ export class TourComponent {
 
   // Search for "To" location suggestions using the geocoding API
   searchTo(): void {
-    if (this.to().trim() === '') return;
+    if (this.to().trim() == '') return;
     this.routeService.geocode(this.to()).subscribe(results => {
       this.toResults.set(results);
     });

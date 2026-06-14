@@ -1,7 +1,7 @@
 <div class="details">
   @if (!compact) {
     <div class="tour-map-wrapper">
-      <app-tour-map [tour]="tour"></app-tour-map>
+      <app-tour-map></app-tour-map>
     </div>
   }
 
@@ -21,6 +21,8 @@
 
   <p><b>Distance:</b> {{ tour.distance }} km</p>
   <p><b>Estimated Time:</b> {{ tour.estimatedTime }} min</p>
+  <p><b>Popularity:</b> {{ tour.popularity }}</p>
+  <p><b>Child Friendliness:</b> {{ tour.childFriendliness }}</p>
 
   <div class="actions">
 

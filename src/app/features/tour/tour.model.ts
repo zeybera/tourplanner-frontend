@@ -67,6 +67,12 @@ export interface TourResponse {
 
   // Graphical route information
   routeInformation: string | null;
+
+  // "Popular" or "Not Popular" - calculated from number of logs
+  popularity: string;
+
+  // "Child Friendly" or "Not Child Friendly" - calculated from log data
+  childFriendliness: string;
 }
 
 

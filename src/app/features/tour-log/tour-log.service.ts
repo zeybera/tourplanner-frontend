@@ -65,7 +65,7 @@ export class TourLogService {
     const result: TourLog[] = [];
 
     for (const log of allLogs) {
-      if (log.tourId === tourId) {
+      if (log.tourId == tourId) {
         result.push(log);
       }
     }
@@ -84,7 +84,7 @@ export class TourLogService {
     const allLogs = this._logs();
 
     for (const log of allLogs) {
-      if (log.id === id) {
+      if (log.id == id) {
         return log;
       }
     }
@@ -156,7 +156,7 @@ export class TourLogService {
         const updatedList: TourLog[] = [];
 
         for (const log of currentLogs) {
-          if (log.id === savedLog.id) {
+          if (log.id == savedLog.id) {
             updatedList.push(savedLog);
           } else {
             updatedList.push(log);

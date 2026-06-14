@@ -4,14 +4,57 @@
   gap: 10px;
 }
 
-/* LEFT = tour list*/
+/* search bar - input and button side by side */
+.search-bar {
+  display: flex;
+  gap: 8px;
+  padding: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* input takes all available space */
+.search-bar input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+/* blue border when user clicks the input */
+.search-bar input:focus {
+  outline: none;
+  border-color: #3498db;
+}
+
+/* search button */
+.search-bar button {
+  padding: 8px 14px;
+  background-color: #3498db;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.search-bar button:hover {
+  background-color: #2980b9;
+}
+
+/* LEFT = tour list */
 .left {
   flex: 1;
   min-width: 250px;
   border-right: 1px solid #ccc;
-  padding: 10px;
+  display: flex;
+  flex-direction: column;
+}
 
+/* only the tour list scrolls, header and search bar stay fixed */
+.tour-list-scroll {
+  flex: 1;
   overflow-y: auto;
+  padding: 10px;
 }
 
 /* RIGHT = tour details*/

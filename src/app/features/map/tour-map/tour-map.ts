@@ -30,16 +30,11 @@ export class TourMapComponent {
       });
 
       // Step 2: Add the map background (OpenStreetMap tiles)
-      tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution: '&copy; OpenStreetMap contributors',
-      }).addTo(this.map);
+      const backgroundUrl = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
+      tileLayer(backgroundUrl, { attribution: '&copy; OpenStreetMap contributors' }).addTo(this.map);
 
       // Step 3: Draw the route for the current selected tour
       this.drawRoute();
-
-      // Step 4: Tell Leaflet to recalculate the map size
-      // We use a small delay because the div sometimes has no size yet at this point
-      setTimeout(() => this.map?.invalidateSize(), 200);
     });
 
     // When the selected tour changes, redraw the route automatically

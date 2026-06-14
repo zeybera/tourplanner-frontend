@@ -20,16 +20,19 @@
       <button type="button" (click)="onSearchSubmit()">Search</button>
     </div>
 
-    <!-- Loading and error state -->
-    @if (service.isLoading()) {
-      <p>Loading tours...</p>
-    }
-    @if (service.errorMessage()) {
-      <p class="error">{{ service.errorMessage() }}</p>
-    }
+    <!-- This part scrolls — header and search bar stay fixed above -->
+    <div class="tour-list-scroll">
 
-    <!-- LIST — passes filteredTours so the list only shows search results -->
-    <app-tour-list></app-tour-list>
+      @if (service.isLoading()) {
+        <p>Loading tours...</p>
+      }
+      @if (service.errorMessage()) {
+        <p class="error">{{ service.errorMessage() }}</p>
+      }
+
+      <app-tour-list></app-tour-list>
+
+    </div>
   </div>
 
   <!-- RIGHT: DETAILS -->

@@ -151,7 +151,7 @@ export class TourEditComponent {
     const tour = this._service.selectedTour();
     if (!tour) return;
 
-    const updated_tour: Tour = {
+    const updatedTour: Tour = {
       id: tour.id,
       name: this.name(),
       description: this.description(),
@@ -169,8 +169,9 @@ export class TourEditComponent {
       estimatedTime: tour.estimatedTime,
     };
 
-    this._service.update(updated_tour);
-
+    this._service.update(updatedTour).subscribe(() => {
     this.router.navigate(['/tours']);
+    });
+    
   }
 }

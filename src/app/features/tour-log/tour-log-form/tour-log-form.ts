@@ -112,7 +112,6 @@ export class TourLogFormComponent {
   });
 
   create(): void {
-
     if (!this.isValid()) return;
 
     const tour = this.tourService.selectedTour();
@@ -121,35 +120,54 @@ export class TourLogFormComponent {
     const existing = this.service.selectedLog();
 
     if (existing) {
-      this.service.update({
-        ...existing,
-
+      // --- EDIT MODE: update the existing log ---
+      const updatedLog = {
+        id: existing.id,
+        tourId: existing.tourId,
         date: this.date() + 'T' + this.time(),
-
         comment: this.comment(),
         difficulty: this.difficulty(),
         rating: this.rating(),
-
         totalDistance: this.totalDistance(),
-        totalTime: this.totalTime()
+        totalTime: this.totalTime(),
+      };
+
+      // Subscribe so we navigate only after the backend confirms the save
+      this.service.update(updatedLog).subscribe({
+        next: () => {
+          this.service.setSelectedLogId(null);
+          this.router.navigate(['/logs']);
+        },
+        error: (err) => {
+          console.error('Could not update tour log:', err);
+          alert('Tour log could not be saved. Please check backend logs.');
+        },
       });
+
     } else {
-      this.service.create({
+      // --- CREATE MODE: create a new log ---
+      const newLog = {
         tourId: tour.id,
-
-        date: this.date() + 'T' + this.time(),    // T nur zum speichern
-
+        date: this.date() + 'T' + this.time(),
         comment: this.comment(),
         difficulty: this.difficulty(),
         rating: this.rating(),
         totalDistance: this.totalDistance(),
-        totalTime: this.totalTime()
+        totalTime: this.totalTime(),
+      };
+
+      // Subscribe so we navigate only after the backend confirms the creation
+      this.service.create(newLog).subscribe({
+        next: () => {
+          this.service.setSelectedLogId(null);
+          this.router.navigate(['/logs']);
+        },
+        error: (err) => {
+          console.error('Could not create tour log:', err);
+          alert('Tour log could not be created. Please check backend logs.');
+        },
       });
     }
-
-    this.router.navigate(['/logs']);
-    this.service.setSelectedLogId(null);
-
   }
 
 

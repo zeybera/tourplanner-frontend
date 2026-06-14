@@ -1,8 +1,8 @@
-@if (service.tours().length == 0) {
-  <p>No tours available.</p>
+@if (service.filteredTours().length == 0) {
+  <p>No tours found.</p>
 }
 
-@for (tour of service.tours(); track tour.id) {
+@for (tour of service.filteredTours(); track tour.id) {
   <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() === tour.id">
     <app-card>
       <h3>{{ tour.name }}</h3>

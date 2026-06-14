@@ -5,16 +5,35 @@
       <h2>My Tours</h2>
       <div class="icons">
         <button type="button" (click)="goToCreate()">＋</button>
-        <button>★</button>
       </div>
     </div>
-    <!-- LIST -->
+
+    <!-- SEARCH BAR -->
+    <!-- Typing updates the query signal. Clicking Search calls GET /api/tours/search?q=... -->
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Search tours..."
+        [value]="service.searchQuery()"
+        (input)="onSearchInput($event)"
+      />
+      <button type="button" (click)="onSearchSubmit()">Search</button>
+    </div>
+
+    <!-- Loading and error state -->
+    @if (service.isLoading()) {
+      <p>Loading tours...</p>
+    }
+    @if (service.errorMessage()) {
+      <p class="error">{{ service.errorMessage() }}</p>
+    }
+
+    <!-- LIST — passes filteredTours so the list only shows search results -->
     <app-tour-list></app-tour-list>
   </div>
 
   <!-- RIGHT: DETAILS -->
   <div class="right">
-    <!-- DETAILS -->
     @if (service.selectedTour(); as tour) {
       <app-card>
         <app-tour-details [tour]="tour"></app-tour-details>

@@ -113,11 +113,9 @@ export class TourComponent {
     };
 
     this.service.create(request).subscribe({
-      next: () => this.router.navigate(['/tours']),
-      error: error => {
-        console.error('Could not create tour', error);
-        alert('Tour could not be created. Please check backend logs.');
-      },
+    next: () => this.router.navigate(['/tours']),
+    error: () => alert('Could not create tour.')
     });
+   
   }
 }

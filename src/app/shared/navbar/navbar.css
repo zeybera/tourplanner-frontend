@@ -1,18 +1,19 @@
 .navbar {
   background-color: #172033;
-  padding: 0 24px;
-  min-height: 60px;
+  padding: 0 26px;
+  min-height: 62px;
   display: flex;
   align-items: center;
   justify-content: space-between;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: 0 6px 18px rgba(15, 23, 42, 0.12);
 }
 
 /* Left side: logo + nav links */
 .left {
   display: flex;
   align-items: center;
-  gap: 24px;
+  gap: 28px;
 }
 
 /* Logo: icon + title together */
@@ -22,6 +23,7 @@
   gap: 8px;
   text-decoration: none;
   color: white;
+  padding: 6px 0;
 }
 
 .nav-icon {
@@ -37,19 +39,38 @@
 }
 
 /* Nav links */
-.left a {
-  color: #d6deea;
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2px;
+  padding: 3px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.nav-links a,
+.nav-action {
+  color: #cbd5e1;
   text-decoration: none;
   font-size: 14px;
   font-weight: 600;
+  border-radius: 999px;
+  padding: 8px 14px;
+  line-height: 1;
+  transition: background-color 0.15s ease, color 0.15s ease;
 }
 
-.left .nav-action {
+.nav-action {
+  border: none;
+  background: transparent;
   cursor: pointer;
 }
 
-.left a:hover {
+.nav-links a:hover,
+.nav-action:hover,
+.nav-links .active-link {
   color: white;
+  background: rgba(255, 255, 255, 0.14);
 }
 
 /* Right side: username + button */
@@ -60,32 +81,62 @@
 }
 
 .username {
-  color: #d6deea;
+  color: #e5edf7;
   font-size: 14px;
+  font-weight: 600;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* Logout / Login button */
-.right button {
+.account-button {
   background-color: transparent;
   color: white;
   border: 1px solid #526277;
   border-radius: 6px;
-  padding: 7px 14px;
+  padding: 8px 14px;
   font-size: 13px;
   cursor: pointer;
+  font-weight: 650;
 }
 
-.right button:hover {
+.account-button:hover {
   background-color: #3b4f63;
   border-color: #94a3b8;
 }
 
+.account-button.primary {
+  background: #2563eb;
+  border-color: #2563eb;
+}
+
+.account-button.primary:hover {
+  background: #1d4ed8;
+  border-color: #1d4ed8;
+}
+
 @media (max-width: 600px) {
+  .navbar {
+    padding: 0 14px;
+  }
+
   .left {
     gap: 12px;
   }
 
   .title {
     display: none;
+  }
+
+  .nav-links {
+    gap: 4px;
+  }
+
+  .nav-links a,
+  .nav-action {
+    padding: 7px 8px;
+    font-size: 13px;
   }
 }

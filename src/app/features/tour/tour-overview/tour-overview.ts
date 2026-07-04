@@ -24,8 +24,6 @@ export class TourOverviewComponent implements OnInit {
   showCreateChoice = false;
 
   ngOnInit(): void {
-    this.service.loadTours();
-
     this.route.queryParamMap.subscribe((params) => {
       if (params.get('create') === 'tour') {
         this.openCreateChoice();

@@ -1,4 +1,4 @@
-import { Component, inject, signal, effect, computed, DestroyRef } from '@angular/core';
+import { Component, inject, signal, computed, DestroyRef } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
@@ -29,7 +29,7 @@ export class TourEditComponent {
   description = signal('');
   from = signal('');
   to = signal('');
-  transportType = signal('');
+  transportType = signal<TransportType | ''>('');
   distance = signal<number | null>(null);
   time = signal<number | null>(null);
   fromResults = signal<GeocodeFeature[]>([]);
@@ -63,18 +63,6 @@ export class TourEditComponent {
     this.distance.set(tour.distance);
     this.time.set(tour.estimatedTime);
   }
-
-  logEffect = effect(() => {
-    console.log('Form changed:', {
-      description: this.description(),
-      from: this.from(),
-      to: this.to(),
-    });
-  });
-
-  Effect = effect(() => {
-    console.log('Editing tour is:', this._service.selectedTour());
-  });
 
   onNameInput(event: Event): void {
     this.name.set((event.target as HTMLInputElement).value);
@@ -215,8 +203,7 @@ export class TourEditComponent {
     };
 
     this._service.update(updatedTour).subscribe(() => {
-    this.router.navigate(['/tours']);
+      this.router.navigate(['/tours']);
     });
-    
   }
 }

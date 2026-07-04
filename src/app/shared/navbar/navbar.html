@@ -2,12 +2,12 @@
 
   <div class="left">
 
-    <a [routerLink]="authService.isLoggedIn ? '/tours' : '/login'" class="logo-link">
+    <a [routerLink]="authService.isLoggedIn() ? '/tours' : '/login'" class="logo-link">
       <img src="assets/images/map-icon.png" class="nav-icon" />
       <span class="title">Tour Planner</span>
     </a>
 
-    @if (authService.isLoggedIn) {
+    @if (authService.isLoggedIn()) {
       <div class="nav-links">
         <a routerLink="/tours" routerLinkActive="active-link">My Tours</a>
         <button type="button" class="nav-action" (click)="openCreateChoice()">Create Tour</button>
@@ -17,8 +17,8 @@
   </div>
 
   <div class="right">
-    @if (authService.isLoggedIn) {
-      <span class="username">{{ authService.username }}</span>
+    @if (authService.isLoggedIn()) {
+      <span class="username">{{ authService.username() }}</span>
       <button type="button" class="account-button" (click)="logout()">Logout</button>
     } @else {
       <button type="button" class="account-button primary" (click)="goToLogin()">Login</button>

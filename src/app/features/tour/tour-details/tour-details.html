@@ -41,7 +41,7 @@
   <div class="actions">
 
     <button class="btn delete"
-            (click)="service.delete(tour.id)">
+            (click)="askDeleteTour()">
       Delete
     </button>
 
@@ -63,3 +63,13 @@
   </div>
 
 </div>
+
+@if (showDeleteConfirm) {
+  <app-confirm-dialog
+    title="Delete tour?"
+    [message]="'This will permanently delete ' + tour.name + ' and all related logs.'"
+    confirmLabel="Delete"
+    (cancelled)="cancelDelete()"
+    (confirmed)="confirmDeleteTour()"
+  ></app-confirm-dialog>
+}

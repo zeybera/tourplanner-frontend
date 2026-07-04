@@ -34,7 +34,7 @@
         Edit
       </button>
 
-      <button class="btn delete" (click)="delete(log.id)">
+      <button class="btn delete" (click)="askDelete(log.id)">
         Delete
       </button>
 
@@ -45,4 +45,14 @@
   <hr />
 
 
+}
+
+@if (logIdPendingDelete !== null) {
+  <app-confirm-dialog
+    title="Delete log?"
+    message="This tour log will be permanently removed."
+    confirmLabel="Delete"
+    (cancelled)="cancelDelete()"
+    (confirmed)="confirmDelete()"
+  ></app-confirm-dialog>
 }

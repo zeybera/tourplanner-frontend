@@ -1,7 +1,7 @@
 import { Component, inject, signal, effect, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
-import { Tour, TransportType } from '../tour.model';
+import { Tour, TransportType } from '../models/tour.model';
 import { RouteService } from '../../route/route.service';
 import { GeocodeFeature } from '../../route/geocode.model';
 

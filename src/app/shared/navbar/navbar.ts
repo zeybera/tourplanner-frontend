@@ -18,6 +18,10 @@ export class NavbarComponent {
     this.router.navigate(['/login']);
   }
 
+  openCreateChoice() {
+    this.router.navigate(['/tours'], { queryParams: { create: 'tour' } });
+  }
+
   logout() {
     this.authService.logout();
     this.router.navigate(['/login']);

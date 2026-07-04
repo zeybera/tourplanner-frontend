@@ -50,6 +50,15 @@
   transform: translateY(-1px);
 }
 
+.btn.export {
+  background-color: #475569;
+}
+
+.btn.export:hover {
+  background-color: #334155;
+  transform: translateY(-1px);
+}
+
 @media (max-width: 600px) {
   .actions {
     flex-direction: column;

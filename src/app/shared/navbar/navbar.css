@@ -41,6 +41,10 @@
   font-size: 14px;
 }
 
+.left .nav-action {
+  cursor: pointer;
+}
+
 .left a:hover {
   color: white;
 }

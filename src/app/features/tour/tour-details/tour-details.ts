@@ -1,5 +1,5 @@
 import { Component, Input, inject } from '@angular/core';
-import { Tour } from '../tour.model';
+import { Tour } from '../models/tour.model';
 import { TourService } from '../tour.service';
 import { TourMapComponent } from '../../map/tour-map/tour-map';
 
@@ -18,4 +18,17 @@ export class TourDetailsComponent {
 
   service = inject(TourService);
   router = inject(Router);
+
+  exportTour(): void {
+    this.service.exportTour(this.tour.id).subscribe({
+      next: (blob) => {
+        const downloadUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = downloadUrl;
+        link.download = 'tourplanner-tour-' + this.tour.id + '.json';
+        link.click();
+        URL.revokeObjectURL(downloadUrl);
+      },
+    });
+  }
 }

@@ -4,9 +4,13 @@
     <div class="list-header">
       <h2>My Tours</h2>
       <div class="icons">
-        <button type="button" (click)="goToCreate()">＋</button>
+        <button type="button" (click)="openCreateChoice()">＋</button>
       </div>
     </div>
+
+    @if (importExportMessage) {
+      <p class="import-export-message">{{ importExportMessage }}</p>
+    }
 
     <!-- SEARCH BAR -->
     <!-- Typing updates the query signal. Clicking Search calls GET /api/tours/search?q=... -->
@@ -46,3 +50,29 @@
     }
   </div>
 </div>
+
+@if (showCreateChoice) {
+  <div class="modal-backdrop" (click)="closeCreateChoice()">
+    <div class="create-choice-dialog" (click)="$event.stopPropagation()">
+      <h3>Create tour</h3>
+      <p>Choose how you want to add a tour.</p>
+
+      @if (importExportMessage) {
+        <p class="dialog-message">{{ importExportMessage }}</p>
+      }
+
+      <div class="create-choice-actions">
+        <button type="button" class="manual" (click)="goToCreate()">
+          Manual
+        </button>
+
+        <label class="import">
+          Import
+          <input type="file" accept="application/json,.json" (change)="importTours($event)" />
+        </label>
+      </div>
+
+      <button type="button" class="cancel" (click)="closeCreateChoice()">Cancel</button>
+    </div>
+  </div>
+}

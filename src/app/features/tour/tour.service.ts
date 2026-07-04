@@ -1,5 +1,6 @@
 import { Injectable, signal, computed, inject } from '@angular/core';
-import { TourResponse, TourRequest } from './tour.model';
+import { TourResponse, TourRequest } from './models/tour.model';
+import { TourExport } from './models/tour-export.model';
 import { HttpClient } from '@angular/common/http';
 import { API } from '../../shared/api';
 import { Observable, tap } from 'rxjs';
@@ -223,6 +224,27 @@ export class TourService {
         this._errorMessage.set('Could not delete tour.');
       },
     });
+  }
+
+  // GET /api/tours/{id}/export
+  // Downloads one selected tour as a JSON file.
+  exportTour(id: number): Observable<Blob> {
+    const url = this.apiUrl + '/' + id + '/export';
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
+  // POST /api/tours/import
+  // Imports tours from a previously exported JSON file.
+  importTours(tours: TourExport[]): Observable<TourResponse[]> {
+    const url = this.apiUrl + '/import';
+
+    return this.http.post<TourResponse[]>(url, tours).pipe(
+      tap((importedTours: TourResponse[]) => {
+        const currentTours = this._tours();
+        this._tours.set([...currentTours, ...importedTours]);
+        this._searchResults.set(null);
+      })
+    );
   }
 
   // Converts a TourResponse (which includes id, distance, etc.) to a TourRequest

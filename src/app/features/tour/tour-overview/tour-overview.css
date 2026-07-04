@@ -41,6 +41,12 @@
   background-color: #2980b9;
 }
 
+.import-export-message {
+  margin: 8px 10px 0;
+  color: #475569;
+  font-size: 13px;
+}
+
 /* LEFT = tour list */
 .left {
   flex: 1;
@@ -205,4 +211,89 @@
 
 .create-link:hover {
   text-decoration: underline;
+}
+
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: rgba(15, 23, 42, 0.42);
+  padding: 20px;
+}
+
+.create-choice-dialog {
+  width: min(360px, 100%);
+  padding: 24px;
+  border-radius: 8px;
+  background: white;
+  box-shadow: 0 18px 45px rgba(15, 23, 42, 0.24);
+  text-align: center;
+}
+
+.create-choice-dialog h3 {
+  margin: 0 0 8px;
+  color: #172033;
+  font-size: 22px;
+}
+
+.create-choice-dialog p {
+  margin: 0 0 20px;
+  color: #64748b;
+  font-size: 14px;
+}
+
+.create-choice-dialog .dialog-message {
+  margin-bottom: 16px;
+  color: #475569;
+  font-weight: 600;
+}
+
+.create-choice-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.create-choice-actions button,
+.create-choice-actions label,
+.create-choice-dialog .cancel {
+  padding: 10px 14px;
+  border: none;
+  border-radius: 6px;
+  color: white;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.create-choice-actions .manual {
+  background-color: #3498db;
+}
+
+.create-choice-actions .manual:hover {
+  background-color: #2980b9;
+}
+
+.create-choice-actions .import {
+  background-color: #475569;
+}
+
+.create-choice-actions .import:hover {
+  background-color: #334155;
+}
+
+.create-choice-actions input {
+  display: none;
+}
+
+.create-choice-dialog .cancel {
+  width: 100%;
+  margin-top: 10px;
+  background-color: #94a3b8;
+}
+
+.create-choice-dialog .cancel:hover {
+  background-color: #64748b;
 }

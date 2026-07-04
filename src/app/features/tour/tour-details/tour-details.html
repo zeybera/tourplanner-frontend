@@ -71,6 +71,10 @@
 
   </div>
 
+  @if (exportError()) {
+    <p class="details-message error-message">{{ exportError() }}</p>
+  }
+
 </div>
 
 @if (showDeleteConfirm) {

@@ -177,6 +177,20 @@
   background: #f1f5f9;
 }
 
+.details-message {
+  margin: 12px 0 0;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.error-message {
+  border: 1px solid #fecaca;
+  background: #fef2f2;
+  color: #b91c1c;
+}
+
 @media (max-width: 600px) {
   .details-header,
   .actions {

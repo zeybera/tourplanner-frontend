@@ -83,8 +83,8 @@
         </div>
       </div>
 
-      @if (!isValid()) {
-        <p class="form-error">Please fill all fields correctly.</p>
+      @if (saveError()) {
+        <p class="form-error">{{ saveError() }}</p>
       }
 
       <div class="actions">

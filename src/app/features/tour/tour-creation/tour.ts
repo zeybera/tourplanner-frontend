@@ -41,6 +41,7 @@ export class TourComponent {
   routeDistance = signal<number | null>(null);
   routeTime = signal<number | null>(null);
   isCalculating = signal(false);
+  formError = signal('');
 
   // The Create button is only enabled when all required fields are filled
   isValid = computed(
@@ -57,15 +58,18 @@ export class TourComponent {
   }
 
   onNameInput(event: Event): void {
+    this.formError.set('');
     this.name.set((event.target as HTMLInputElement).value);
   }
 
   onDescriptionInput(event: Event): void {
+    this.formError.set('');
     this.description.set((event.target as HTMLInputElement).value);
   }
 
   onFromInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
+    this.formError.set('');
     this.from.set(value);
     // Clear the selection when the user changes the text
     this.selectedFrom.set(null);
@@ -77,6 +81,7 @@ export class TourComponent {
 
   onToInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
+    this.formError.set('');
     this.to.set(value);
     // Clear the selection when the user changes the text
     this.selectedTo.set(null);
@@ -87,6 +92,7 @@ export class TourComponent {
   }
 
   onTransportInput(event: Event): void {
+    this.formError.set('');
     this.transportType.set((event.target as HTMLSelectElement).value as TransportType);
     // Try to calculate the route now that transport type is set
     this.tryCalculateRoute();
@@ -140,6 +146,7 @@ export class TourComponent {
 
   // Called when the user clicks a result in the From dropdown
   selectFrom(result: GeocodeFeature): void {
+    this.formError.set('');
     this.selectedFrom.set(result);
     this.from.set(result.label);
     this.fromResults.set([]); // hide the dropdown
@@ -148,6 +155,7 @@ export class TourComponent {
 
   // Called when the user clicks a result in the To dropdown
   selectTo(result: GeocodeFeature): void {
+    this.formError.set('');
     this.selectedTo.set(result);
     this.to.set(result.label);
     this.toResults.set([]); // hide the dropdown
@@ -164,6 +172,7 @@ export class TourComponent {
     // We need all three to calculate a route
     if (!from || !to || !transport) return;
 
+    this.formError.set('');
     this.isCalculating.set(true);
 
     this.routeService.calculateRoute(
@@ -178,6 +187,7 @@ export class TourComponent {
       },
       error: () => {
         this.isCalculating.set(false);
+        this.formError.set('Route calculation failed. Please check the selected locations.');
       }
     });
   }
@@ -185,7 +195,6 @@ export class TourComponent {
   // Saves the tour to the backend
   create(): void {
     if (!this.isValid()) {
-      alert('Please fill all required fields and select valid locations.');
       return;
     }
 
@@ -205,7 +214,7 @@ export class TourComponent {
 
     this.service.create(request).subscribe({
       next: () => this.router.navigate(['/tours']),
-      error: () => alert('Could not create tour.')
+      error: () => this.formError.set('Could not create tour. Please try again.')
     });
   }
 }

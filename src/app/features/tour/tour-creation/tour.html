@@ -96,6 +96,10 @@
       </div>
     }
 
+    @if (formError()) {
+      <p class="form-message error-message">{{ formError() }}</p>
+    }
+
     <button type="button" (click)="create()" [disabled]="!isValid()">
       Create Tour
     </button>

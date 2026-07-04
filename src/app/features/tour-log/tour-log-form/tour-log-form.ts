@@ -26,36 +26,44 @@ export class TourLogFormComponent {
   rating = signal(0);
   totalDistance = signal(0);
   totalTime = signal(0);
+  saveError = signal('');
 
   //event handler
   onDateInput(event: Event): void {
+    this.saveError.set('');
     this.date.set((event.target as HTMLInputElement).value);
   }
 
   onTimeInput(event: Event): void {
+    this.saveError.set('');
     this.time.set((event.target as HTMLInputElement).value);
   }
 
   onCommentInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
+    this.saveError.set('');
     this.comment.set(value);
   }
 
   onDifficultyInput(event: Event): void {
     const value = Number((event.target as HTMLInputElement).value);
+    this.saveError.set('');
     this.difficulty.set(value);
   }
 
   onRatingInput(event: Event): void {
     const value = Number((event.target as HTMLInputElement).value);
+    this.saveError.set('');
     this.rating.set(value);
   }
 
   onDistanceInput(event: Event): void {
+    this.saveError.set('');
     this.totalDistance.set(Number((event.target as HTMLInputElement).value));
   }
 
   onTotalTimeInput(event: Event): void {
+    this.saveError.set('');
     this.totalTime.set(Number((event.target as HTMLInputElement).value));
   }
 
@@ -103,7 +111,10 @@ export class TourLogFormComponent {
     if (!this.isValid()) return;
 
     const tour = this.tourService.selectedTour();
-    if (!tour) return;
+    if (!tour) {
+      this.saveError.set('Please select a tour before saving a log.');
+      return;
+    }
 
     const existing = this.service.selectedLog();
 
@@ -128,7 +139,7 @@ export class TourLogFormComponent {
         },
         error: (err) => {
           console.error('Could not update tour log:', err);
-          alert('Tour log could not be saved. Please check backend logs.');
+          this.saveError.set('Tour log could not be saved. Please try again.');
         },
       });
     } else {
@@ -151,7 +162,7 @@ export class TourLogFormComponent {
         },
         error: (err) => {
           console.error('Could not create tour log:', err);
-          alert('Tour log could not be created. Please check backend logs.');
+          this.saveError.set('Tour log could not be created. Please try again.');
         },
       });
     }

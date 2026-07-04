@@ -12,6 +12,7 @@ import { AuthService } from '../../../shared/auth.service';
 export class LoginComponent {
   username = '';
   password = '';
+  confirmPassword = '';
   errorMessage = '';
   successMessage = '';
   isLoading = false;
@@ -24,30 +25,60 @@ export class LoginComponent {
     this.successMessage = '';
     this.isLoading = true;
 
-    const success = await this.authService.login(this.username, this.password);
+    const result = await this.authService.login(this.username, this.password);
 
     this.isLoading = false;
 
-    if (success) {
+    if (result.success) {
       this.router.navigate(['/tours']);
     } else {
-      this.errorMessage = 'Wrong username or password. Please try again.';
+      this.errorMessage = result.message ?? 'Wrong username or password. Please try again.';
     }
   }
 
   async register() {
     this.errorMessage = '';
     this.successMessage = '';
+
+    if (this.password !== this.confirmPassword) {
+      this.errorMessage = 'Passwords do not match.';
+      return;
+    }
+
+    if (this.username.trim() === '') {
+      this.errorMessage = 'Username is required.';
+      return;
+    }
+
+    if (this.password.length < 6) {
+      this.errorMessage = 'Password must be at least 6 characters.';
+      return;
+    }
+
     this.isLoading = true;
 
-    const success = await this.authService.register(this.username, this.password);
+    const result = await this.authService.register(this.username, this.password);
 
-    if (success) {
+    if (result.success) {
       this.successMessage = 'Registered successfully! Logging you in...';
       await this.login();
     } else {
       this.isLoading = false;
-      this.errorMessage = 'Username already taken. Please choose another.';
+      this.errorMessage = result.message ?? 'Registration failed.';
     }
+  }
+
+  switchToRegister(): void {
+    this.showRegister = true;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.confirmPassword = '';
+  }
+
+  switchToLogin(): void {
+    this.showRegister = false;
+    this.errorMessage = '';
+    this.successMessage = '';
+    this.confirmPassword = '';
   }
 }

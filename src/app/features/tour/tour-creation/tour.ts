@@ -1,9 +1,11 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { Component, signal, inject, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TourService } from '../tour.service';
 import { Router } from '@angular/router';
 import { TransportType } from '../models/tour.model';
 import { RouteService } from '../../route/route.service';
 import { GeocodeFeature } from '../../route/geocode.model';
+import { Subject, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-tour',
@@ -15,6 +17,10 @@ export class TourComponent {
   private service = inject(TourService);
   private routeService = inject(RouteService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+
+  private fromAutocomplete = new Subject<string>();
+  private toAutocomplete = new Subject<string>();
 
   // Basic form fields
   name = signal('');
@@ -46,6 +52,10 @@ export class TourComponent {
       this.transportType() !== ''
   );
 
+  constructor() {
+    this.setupAutocomplete();
+  }
+
   onNameInput(event: Event): void {
     this.name.set((event.target as HTMLInputElement).value);
   }
@@ -55,19 +65,25 @@ export class TourComponent {
   }
 
   onFromInput(event: Event): void {
-    this.from.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.from.set(value);
     // Clear the selection when the user changes the text
     this.selectedFrom.set(null);
     this.routeDistance.set(null);
     this.routeTime.set(null);
+    this.fromResults.set([]);
+    this.fromAutocomplete.next(value);
   }
 
   onToInput(event: Event): void {
-    this.to.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.to.set(value);
     // Clear the selection when the user changes the text
     this.selectedTo.set(null);
     this.routeDistance.set(null);
     this.routeTime.set(null);
+    this.toResults.set([]);
+    this.toAutocomplete.next(value);
   }
 
   onTransportInput(event: Event): void {
@@ -88,6 +104,36 @@ export class TourComponent {
   searchTo(): void {
     if (this.to().trim() == '') return;
     this.routeService.geocode(this.to()).subscribe(results => {
+      this.toResults.set(results);
+    });
+  }
+
+  private setupAutocomplete(): void {
+    this.fromAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.fromResults.set(results);
+    });
+
+    this.toAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
       this.toResults.set(results);
     });
   }

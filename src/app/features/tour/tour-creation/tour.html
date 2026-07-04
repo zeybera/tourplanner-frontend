@@ -18,14 +18,28 @@
     />
 
     <!-- FROM LOCATION -->
-    <div class="geocode-field">
-      <input
-        type="text"
-        placeholder="From location"
-        [value]="from()"
-        (input)="onFromInput($event)"
-      />
-      <button type="button" (click)="searchFrom()">Search</button>
+    <div class="autocomplete">
+      <div class="geocode-field">
+        <input
+          type="text"
+          placeholder="From location"
+          [value]="from()"
+          (input)="onFromInput($event)"
+        />
+        <button type="button" class="search-button" (click)="searchFrom()">Search</button>
+      </div>
+
+      <!-- Show the geocoding results as a clickable list -->
+      @if (fromResults().length > 0) {
+        <div class="geocode-results">
+          @for (result of fromResults(); track result.label + result.coordinates[0] + result.coordinates[1]) {
+            <button type="button" class="geocode-result" (click)="selectFrom(result)">
+              <strong>{{ result.label }}</strong>
+              <span>{{ result.neighbourhood || result.locality }} {{ result.country }}</span>
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <!-- Show the selected from location with a checkmark -->
@@ -33,44 +47,34 @@
       <p class="selected-label">Selected: {{ selectedFrom()!.label }}</p>
     }
 
-    <!-- Show the geocoding results as a clickable list -->
-    @if (fromResults().length > 0) {
-      <div class="geocode-results">
-        @for (result of fromResults(); track result.label) {
-          <button type="button" class="geocode-result" (click)="selectFrom(result)">
-            <strong>{{ result.label }}</strong>
-            <span>{{ result.locality }} {{ result.country }}</span>
-          </button>
-        }
-      </div>
-    }
-
     <!-- TO LOCATION -->
-    <div class="geocode-field">
-      <input
-        type="text"
-        placeholder="To location"
-        [value]="to()"
-        (input)="onToInput($event)"
-      />
-      <button type="button" (click)="searchTo()">Search</button>
+    <div class="autocomplete">
+      <div class="geocode-field">
+        <input
+          type="text"
+          placeholder="To location"
+          [value]="to()"
+          (input)="onToInput($event)"
+        />
+        <button type="button" class="search-button" (click)="searchTo()">Search</button>
+      </div>
+
+      <!-- Show the geocoding results as a clickable list -->
+      @if (toResults().length > 0) {
+        <div class="geocode-results">
+          @for (result of toResults(); track result.label + result.coordinates[0] + result.coordinates[1]) {
+            <button type="button" class="geocode-result" (click)="selectTo(result)">
+              <strong>{{ result.label }}</strong>
+              <span>{{ result.neighbourhood || result.locality }} {{ result.country }}</span>
+            </button>
+          }
+        </div>
+      }
     </div>
 
     <!-- Show the selected to location with a checkmark -->
     @if (selectedTo()) {
       <p class="selected-label">Selected: {{ selectedTo()!.label }}</p>
-    }
-
-    <!-- Show the geocoding results as a clickable list -->
-    @if (toResults().length > 0) {
-      <div class="geocode-results">
-        @for (result of toResults(); track result.label) {
-          <button type="button" class="geocode-result" (click)="selectTo(result)">
-            <strong>{{ result.label }}</strong>
-            <span>{{ result.locality }} {{ result.country }}</span>
-          </button>
-        }
-      </div>
     }
 
     <select (change)="onTransportInput($event)">

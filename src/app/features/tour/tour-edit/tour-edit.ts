@@ -1,9 +1,11 @@
-import { Component, inject, signal, effect, computed } from '@angular/core';
+import { Component, inject, signal, effect, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
 import { Tour, TransportType } from '../models/tour.model';
 import { RouteService } from '../../route/route.service';
 import { GeocodeFeature } from '../../route/geocode.model';
+import { Subject, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-tour-edit',
@@ -16,6 +18,10 @@ export class TourEditComponent {
   private _service = inject(TourService);
   private routeService = inject(RouteService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+
+  private fromAutocomplete = new Subject<string>();
+  private toAutocomplete = new Subject<string>();
 
   selectedTour = this._service.selectedTour;
 
@@ -42,6 +48,7 @@ export class TourEditComponent {
 
   constructor() {
     this.initFormFromTour();
+    this.setupAutocomplete();
   }
 
   initFormFromTour() {
@@ -78,13 +85,19 @@ export class TourEditComponent {
   }
 
   onFromInput(event: Event): void {
-    this.from.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.from.set(value);
     this.selectedFrom.set(null);
+    this.fromResults.set([]);
+    this.fromAutocomplete.next(value);
   }
 
   onToInput(event: Event): void {
-    this.to.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.to.set(value);
     this.selectedTo.set(null);
+    this.toResults.set([]);
+    this.toAutocomplete.next(value);
   }
 
   onTransportInput(event: Event): void {
@@ -117,6 +130,36 @@ export class TourEditComponent {
     this.selectedTo.set(result);
     this.to.set(result.label);
     this.toResults.set([]);
+  }
+
+  private setupAutocomplete(): void {
+    this.fromAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.fromResults.set(results);
+    });
+
+    this.toAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.toResults.set(results);
+    });
   }
 
   onDistanceInput(event: Event): void {

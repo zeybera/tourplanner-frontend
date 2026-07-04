@@ -30,7 +30,7 @@
 
     <!-- Show the selected from location with a checkmark -->
     @if (selectedFrom()) {
-      <p class="selected-label">✓ {{ selectedFrom()!.label }}</p>
+      <p class="selected-label">Selected: {{ selectedFrom()!.label }}</p>
     }
 
     <!-- Show the geocoding results as a clickable list -->
@@ -58,7 +58,7 @@
 
     <!-- Show the selected to location with a checkmark -->
     @if (selectedTo()) {
-      <p class="selected-label">✓ {{ selectedTo()!.label }}</p>
+      <p class="selected-label">Selected: {{ selectedTo()!.label }}</p>
     }
 
     <!-- Show the geocoding results as a clickable list -->
@@ -87,8 +87,8 @@
 
     @if (routeDistance() !== null && !isCalculating()) {
       <div class="route-preview">
-        <p>📍 Distance: <strong>{{ routeDistance() }} km</strong></p>
-        <p>⏱ Estimated Time: <strong>{{ routeTime() }} min</strong></p>
+        <p>Distance: <strong>{{ routeDistance() }} km</strong></p>
+        <p>Estimated time: <strong>{{ routeTime() }} min</strong></p>
       </div>
     }
 

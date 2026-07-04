@@ -5,38 +5,41 @@
 @for (tour of service.filteredTours(); track tour.id) {
   <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() == tour.id">
     <app-card>
-      <h3>{{ tour.name }}</h3>
+      <div class="tour-card-header">
+        <h3>{{ tour.name }}</h3>
 
-      <p><b>Description:</b> {{ tour.description }}</p>
+        <span class="transport-chip">
+          @switch (tour.transportType) {
+            @case ('CAR') {
+              Car
+            }
+            @case ('BIKE') {
+              Bike
+            }
+            @case ('WALKING') {
+              Walking
+            }
+            @default {
+              {{ tour.transportType }}
+            }
+          }
+        </span>
+      </div>
 
-      <p>
-        <b>From:</b> {{ tour.fromLocation }}
-        →
-        <b>To:</b> {{ tour.toLocation }}
-      </p>
+      <p class="tour-description">{{ tour.description }}</p>
 
-      <p>
-        <b>Transport:</b>
-        @switch (tour.transportType) {
-          @case ('CAR') {
-            <span>Car</span>
-          }
-          @case ('BIKE') {
-            <span>Bike</span>
-          }
-          @case ('WALKING') {
-            <span>Walking</span>
-          }
-          @default {
-            <span>{{ tour.transportType }}</span>
-          }
-        }
-      </p>
+      <div class="route-line">
+        <span>{{ tour.fromLocation }}</span>
+        <span class="route-arrow">→</span>
+        <span>{{ tour.toLocation }}</span>
+      </div>
 
-      <p><b>Distance:</b> {{ tour.distance }} km</p>
-      <p><b>Estimated Time:</b> {{ tour.estimatedTime }} min</p>
-      <p><b>Popularity:</b> {{ tour.popularity }}</p>
-      <p><b>Child Friendliness:</b> {{ tour.childFriendliness }}</p>
+      <div class="tour-meta">
+        <span>{{ tour.distance }} km</span>
+        <span>{{ tour.estimatedTime }} min</span>
+        <span>{{ tour.popularity }}</span>
+        <span>{{ tour.childFriendliness }}</span>
+      </div>
 
       @if (service.selectedId() == tour.id) {
         <div class="mobile-only">

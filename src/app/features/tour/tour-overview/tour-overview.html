@@ -46,7 +46,10 @@
         <app-tour-details [tour]="tour"></app-tour-details>
       </app-card>
     } @else {
-      <p>Select a tour to see details</p>
+      <div class="detail-empty">
+        <h3>Select a tour</h3>
+        <p>Choose a tour from the list to view the map, route details, logs, and export actions.</p>
+      </div>
     }
   </div>
 </div>

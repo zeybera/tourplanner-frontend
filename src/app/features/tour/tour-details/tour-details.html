@@ -4,23 +4,39 @@
   </div>
 
   @if (!compact) {
-    <h3>{{ tour.name }}</h3>
+    <div class="details-header">
+      <div>
+        <h3>{{ tour.name }}</h3>
+        <p class="details-route">{{ tour.fromLocation }} → {{ tour.toLocation }}</p>
+      </div>
 
-    <p><b>Description:</b> {{ tour.description }}</p>
-    
-    <p>
-      {{ tour.fromLocation }} → {{ tour.toLocation }}
-    </p>
+      <span class="transport-chip">{{ tour.transportType }}</span>
+    </div>
 
-    <p>
-      <b>Transport:</b> {{ tour.transportType }}
-    </p>
+    <p class="details-description">{{ tour.description }}</p>
   }
 
-  <p><b>Distance:</b> {{ tour.distance }} km</p>
-  <p><b>Estimated Time:</b> {{ tour.estimatedTime }} min</p>
-  <p><b>Popularity:</b> {{ tour.popularity }}</p>
-  <p><b>Child Friendliness:</b> {{ tour.childFriendliness }}</p>
+  <div class="details-stats">
+    <div class="stat">
+      <span>Distance</span>
+      <strong>{{ tour.distance }} km</strong>
+    </div>
+
+    <div class="stat">
+      <span>Estimated time</span>
+      <strong>{{ tour.estimatedTime }} min</strong>
+    </div>
+
+    <div class="stat">
+      <span>Popularity</span>
+      <strong>{{ tour.popularity }}</strong>
+    </div>
+
+    <div class="stat">
+      <span>Child friendliness</span>
+      <strong>{{ tour.childFriendliness }}</strong>
+    </div>
+  </div>
 
   <div class="actions">
 

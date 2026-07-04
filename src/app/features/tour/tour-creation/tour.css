@@ -1,60 +1,73 @@
 /* container */
 .container {
-  max-width: 600px;
-  margin: 40px auto;
-  padding: 20px;
+  max-width: 720px;
+  margin: 32px auto;
+  padding: 24px;
   background: #ffffff;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 12px 28px rgba(15, 23, 42, 0.06);
 }
 
 /* title */
 h2 {
-  margin-bottom: 15px;
+  margin-bottom: 18px;
+  color: #172033;
+  font-size: 26px;
+  font-weight: 750;
+  letter-spacing: 0;
 }
 
 /* form */
 form {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 14px;
 }
 
 /* inputs */
 input {
-  padding: 10px;
+  padding: 11px 12px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #172033;
 }
 
 input:focus {
   outline: none;
-  border-color: #3498db;
+  border-color: #2563eb;
+  background: white;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
 }
 
 /* button */
 button {
-  padding: 10px;
+  padding: 11px 14px;
   border: none;
   border-radius: 6px;
-  background-color: #3498db;
+  background-color: #2563eb;
   color: white;
   cursor: pointer;
+  font-weight: 650;
 }
 
 button:not(:disabled):hover {
-  background-color: #2980b9;
+  background-color: #1d4ed8;
 }
 
 button:disabled {
-  background-color: #a0c4e3; /* hellblau */
+  background-color: #cbd5e1;
+  color: #64748b;
   cursor: not-allowed;
 }
 
 select {
-  padding: 10px;
+  padding: 11px 12px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #cbd5e1;
+  background: #f8fafc;
+  color: #172033;
 }
 
 
@@ -80,14 +93,15 @@ select {
 
 label {
   font-size: 12px;
-  color: #555;
-  margin-bottom: 3px;
+  color: #526071;
+  margin-bottom: 5px;
+  font-weight: 650;
 }
 
 input, select {
-  padding: 8px;
+  padding: 11px 12px;
   border-radius: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid #cbd5e1;
 }
 
 .geocode-field {
@@ -99,23 +113,25 @@ input, select {
 .geocode-results {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-top: -4px;
+  gap: 8px;
+  margin-top: -2px;
 }
 
 .geocode-result {
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  gap: 2px;
+  gap: 3px;
   text-align: left;
-  background-color: #f4f7fb;
+  background-color: #f8fafc;
   color: #1f2937;
-  border: 1px solid #d4dde8;
+  border: 1px solid #dbe4ef;
+  box-shadow: none;
 }
 
 .geocode-result:hover {
-  background-color: #e6eef8;
+  background-color: #eff6ff;
+  border-color: #bfdbfe;
 }
 
 .geocode-result span {
@@ -125,28 +141,29 @@ input, select {
 
 /* Shown below the input when the user has selected a location */
 .selected-label {
-  color: #16a34a;
+  color: #047857;
   font-size: 13px;
   margin: -4px 0 0 0;
+  font-weight: 650;
 }
 
 /* Shown while the route is being calculated */
 .route-calculating {
   color: #6b7280;
   font-size: 13px;
+  font-weight: 600;
 }
 
 /* Box that shows distance and estimated time */
 .route-preview {
   background-color: #f0fdf4;
-  border: 1px solid #86efac;
+  border: 1px solid #bbf7d0;
   border-radius: 6px;
-  padding: 10px 14px;
+  padding: 12px 14px;
 }
 
 .route-preview p {
   margin: 4px 0;
   font-size: 14px;
-  color: #15803d;
+  color: #166534;
 }
-

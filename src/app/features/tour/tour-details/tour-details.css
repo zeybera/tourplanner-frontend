@@ -143,10 +143,55 @@
   transform: translateY(-1px);
 }
 
+.export-menu {
+  position: relative;
+}
+
+.export-options {
+  position: absolute;
+  right: 0;
+  top: calc(100% + 8px);
+  z-index: 10;
+  min-width: 128px;
+  padding: 6px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
+}
+
+.export-options button {
+  width: 100%;
+  padding: 9px 10px;
+  border: none;
+  border-radius: 6px;
+  background: transparent;
+  color: #334155;
+  font-size: 14px;
+  font-weight: 700;
+  text-align: left;
+  cursor: pointer;
+}
+
+.export-options button:hover {
+  background: #f1f5f9;
+}
+
 @media (max-width: 600px) {
   .details-header,
   .actions {
     flex-direction: column;
+  }
+
+  .export-menu,
+  .export-menu .btn {
+    width: 100%;
+  }
+
+  .export-options {
+    left: 0;
+    right: auto;
+    width: 100%;
   }
 
   .details-stats {

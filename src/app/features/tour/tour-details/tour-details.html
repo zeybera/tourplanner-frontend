@@ -55,10 +55,19 @@
       Logs
     </button>
 
-    <button class="btn export"
-            (click)="exportTour()">
-      Export
-    </button>
+    <div class="export-menu">
+      <button class="btn export"
+              (click)="toggleExportMenu()">
+        Export
+      </button>
+
+      @if (showExportMenu) {
+        <div class="export-options">
+          <button type="button" (click)="exportTour()">JSON</button>
+          <button type="button" (click)="exportTourXml()">XML</button>
+        </div>
+      }
+    </div>
 
   </div>
 

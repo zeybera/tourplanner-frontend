@@ -233,12 +233,35 @@ export class TourService {
     return this.http.get(url, { responseType: 'blob' });
   }
 
+  // GET /api/tours/{id}/export/xml
+  // Downloads one selected tour as an XML file.
+  exportTourXml(id: number): Observable<Blob> {
+    const url = this.apiUrl + '/' + id + '/export/xml';
+    return this.http.get(url, { responseType: 'blob' });
+  }
+
   // POST /api/tours/import
   // Imports tours from a previously exported JSON file.
   importTours(tours: TourExport[]): Observable<TourResponse[]> {
     const url = this.apiUrl + '/import';
 
     return this.http.post<TourResponse[]>(url, tours).pipe(
+      tap((importedTours: TourResponse[]) => {
+        const currentTours = this._tours();
+        this._tours.set([...currentTours, ...importedTours]);
+        this._searchResults.set(null);
+      })
+    );
+  }
+
+  // POST /api/tours/import/xml
+  // Imports tours from a previously exported XML file.
+  importToursXml(xml: string): Observable<TourResponse[]> {
+    const url = this.apiUrl + '/import/xml';
+
+    return this.http.post<TourResponse[]>(url, xml, {
+      headers: { 'Content-Type': 'application/xml' },
+    }).pipe(
       tap((importedTours: TourResponse[]) => {
         const currentTours = this._tours();
         this._tours.set([...currentTours, ...importedTours]);

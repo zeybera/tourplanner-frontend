@@ -1,24 +1,23 @@
-
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourListComponent } from '../tour-list/tour-list';
 import { TourService } from '../tour.service';
-import { TourDetailsComponent} from '../tour-details/tour-details';
+import { TourDetailsComponent } from '../tour-details/tour-details';
 import { ActivatedRoute, Router } from '@angular/router';
-import {CardComponent} from '../../../shared/card/card';
+import { CardComponent } from '../../../shared/card/card';
 import { Tour } from '../models/tour.model';
-import { TourExport } from '../models/tour-export.model';
+import { TourImportExportFileService } from '../import-export/tour-import-export-file.service';
 
 @Component({
   selector: 'app-tour-overview',
   standalone: true,
   imports: [CommonModule, TourListComponent, CardComponent, TourDetailsComponent],
   templateUrl: './tour-overview.html',
-  styleUrls: ['./tour-overview.css']
+  styleUrls: ['./tour-overview.css'],
 })
 export class TourOverviewComponent implements OnInit {
-
   service = inject(TourService);
+  private importExportFiles = inject(TourImportExportFileService);
   private router = inject(Router);
   private route = inject(ActivatedRoute);
   importExportMessage = '';
@@ -27,7 +26,7 @@ export class TourOverviewComponent implements OnInit {
   ngOnInit(): void {
     this.service.loadTours();
 
-    this.route.queryParamMap.subscribe(params => {
+    this.route.queryParamMap.subscribe((params) => {
       if (params.get('create') === 'tour') {
         this.openCreateChoice();
       }
@@ -94,31 +93,36 @@ export class TourOverviewComponent implements OnInit {
       return;
     }
 
-    const reader = new FileReader();
+    this.importExportFiles
+      .readImportFile(file)
+      .then((importFile) => {
+        if (importFile.type === 'xml') {
+          this.service.importToursXml(importFile.xml).subscribe({
+            next: () => this.handleImportSuccess('XML import finished.', input),
+            error: () => this.handleImportError('XML import failed.', input),
+          });
+          return;
+        }
 
-    reader.onload = () => {
-      try {
-        const text = String(reader.result);
-        const parsedImport = JSON.parse(text) as TourExport | TourExport[];
-        const tours = Array.isArray(parsedImport) ? parsedImport : [parsedImport];
-
-        this.service.importTours(tours).subscribe({
-          next: () => {
-            this.importExportMessage = 'Import finished.';
-            this.showCreateChoice = false;
-            input.value = '';
-          },
-          error: () => {
-            this.importExportMessage = 'Import failed.';
-            input.value = '';
-          },
+        this.service.importTours(importFile.tours).subscribe({
+          next: () => this.handleImportSuccess('Import finished.', input),
+          error: () => this.handleImportError('Import failed.', input),
         });
-      } catch {
-        this.importExportMessage = 'Import file is not valid JSON.';
+      })
+      .catch(() => {
+        this.importExportMessage = 'Import file is not valid JSON or XML.';
         input.value = '';
-      }
-    };
+      });
+  }
 
-    reader.readAsText(file);
+  private handleImportSuccess(message: string, input: HTMLInputElement): void {
+    this.importExportMessage = message;
+    this.showCreateChoice = false;
+    input.value = '';
+  }
+
+  private handleImportError(message: string, input: HTMLInputElement): void {
+    this.importExportMessage = message;
+    input.value = '';
   }
 }

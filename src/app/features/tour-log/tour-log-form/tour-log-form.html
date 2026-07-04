@@ -1,103 +1,102 @@
-<app-card>
-
-  <h2>
-    @if (isEditMode()) {
-      Edit Tour Log
-    } @else {
-      Create Tour Log
-    }
-  </h2>
-
-  <div class="form">
-    <div class="row">
-      <div class="field">
-        <label>Date</label>
-        <input type="date"
-               [value]="date()"
-               (input)="onDateInput($event)" />
-        @if (dateError()) {
-          <p class="error">{{ dateError() }}</p>
-        }
+<div class="log-form-page">
+  <app-card>
+    <div class="form-header">
+      <div>
+        <p class="eyebrow">Tour journal</p>
+        <h2>
+          @if (isEditMode()) {
+            Edit Tour Log
+          } @else {
+            Create Tour Log
+          }
+        </h2>
       </div>
 
-      <div class="field">
-        <label>Time</label>
-        <input type="time"
-               [value]="time()"
-               (input)="onTimeInput($event)" />
-      </div>
+      <button type="button" class="btn ghost" (click)="cancel()">Back</button>
     </div>
 
-    <div class="row">
-      <div class="field full">
+    <div class="form">
+      <div class="row">
+        <div class="field">
+          <label>Date</label>
+          <input type="date" [value]="date()" (input)="onDateInput($event)" />
+          @if (dateError()) {
+            <p class="error">{{ dateError() }}</p>
+          }
+        </div>
+
+        <div class="field">
+          <label>Time</label>
+          <input type="time" [value]="time()" (input)="onTimeInput($event)" />
+        </div>
+      </div>
+
+      <div class="field">
         <label>Comment</label>
-        <input type="text"
-               [value]="comment()"
-               (input)="onCommentInput($event)" />
+        <input
+          type="text"
+          placeholder="How was this tour?"
+          [value]="comment()"
+          (input)="onCommentInput($event)"
+        />
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Difficulty</label>
+          <input
+            type="number"
+            min="1"
+            max="5"
+            [value]="difficulty()"
+            (input)="onDifficultyInput($event)"
+          />
+        </div>
+
+        <div class="field">
+          <label>Rating</label>
+          <input
+            type="number"
+            min="1"
+            max="5"
+            [value]="rating()"
+            (input)="onRatingInput($event)"
+          />
+        </div>
+      </div>
+
+      <div class="row">
+        <div class="field">
+          <label>Total Distance (km)</label>
+          <input type="number" min="0" [value]="totalDistance()" (input)="onDistanceInput($event)" />
+          @if (distanceError()) {
+            <p class="error">{{ distanceError() }}</p>
+          }
+        </div>
+
+        <div class="field">
+          <label>Total Time (min)</label>
+          <input type="number" min="0" [value]="totalTime()" (input)="onTotalTimeInput($event)" />
+          @if (timeError()) {
+            <p class="error">{{ timeError() }}</p>
+          }
+        </div>
+      </div>
+
+      @if (!isValid()) {
+        <p class="form-error">Please fill all fields correctly.</p>
+      }
+
+      <div class="actions">
+        <button type="button" class="btn secondary" (click)="cancel()">Cancel</button>
+        <button type="button" class="btn primary" (click)="create()" [disabled]="!isValid()">
+          @if (isEditMode()) {
+            Save Log
+          } @else {
+            Create Log
+          }
+        </button>
       </div>
     </div>
-
-    <div class="row">
-      <div class="field">
-        <label>Difficulty</label>
-        <input type="number"
-               min="1"
-               max="5"
-               [value]="difficulty()"
-               (input)="onDifficultyInput($event)" />
-      </div>
-
-      <div class="field">
-        <label>Rating</label>
-        <input type="number"
-               min="1"
-               max="5"
-               [value]="rating()"
-               (input)="onRatingInput($event)" />
-      </div>
-    </div>
-
-
-    <div class="row">
-      <div class="field">
-        <label>Total Distance (km)</label>
-        <input type="number"
-               min="0"
-               [value]="totalDistance()"
-               (input)="onDistanceInput($event)" />
-        @if (distanceError()) {
-          <p class="error">{{ distanceError() }}</p>
-        }
-      </div>
-
-      <div class="field">
-        <label>Total Time (min)</label>
-        <input type="number"
-               min="0"
-               [value]="totalTime()"
-               (input)="onTotalTimeInput($event)" />
-        @if (timeError()) {
-          <p class="error">{{ timeError() }}</p>
-        }
-      </div>
-    </div>
-
-    @if (!isValid()) {
-      <p class="error">Please fill all fields correctly.</p>
-    }
-
-    <div class="actions">
-      <button class="btn primary"
-              (click)="create()"
-              [disabled]="!isValid()">
-        @if (isEditMode()) {
-          Save
-        } @else {
-          Create
-        }
-      </button>
-    </div>
-
-  </div>
-
-</app-card>
+  </app-card>
+</div>

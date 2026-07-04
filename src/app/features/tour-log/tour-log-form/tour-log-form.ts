@@ -2,30 +2,24 @@ import { Component, signal, computed, inject, effect } from '@angular/core';
 import { TourLogService } from '../tour-log.service';
 import { TourService } from '../../tour/tour.service';
 import { Router } from '@angular/router';
-import {CardComponent} from '../../../shared/card/card';
+import { CardComponent } from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-log-form',
   standalone: true,
   imports: [CardComponent],
   templateUrl: './tour-log-form.html',
-  styleUrls: ['./tour-log-form.css']
+  styleUrls: ['./tour-log-form.css'],
 })
-
 export class TourLogFormComponent {
-
   private service = inject(TourLogService);
   private tourService = inject(TourService);
   private router = inject(Router);
 
-
-  //tourId = input<number>();
-
-  //
   isEditMode = computed(() => this.service.selectedLog() !== null);
 
   // STATE
-  date = signal ('');
+  date = signal('');
   time = signal('');
   comment = signal('');
   difficulty = signal(0);
@@ -34,11 +28,11 @@ export class TourLogFormComponent {
   totalTime = signal(0);
 
   //event handler
-  onDateInput(event: Event) {
+  onDateInput(event: Event): void {
     this.date.set((event.target as HTMLInputElement).value);
   }
 
-  onTimeInput(event: Event) {
+  onTimeInput(event: Event): void {
     this.time.set((event.target as HTMLInputElement).value);
   }
 
@@ -57,22 +51,22 @@ export class TourLogFormComponent {
     this.rating.set(value);
   }
 
-  onDistanceInput(event: Event) {
+  onDistanceInput(event: Event): void {
     this.totalDistance.set(Number((event.target as HTMLInputElement).value));
   }
 
-  onTotalTimeInput(event: Event) {
+  onTotalTimeInput(event: Event): void {
     this.totalTime.set(Number((event.target as HTMLInputElement).value));
   }
 
   loadEffect = effect(() => {
     const log = this.service.selectedLog();
 
-    if(log) {
+    if (log) {
       const [datePart, timePart] = log.date.split('T');
 
       this.date.set(datePart);
-      this.time.set(timePart?.substring(0,5) || '');
+      this.time.set(timePart?.substring(0, 5) || '');
 
       this.comment.set(log.comment);
       this.difficulty.set(log.difficulty);
@@ -81,33 +75,27 @@ export class TourLogFormComponent {
       this.totalDistance.set(log.totalDistance);
       this.totalTime.set(log.totalTime);
     }
-    });
-
+  });
 
   isValid = computed(() => {
-
     const selectedDateTime = new Date(this.date() + 'T' + this.time());
     const now = new Date();
     const minDate = new Date('2020-01-01');
 
-    return(
-    this.date() !== '' &&
-    this.time() !== '' &&
-
-    selectedDateTime <= now &&
-    selectedDateTime >=minDate &&
-
-    this.comment().trim() !== '' &&
-    this.difficulty() >= 1 && this.difficulty() <= 5 &&
-    this.rating() >= 1 && this.rating() <= 5 &&
-
-    // validation for total distance
-    this.totalDistance() > 0 &&
-    this.totalDistance() < 2000 && //max km
-
-    //validation for total time
-    this.totalTime() > 0 &&
-    this.totalTime() <= 1440 //max 24h
+    return (
+      this.date() !== '' &&
+      this.time() !== '' &&
+      selectedDateTime <= now &&
+      selectedDateTime >= minDate &&
+      this.comment().trim() !== '' &&
+      this.difficulty() >= 1 &&
+      this.difficulty() <= 5 &&
+      this.rating() >= 1 &&
+      this.rating() <= 5 &&
+      this.totalDistance() > 0 &&
+      this.totalDistance() < 2000 &&
+      this.totalTime() > 0 &&
+      this.totalTime() <= 1440
     );
   });
 
@@ -143,7 +131,6 @@ export class TourLogFormComponent {
           alert('Tour log could not be saved. Please check backend logs.');
         },
       });
-
     } else {
       // --- CREATE MODE: create a new log ---
       const newLog = {
@@ -170,7 +157,10 @@ export class TourLogFormComponent {
     }
   }
 
-
+  cancel(): void {
+    this.service.setSelectedLogId(null);
+    this.router.navigate(['/logs']);
+  }
 
   dateError = computed(() => {
     if (this.date() == '' || this.time() == '') return 'Please select date and time';

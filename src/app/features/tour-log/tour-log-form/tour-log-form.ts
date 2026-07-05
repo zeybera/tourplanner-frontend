@@ -13,6 +13,7 @@ import { CardComponent } from '../../../shared/card/card';
 })
 export class TourLogFormComponent {
   private readonly maxPhotoSizeBytes = 750_000;
+  private readonly allowedPhotoTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
   private service = inject(TourLogService);
   private tourService = inject(TourService);
@@ -211,8 +212,8 @@ export class TourLogFormComponent {
       return;
     }
 
-    if (!file.type.startsWith('image/')) {
-      this.saveError.set('Please select an image file.');
+    if (!this.allowedPhotoTypes.includes(file.type)) {
+      this.saveError.set('Please select a JPEG, PNG, or WebP image.');
       input.value = '';
       return;
     }

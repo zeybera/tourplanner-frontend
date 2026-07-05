@@ -85,7 +85,7 @@
 
       <div class="field">
         <label>Photo</label>
-        <input type="file" accept="image/*" (change)="onPhotoSelected($event)" />
+        <input type="file" accept="image/jpeg,image/png,image/webp" (change)="onPhotoSelected($event)" />
 
         @if (photoData()) {
           <div class="photo-preview">

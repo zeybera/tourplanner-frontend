@@ -178,6 +178,7 @@ export class TourLogService {
       rating: log.rating,
       totalDistance: log.totalDistance,
       totalTime: log.totalTime,
+      photoData: log.photoData ?? null,
     };
 
     return requestBody;

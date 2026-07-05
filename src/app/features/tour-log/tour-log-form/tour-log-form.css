@@ -74,6 +74,26 @@ input:focus {
   box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.14);
 }
 
+input[type='file'] {
+  padding: 9px 12px;
+  background: #f8fafc;
+}
+
+.photo-preview {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.photo-preview img {
+  width: 140px;
+  height: 96px;
+  border: 1px solid #dbe3ef;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
 .error,
 .form-error {
   margin: 6px 0 0;

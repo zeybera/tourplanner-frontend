@@ -83,6 +83,18 @@
         </div>
       </div>
 
+      <div class="field">
+        <label>Photo</label>
+        <input type="file" accept="image/*" (change)="onPhotoSelected($event)" />
+
+        @if (photoData()) {
+          <div class="photo-preview">
+            <img [src]="photoData()" alt="Tour log photo preview" />
+            <button type="button" class="btn secondary" (click)="removePhoto()">Remove Photo</button>
+          </div>
+        }
+      </div>
+
       @if (saveError()) {
         <p class="form-error">{{ saveError() }}</p>
       }

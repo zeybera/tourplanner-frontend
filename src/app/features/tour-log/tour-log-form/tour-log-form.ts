@@ -12,6 +12,8 @@ import { CardComponent } from '../../../shared/card/card';
   styleUrls: ['./tour-log-form.css'],
 })
 export class TourLogFormComponent {
+  private readonly maxPhotoSizeBytes = 750_000;
+
   private service = inject(TourLogService);
   private tourService = inject(TourService);
   private router = inject(Router);
@@ -26,6 +28,7 @@ export class TourLogFormComponent {
   rating = signal(0);
   totalDistance = signal(0);
   totalTime = signal(0);
+  photoData = signal<string | null>(null);
   saveError = signal('');
 
   //event handler
@@ -82,6 +85,7 @@ export class TourLogFormComponent {
 
       this.totalDistance.set(log.totalDistance);
       this.totalTime.set(log.totalTime);
+      this.photoData.set(log.photoData ?? null);
     }
   });
 
@@ -129,6 +133,7 @@ export class TourLogFormComponent {
         rating: this.rating(),
         totalDistance: this.totalDistance(),
         totalTime: this.totalTime(),
+        photoData: this.photoData(),
       };
 
       // Subscribe so we navigate only after the backend confirms the save
@@ -152,6 +157,7 @@ export class TourLogFormComponent {
         rating: this.rating(),
         totalDistance: this.totalDistance(),
         totalTime: this.totalTime(),
+        photoData: this.photoData(),
       };
 
       // Subscribe so we navigate only after the backend confirms the creation
@@ -195,4 +201,44 @@ export class TourLogFormComponent {
     if (this.totalTime() > 1440) return 'Max duration is 24h';
     return '';
   });
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.saveError.set('');
+
+    if (!file) {
+      return;
+    }
+
+    if (!file.type.startsWith('image/')) {
+      this.saveError.set('Please select an image file.');
+      input.value = '';
+      return;
+    }
+
+    if (file.size > this.maxPhotoSizeBytes) {
+      this.saveError.set('The image is too large. Please choose an image below 750 KB.');
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.photoData.set(String(reader.result));
+    };
+
+    reader.onerror = () => {
+      this.saveError.set('The image could not be loaded.');
+      input.value = '';
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  removePhoto(): void {
+    this.photoData.set(null);
+    this.saveError.set('');
+  }
 }

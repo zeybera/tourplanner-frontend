@@ -38,6 +38,14 @@
             <span class="rating">Rating {{ log.rating }}/5</span>
           </div>
 
+          <div class="log-photo-frame" [class.placeholder]="!log.photoData">
+            <img
+              class="log-photo"
+              [src]="log.photoData || 'assets/images/tour-log-placeholder.jpg'"
+              alt="Tour log photo"
+            />
+          </div>
+
           <div class="log-stats">
             <div class="stat">
               <span>Difficulty</span>

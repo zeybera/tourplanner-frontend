@@ -1,6 +1,7 @@
 import { computed, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { firstValueFrom } from 'rxjs';
+import { API } from './api';
 
 export interface AuthResult {
   success: boolean;
@@ -32,7 +33,7 @@ export class AuthService {
   async login(username: string, password: string): Promise<AuthResult> {
     try {
       const response = await firstValueFrom(
-        this.http.post<LoginResponse>('http://localhost:8080/api/auth/login', { username, password })
+        this.http.post<LoginResponse>(`${API.apiBaseUrl}/api/auth/login`, { username, password })
       );
 
       this.saveSession(response.token, response.username);
@@ -45,7 +46,7 @@ export class AuthService {
   async register(username: string, password: string): Promise<AuthResult> {
     try {
       await firstValueFrom(
-        this.http.post('http://localhost:8080/api/auth/register', { username, password }, { responseType: 'text' })
+        this.http.post(`${API.apiBaseUrl}/api/auth/register`, { username, password }, { responseType: 'text' })
       );
       return { success: true };
     } catch (error) {

@@ -1,29 +1,47 @@
 <div class="details">
-  <div class="mobile-map">
-    <img src="assets/images/map-placeholder.png" alt="Map" />
+  <div class="tour-map-wrapper">
+    <app-tour-map></app-tour-map>
   </div>
+
   @if (!compact) {
-    <h3>{{ tour.name }}</h3>
+    <div class="details-header">
+      <div>
+        <h3>{{ tour.name }}</h3>
+        <p class="details-route">{{ tour.fromLocation }} → {{ tour.toLocation }}</p>
+      </div>
 
-    <p><b>Description:</b> {{ tour.description }}</p>
-    
-    <p>
-      {{ tour.from }} → {{ tour.to }}
-    </p>
+      <span class="transport-chip">{{ tour.transportType }}</span>
+    </div>
 
-    <p>
-      <b>Transport:</b> {{ tour.transportType }}
-    </p>
+    <p class="details-description">{{ tour.description }}</p>
   }
 
-  <p><b>Distance:</b> {{ tour.distance }} km</p>
-  <p><b>Estimated Time:</b> {{ tour.time }} min</p>
-  <p><b>Route Info:</b> {{ tour.routeInformation }}</p>
+  <div class="details-stats">
+    <div class="stat">
+      <span>Distance</span>
+      <strong>{{ tour.distance }} km</strong>
+    </div>
+
+    <div class="stat">
+      <span>Estimated time</span>
+      <strong>{{ tour.estimatedTime }} min</strong>
+    </div>
+
+    <div class="stat">
+      <span>Popularity</span>
+      <strong>{{ tour.popularity }}</strong>
+    </div>
+
+    <div class="stat">
+      <span>Child friendliness</span>
+      <strong>{{ tour.childFriendliness }}</strong>
+    </div>
+  </div>
 
   <div class="actions">
 
     <button class="btn delete"
-            (click)="service.delete(tour.id)">
+            (click)="askDeleteTour()">
       Delete
     </button>
 
@@ -37,6 +55,34 @@
       Logs
     </button>
 
+    <div class="export-menu">
+      <button class="btn export"
+              (click)="toggleExportMenu()">
+        Export
+      </button>
+
+      @if (showExportMenu) {
+        <div class="export-options">
+          <button type="button" (click)="exportTour()">JSON</button>
+          <button type="button" (click)="exportTourXml()">XML</button>
+        </div>
+      }
+    </div>
+
   </div>
 
+  @if (exportError()) {
+    <p class="details-message error-message">{{ exportError() }}</p>
+  }
+
 </div>
+
+@if (showDeleteConfirm) {
+  <app-confirm-dialog
+    title="Delete tour?"
+    [message]="'This will permanently delete ' + tour.name + ' and all related logs.'"
+    confirmLabel="Delete"
+    (cancelled)="cancelDelete()"
+    (confirmed)="confirmDeleteTour()"
+  ></app-confirm-dialog>
+}

@@ -1,7 +1,7 @@
 import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TourService } from '../tour.service';
-import { Tour } from '../tour.model';
+import { Tour } from '../models/tour.model';
 import { Router } from '@angular/router';
 import {CardComponent} from '../../../shared/card/card';
 import {TourDetailsComponent} from '../tour-details/tour-details';

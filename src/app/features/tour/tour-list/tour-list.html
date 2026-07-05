@@ -1,42 +1,46 @@
-@if (service.tours().length == 0) {
-  <p>No tours available.</p>
+@if (service.filteredTours().length == 0) {
+  <p>No tours found.</p>
 }
 
-@for (tour of service.tours(); track tour.id) {
-  <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() === tour.id">
+@for (tour of service.filteredTours(); track tour.id) {
+  <div class="tour-item" (click)="select(tour)" [class.active]="service.selectedId() == tour.id">
     <app-card>
+      <div class="tour-card-header">
+        <h3>{{ tour.name }}</h3>
 
-      <h3>{{ tour.name }}</h3>
-
-      <p><b>Description:</b> {{ tour.description }}</p>
-
-      <p>
-        <b>From:</b> {{ tour.from }}
-        →
-        <b>To:</b> {{ tour.to }}
-      </p>
-
-      <p>
-        <b>Transport:</b>
-        @switch (tour.transportType) {
-          @case ('bike') {
-            <span>Bike</span>
+        <span class="transport-chip">
+          @switch (tour.transportType) {
+            @case ('CAR') {
+              Car
+            }
+            @case ('BIKE') {
+              Bike
+            }
+            @case ('WALKING') {
+              Walking
+            }
+            @default {
+              {{ tour.transportType }}
+            }
           }
-          @case ('hike') {
-            <span>Hike</span>
-          }
-          @case ('run') {
-            <span>Run</span>
-          }
-          @default {
-            <span>{{ tour.transportType }}</span>
-          }
-        }
-      </p>
+        </span>
+      </div>
 
-      <p><b>Distance:</b> {{ tour.distance }} km</p>
-      <p><b>Estimated Time:</b> {{ tour.time }} min</p>
-      
+      <p class="tour-description">{{ tour.description }}</p>
+
+      <div class="route-line">
+        <span>{{ tour.fromLocation }}</span>
+        <span class="route-arrow">→</span>
+        <span>{{ tour.toLocation }}</span>
+      </div>
+
+      <div class="tour-meta">
+        <span>{{ tour.distance }} km</span>
+        <span>{{ tour.estimatedTime }} min</span>
+        <span>{{ tour.popularity }}</span>
+        <span>{{ tour.childFriendliness }}</span>
+      </div>
+
       @if (service.selectedId() == tour.id) {
         <div class="mobile-only">
           <app-tour-details [tour]="tour" [compact]="true"></app-tour-details>

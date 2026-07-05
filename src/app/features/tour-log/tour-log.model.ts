@@ -11,4 +11,6 @@ export interface TourLog {
 
   totalDistance: number;
   totalTime: number;
+
+  photoData?: string | null;
 }

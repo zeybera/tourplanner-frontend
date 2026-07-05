@@ -1,48 +1,84 @@
-<div class="tour-header">
-  <h2>Tour Logs</h2>
+<div class="logs-page">
+  <div class="logs-header">
+    <div>
+      <p class="eyebrow">Tour journal</p>
+      <h2>Tour Logs</h2>
 
-  @if (tourService.selectedTour(); as tour) {
-    <div class="tour-info">
-      <h3>{{ tour.description }}</h3>
-      <p class="route">{{ tour.from }} → {{ tour.to }}</p>
+      @if (tourService.selectedTour(); as tour) {
+        <p class="route">{{ tour.name }} - {{ tour.fromLocation }} → {{ tour.toLocation }}</p>
+      } @else {
+        <p class="route">Select a tour before creating or editing logs.</p>
+      }
+    </div>
+
+    <button class="btn create" [disabled]="!hasSelectedTour()" (click)="goToCreate()">Create Log</button>
+  </div>
+
+  @if (service.errorMessage()) {
+    <p class="error">{{ service.errorMessage() }}</p>
+  }
+
+  @if (service.selectedLogs().length == 0) {
+    <div class="empty-state">
+      <h3>No logs yet</h3>
+      <p>Add your first log to document distance, duration, rating, and difficulty for this tour.</p>
     </div>
   }
+
+  <div class="log-grid">
+    @for (log of service.selectedLogs(); track log.id) {
+      <app-card>
+        <article class="log-card">
+          <div class="log-card-header">
+            <div>
+              <span class="log-date">{{ formatDate(log.date) }}</span>
+              <h3>{{ log.comment }}</h3>
+            </div>
+
+            <span class="rating">Rating {{ log.rating }}/5</span>
+          </div>
+
+          <div class="log-photo-frame" [class.placeholder]="!log.photoData">
+            <img
+              class="log-photo"
+              [src]="log.photoData || 'assets/images/tour-log-placeholder.jpg'"
+              alt="Tour log photo"
+            />
+          </div>
+
+          <div class="log-stats">
+            <div class="stat">
+              <span>Difficulty</span>
+              <strong>{{ log.difficulty }}/5</strong>
+            </div>
+
+            <div class="stat">
+              <span>Distance</span>
+              <strong>{{ log.totalDistance }} km</strong>
+            </div>
+
+            <div class="stat">
+              <span>Time</span>
+              <strong>{{ log.totalTime }} min</strong>
+            </div>
+          </div>
+
+          <div class="actions">
+            <button class="btn edit" (click)="edit(log)">Edit</button>
+            <button class="btn delete" (click)="askDelete(log.id)">Delete</button>
+          </div>
+        </article>
+      </app-card>
+    }
+  </div>
 </div>
 
-<button class="btn create" (click)="goToCreate()"> + Create Log</button>
-
-@if (service.selectedLogs().length == 0) {
-  <p>No logs available.</p>
-}
-
-@for (log of service.selectedLogs(); track log.id) {
-  <app-card>
-
-     <!--       <p><b>Date:</b> {{ log.date }}</p>       damit T aus dem log veschwindet,  todo: besser machen ?-->
-    <p><b>Date:</b> {{ log.date.split('T')[0] }} – {{ log.date.split('T')[1]?.substring(0,5) }}</p>
-
-    <p><b>Comment:</b> {{ log.comment }}</p>
-    <p><b>Difficulty:</b> {{ log.difficulty }}</p>
-    <p><b>Rating:</b> {{ log.rating }}</p>
-
-    <p><b>Distance:</b> {{ log.totalDistance }} km</p>
-    <p><b>Time:</b> {{ log.totalTime }} min</p>
-
-    <div class="actions">
-
-      <button class="btn edit" (click)="edit(log)">
-        Edit
-      </button>
-
-      <button class="btn delete" (click)="delete(log.id)">
-        Delete
-      </button>
-
-    </div>
-
-    </app-card>
-
-  <hr />
-
-
+@if (logIdPendingDelete !== null) {
+  <app-confirm-dialog
+    title="Delete log?"
+    message="This tour log will be permanently removed."
+    confirmLabel="Delete"
+    (cancelled)="cancelDelete()"
+    (confirmed)="confirmDelete()"
+  ></app-confirm-dialog>
 }

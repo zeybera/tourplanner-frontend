@@ -2,77 +2,83 @@ import { Component, signal, computed, inject, effect } from '@angular/core';
 import { TourLogService } from '../tour-log.service';
 import { TourService } from '../../tour/tour.service';
 import { Router } from '@angular/router';
-import {CardComponent} from '../../../shared/card/card';
+import { CardComponent } from '../../../shared/card/card';
 
 @Component({
   selector: 'app-tour-log-form',
   standalone: true,
   imports: [CardComponent],
   templateUrl: './tour-log-form.html',
-  styleUrls: ['./tour-log-form.css']
+  styleUrls: ['./tour-log-form.css'],
 })
-
 export class TourLogFormComponent {
+  private readonly maxPhotoSizeBytes = 750_000;
+  private readonly allowedPhotoTypes = ['image/jpeg', 'image/png', 'image/webp'];
 
   private service = inject(TourLogService);
   private tourService = inject(TourService);
   private router = inject(Router);
 
-
-  //tourId = input<number>();
-
-  //
   isEditMode = computed(() => this.service.selectedLog() !== null);
 
   // STATE
-  date = signal ('');
+  date = signal('');
   time = signal('');
   comment = signal('');
   difficulty = signal(0);
   rating = signal(0);
   totalDistance = signal(0);
   totalTime = signal(0);
+  photoData = signal<string | null>(null);
+  saveError = signal('');
 
   //event handler
-  onDateInput(event: Event) {
+  onDateInput(event: Event): void {
+    this.saveError.set('');
     this.date.set((event.target as HTMLInputElement).value);
   }
 
-  onTimeInput(event: Event) {
+  onTimeInput(event: Event): void {
+    this.saveError.set('');
     this.time.set((event.target as HTMLInputElement).value);
   }
 
   onCommentInput(event: Event): void {
     const value = (event.target as HTMLInputElement).value;
+    this.saveError.set('');
     this.comment.set(value);
   }
 
   onDifficultyInput(event: Event): void {
     const value = Number((event.target as HTMLInputElement).value);
+    this.saveError.set('');
     this.difficulty.set(value);
   }
 
   onRatingInput(event: Event): void {
     const value = Number((event.target as HTMLInputElement).value);
+    this.saveError.set('');
     this.rating.set(value);
   }
 
-  onDistanceInput(event: Event) {
+  onDistanceInput(event: Event): void {
+    this.saveError.set('');
     this.totalDistance.set(Number((event.target as HTMLInputElement).value));
   }
 
-  onTotalTimeInput(event: Event) {
+  onTotalTimeInput(event: Event): void {
+    this.saveError.set('');
     this.totalTime.set(Number((event.target as HTMLInputElement).value));
   }
 
   loadEffect = effect(() => {
     const log = this.service.selectedLog();
 
-    if(log) {
+    if (log) {
       const [datePart, timePart] = log.date.split('T');
 
       this.date.set(datePart);
-      this.time.set(timePart?.substring(0,5) || '');
+      this.time.set(timePart?.substring(0, 5) || '');
 
       this.comment.set(log.comment);
       this.difficulty.set(log.difficulty);
@@ -80,82 +86,102 @@ export class TourLogFormComponent {
 
       this.totalDistance.set(log.totalDistance);
       this.totalTime.set(log.totalTime);
+      this.photoData.set(log.photoData ?? null);
     }
-    });
-
+  });
 
   isValid = computed(() => {
-
     const selectedDateTime = new Date(this.date() + 'T' + this.time());
     const now = new Date();
     const minDate = new Date('2020-01-01');
 
-    return(
-    this.date() !== '' &&
-    this.time() !== '' &&
-
-    selectedDateTime <= now &&
-    selectedDateTime >=minDate &&
-
-    this.comment().trim() !== '' &&
-    this.difficulty() >= 1 && this.difficulty() <= 5 &&
-    this.rating() >= 1 && this.rating() <= 5 &&
-
-    // validation for total distance
-    this.totalDistance() > 0 &&
-    this.totalDistance() < 2000 && //max km
-
-    //validation for total time
-    this.totalTime() > 0 &&
-    this.totalTime() <= 1440 //max 24h
+    return (
+      this.date() !== '' &&
+      this.time() !== '' &&
+      selectedDateTime <= now &&
+      selectedDateTime >= minDate &&
+      this.comment().trim() !== '' &&
+      this.difficulty() >= 1 &&
+      this.difficulty() <= 5 &&
+      this.rating() >= 1 &&
+      this.rating() <= 5 &&
+      this.totalDistance() > 0 &&
+      this.totalDistance() < 2000 &&
+      this.totalTime() > 0 &&
+      this.totalTime() <= 1440
     );
   });
 
   create(): void {
-
     if (!this.isValid()) return;
 
     const tour = this.tourService.selectedTour();
-    if (!tour) return;
+    if (!tour) {
+      this.saveError.set('Please select a tour before saving a log.');
+      return;
+    }
 
     const existing = this.service.selectedLog();
 
     if (existing) {
-      this.service.update({
-        ...existing,
-
+      // --- EDIT MODE: update the existing log ---
+      const updatedLog = {
+        id: existing.id,
+        tourId: existing.tourId,
         date: this.date() + 'T' + this.time(),
-
         comment: this.comment(),
         difficulty: this.difficulty(),
         rating: this.rating(),
-
         totalDistance: this.totalDistance(),
-        totalTime: this.totalTime()
+        totalTime: this.totalTime(),
+        photoData: this.photoData(),
+      };
+
+      // Subscribe so we navigate only after the backend confirms the save
+      this.service.update(updatedLog).subscribe({
+        next: () => {
+          this.service.setSelectedLogId(null);
+          this.router.navigate(['/logs']);
+        },
+        error: (err) => {
+          console.error('Could not update tour log:', err);
+          this.saveError.set('Tour log could not be saved. Please try again.');
+        },
       });
     } else {
-      this.service.create({
+      // --- CREATE MODE: create a new log ---
+      const newLog = {
         tourId: tour.id,
-
-        date: this.date() + 'T' + this.time(),    // T nur zum speichern
-
+        date: this.date() + 'T' + this.time(),
         comment: this.comment(),
         difficulty: this.difficulty(),
         rating: this.rating(),
         totalDistance: this.totalDistance(),
-        totalTime: this.totalTime()
+        totalTime: this.totalTime(),
+        photoData: this.photoData(),
+      };
+
+      // Subscribe so we navigate only after the backend confirms the creation
+      this.service.create(newLog).subscribe({
+        next: () => {
+          this.service.setSelectedLogId(null);
+          this.router.navigate(['/logs']);
+        },
+        error: (err) => {
+          console.error('Could not create tour log:', err);
+          this.saveError.set('Tour log could not be created. Please try again.');
+        },
       });
     }
-
-    this.router.navigate(['/logs']);
-    this.service.setSelectedLogId(null);
-
   }
 
-
+  cancel(): void {
+    this.service.setSelectedLogId(null);
+    this.router.navigate(['/logs']);
+  }
 
   dateError = computed(() => {
-    if (this.date() === '' || this.time() === '') return 'Please select date and time';
+    if (this.date() == '' || this.time() == '') return 'Please select date and time';
 
     const selected = new Date(this.date() + 'T' + this.time());
     const now = new Date();
@@ -176,4 +202,44 @@ export class TourLogFormComponent {
     if (this.totalTime() > 1440) return 'Max duration is 24h';
     return '';
   });
+
+  onPhotoSelected(event: Event): void {
+    const input = event.target as HTMLInputElement;
+    const file = input.files?.[0];
+    this.saveError.set('');
+
+    if (!file) {
+      return;
+    }
+
+    if (!this.allowedPhotoTypes.includes(file.type)) {
+      this.saveError.set('Please select a JPEG, PNG, or WebP image.');
+      input.value = '';
+      return;
+    }
+
+    if (file.size > this.maxPhotoSizeBytes) {
+      this.saveError.set('The image is too large. Please choose an image below 750 KB.');
+      input.value = '';
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.photoData.set(String(reader.result));
+    };
+
+    reader.onerror = () => {
+      this.saveError.set('The image could not be loaded.');
+      input.value = '';
+    };
+
+    reader.readAsDataURL(file);
+  }
+
+  removePhoto(): void {
+    this.photoData.set(null);
+    this.saveError.set('');
+  }
 }

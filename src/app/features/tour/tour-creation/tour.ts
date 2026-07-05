@@ -1,8 +1,11 @@
-import { Component, signal, inject, computed } from '@angular/core';
+import { Component, signal, inject, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TourService } from '../tour.service';
 import { Router } from '@angular/router';
-import { TransportType } from '../tour.model';
-//import { }
+import { TransportType } from '../models/tour.model';
+import { RouteService } from '../../route/route.service';
+import { GeocodeFeature } from '../../route/geocode.model';
+import { Subject, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-tour',
@@ -12,99 +15,206 @@ import { TransportType } from '../tour.model';
 })
 export class TourComponent {
   private service = inject(TourService);
+  private routeService = inject(RouteService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
 
-  // FORM STATE (signals)
+  private fromAutocomplete = new Subject<string>();
+  private toAutocomplete = new Subject<string>();
+
+  // Basic form fields
   name = signal('');
   description = signal('');
   from = signal('');
   to = signal('');
   transportType = signal<TransportType | ''>('');
-  routeInformation = signal('');
-  distance = signal<number | null>(null);
-  time = signal<number | null>(null);
 
+  // Geocoding results shown below each input after the user clicks Search
+  fromResults = signal<GeocodeFeature[]>([]);
+  toResults = signal<GeocodeFeature[]>([]);
+
+  // The location the user clicked from the results list
+  selectedFrom = signal<GeocodeFeature | null>(null);
+  selectedTo = signal<GeocodeFeature | null>(null);
+
+  // Route preview - shown after both locations and transport type are selected
+  routeDistance = signal<number | null>(null);
+  routeTime = signal<number | null>(null);
+  isCalculating = signal(false);
+  formError = signal('');
+
+  // The Create button is only enabled when all required fields are filled
   isValid = computed(
     () =>
       this.name().trim() !== '' &&
       this.description().trim() !== '' &&
-      this.from().trim() !== '' &&
-      this.to().trim() !== '' &&
-      this.transportType() !== '' &&
-      this.routeInformation().trim() !== '' &&
-      this.distance()! > 0 &&
-      this.time()! > 0 &&
-      this.from().trim() !== this.to().trim(),
+      this.selectedFrom() !== null &&
+      this.selectedTo() !== null &&
+      this.transportType() !== ''
   );
 
-  // EVENT HANDLERS
+  constructor() {
+    this.setupAutocomplete();
+  }
+
   onNameInput(event: Event): void {
+    this.formError.set('');
     this.name.set((event.target as HTMLInputElement).value);
   }
 
   onDescriptionInput(event: Event): void {
+    this.formError.set('');
     this.description.set((event.target as HTMLInputElement).value);
   }
 
   onFromInput(event: Event): void {
-    this.from.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.formError.set('');
+    this.from.set(value);
+    // Clear the selection when the user changes the text
+    this.selectedFrom.set(null);
+    this.routeDistance.set(null);
+    this.routeTime.set(null);
+    this.fromResults.set([]);
+    this.fromAutocomplete.next(value);
   }
 
   onToInput(event: Event): void {
-    this.to.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.formError.set('');
+    this.to.set(value);
+    // Clear the selection when the user changes the text
+    this.selectedTo.set(null);
+    this.routeDistance.set(null);
+    this.routeTime.set(null);
+    this.toResults.set([]);
+    this.toAutocomplete.next(value);
   }
 
   onTransportInput(event: Event): void {
+    this.formError.set('');
     this.transportType.set((event.target as HTMLSelectElement).value as TransportType);
-  }
-  onRouteInput(event: Event): void {
-    this.routeInformation.set((event.target as HTMLInputElement).value);
-  }
-
-  onDistanceInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = Number(input.value);
-
-    if (input.value == '') {
-      this.distance.set(null);
-    } else if (!isNaN(value) && value > 0) {
-      this.distance.set(value);
-    } else {
-      this.distance.set(null);
-    }
+    // Try to calculate the route now that transport type is set
+    this.tryCalculateRoute();
   }
 
-  onTimeInput(event: Event): void {
-    const input = event.target as HTMLInputElement;
-    const value = Number(input.value);
-
-    if (input.value == '') {
-      this.time.set(null);
-    } else if (!isNaN(value) && value > 0) {
-      this.time.set(value);
-    } else {
-      this.time.set(null);
-    }
+  // Search for "From" location suggestions using the geocoding API
+  searchFrom(): void {
+    if (this.from().trim() == '') return;
+    this.routeService.geocode(this.from()).subscribe(results => {
+      this.fromResults.set(results);
+    });
   }
 
-  // CREATE
+  // Search for "To" location suggestions using the geocoding API
+  searchTo(): void {
+    if (this.to().trim() == '') return;
+    this.routeService.geocode(this.to()).subscribe(results => {
+      this.toResults.set(results);
+    });
+  }
+
+  private setupAutocomplete(): void {
+    this.fromAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.fromResults.set(results);
+    });
+
+    this.toAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.toResults.set(results);
+    });
+  }
+
+  // Called when the user clicks a result in the From dropdown
+  selectFrom(result: GeocodeFeature): void {
+    this.formError.set('');
+    this.selectedFrom.set(result);
+    this.from.set(result.label);
+    this.fromResults.set([]); // hide the dropdown
+    this.tryCalculateRoute();
+  }
+
+  // Called when the user clicks a result in the To dropdown
+  selectTo(result: GeocodeFeature): void {
+    this.formError.set('');
+    this.selectedTo.set(result);
+    this.to.set(result.label);
+    this.toResults.set([]); // hide the dropdown
+    this.tryCalculateRoute();
+  }
+
+  // Automatically calculates the route when both locations and transport type are ready.
+  // Shows a distance and time preview to the user before they save the tour.
+  tryCalculateRoute(): void {
+    const from = this.selectedFrom();
+    const to = this.selectedTo();
+    const transport = this.transportType();
+
+    // We need all three to calculate a route
+    if (!from || !to || !transport) return;
+
+    this.formError.set('');
+    this.isCalculating.set(true);
+
+    this.routeService.calculateRoute(
+      from.coordinates[0], from.coordinates[1],
+      to.coordinates[0], to.coordinates[1],
+      transport
+    ).subscribe({
+      next: (result) => {
+        this.routeDistance.set(result.distance);
+        this.routeTime.set(result.estimatedTime);
+        this.isCalculating.set(false);
+      },
+      error: () => {
+        this.isCalculating.set(false);
+        this.formError.set('Route calculation failed. Please check the selected locations.');
+      }
+    });
+  }
+
+  // Saves the tour to the backend
   create(): void {
     if (!this.isValid()) {
-      alert('Please fill all required fields');
       return;
     }
 
-    //create() function within TourService is called
-    this.service.create({
+    const request = {
       name: this.name(),
       description: this.description(),
-      from: this.from(),
-      to: this.to(),
+      fromLocation: this.from(),
+      toLocation: this.to(),
       transportType: this.transportType() as TransportType,
-      routeInformation: this.routeInformation(),
-      distance: this.distance()!,
-      time: this.time()!,
+      fromLongitude: this.selectedFrom()!.coordinates[0],
+      fromLatitude: this.selectedFrom()!.coordinates[1],
+      toLongitude: this.selectedTo()!.coordinates[0],
+      toLatitude: this.selectedTo()!.coordinates[1],
+      fromFeatureJson: JSON.stringify(this.selectedFrom()),
+      toFeatureJson: JSON.stringify(this.selectedTo()),
+    };
+
+    this.service.create(request).subscribe({
+      next: () => this.router.navigate(['/tours']),
+      error: () => this.formError.set('Could not create tour. Please try again.')
     });
-    this.router.navigate(['/tours']);
   }
 }

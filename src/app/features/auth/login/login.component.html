@@ -1,0 +1,59 @@
+<div class="auth-card">
+  @if (showRegister) {
+    <h2>Register</h2>
+    <p class="intro">Create an account to save your tours.</p>
+  } @else {
+    <h2>Login</h2>
+    <p class="intro">Sign in to continue with your tour planner.</p>
+  }
+
+  <div class="form-fields">
+    <label>
+      <span>Username</span>
+      <input type="text" placeholder="Enter username" [(ngModel)]="username" [disabled]="isLoading" />
+    </label>
+
+    <label>
+      <span>Password</span>
+      <input type="password" placeholder="Enter password" [(ngModel)]="password" [disabled]="isLoading" />
+    </label>
+
+    @if (showRegister) {
+      <label>
+        <span>Repeat password</span>
+        <input
+          type="password"
+          placeholder="Repeat password"
+          [(ngModel)]="confirmPassword"
+          [disabled]="isLoading"
+        />
+      </label>
+    }
+  </div>
+
+  @if (!showRegister) {
+    <button (click)="login()" [disabled]="isLoading">
+      {{ isLoading ? 'Logging in...' : 'Login' }}
+    </button>
+  } @else {
+    <button (click)="register()" [disabled]="isLoading">
+      {{ isLoading ? 'Registering...' : 'Register' }}
+    </button>
+  }
+
+  @if (successMessage) {
+    <p class="success-message">{{ successMessage }}</p>
+  }
+
+  @if (errorMessage) {
+    <p class="error-message">{{ errorMessage }}</p>
+  }
+
+  <p class="switch-text">
+    @if (!showRegister) {
+      No account? <a (click)="switchToRegister()">Register</a>
+    } @else {
+      Have an account? <a (click)="switchToLogin()">Login</a>
+    }
+  </p>
+</div>

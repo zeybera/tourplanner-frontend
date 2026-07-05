@@ -14,27 +14,54 @@
 
     <div class="field">
       <label>From</label>
-      <input [value]="from()" (input)="onFromInput($event)" />
+      <div class="autocomplete">
+        <div class="geocode-field">
+          <input [value]="from()" (input)="onFromInput($event)" />
+          <button type="button" class="search-button" (click)="searchFrom()">Search</button>
+        </div>
+
+        @if (fromResults().length > 0) {
+          <div class="geocode-results">
+            @for (result of fromResults(); track result.label + result.coordinates[0] + result.coordinates[1]) {
+              <button type="button" class="geocode-result" (click)="selectFrom(result)">
+                <strong>{{ result.label }}</strong>
+                <span>{{ result.neighbourhood || result.locality }} {{ result.country }}</span>
+              </button>
+            }
+          </div>
+        }
+      </div>
     </div>
 
     <div class="field">
       <label>To</label>
-      <input [value]="to()" (input)="onToInput($event)" />
+      <div class="autocomplete">
+        <div class="geocode-field">
+          <input [value]="to()" (input)="onToInput($event)" />
+          <button type="button" class="search-button" (click)="searchTo()">Search</button>
+        </div>
+
+        @if (toResults().length > 0) {
+          <div class="geocode-results">
+            @for (result of toResults(); track result.label + result.coordinates[0] + result.coordinates[1]) {
+              <button type="button" class="geocode-result" (click)="selectTo(result)">
+                <strong>{{ result.label }}</strong>
+                <span>{{ result.neighbourhood || result.locality }} {{ result.country }}</span>
+              </button>
+            }
+          </div>
+        }
+      </div>
     </div>
 
     <div class="field">
       <label>Transport Type</label>
       <select [value]="transportType()" (change)="onTransportInput($event)">
         <option value="">Select transport</option>
-        <option value="bike">Bike</option>
-        <option value="hike">Hike</option>
-        <option value="run">Run</option>
+        <option value="CAR">Car</option>
+        <option value="BIKE">Bike</option>
+        <option value="WALKING">Walking</option>
       </select>
-    </div>
-
-    <div class="field">
-      <label>Route Info</label>
-      <input [value]="routeInformation()" (input)="onRouteInput($event)" />
     </div>
 
     <div class="field">

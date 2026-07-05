@@ -1,25 +1,113 @@
 .tour-item {
-  padding: 10px;
-  transition: 0.2s;
-  background: white;
+  padding: 0;
+  transition: transform 0.2s ease;
+  background: transparent;
   border-radius: 8px;
 }
 
 /* SELECTED (bleibt grau) */
 .tour-item.active {
-  background: #e0e0e0;
+  background: transparent;
 }
 
 /* HOVER NUR wenn NICHT selected */
 .tour-item:not(.active):hover {
-  background: #eee;
   cursor: pointer;
+  transform: translateY(-1px);
+}
+
+.tour-card-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 8px;
+}
+
+.tour-item h3 {
+  margin: 0;
+  color: #172033;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.25;
+}
+
+.tour-item p {
+  margin: 5px 0;
+  color: #526071;
+  font-size: 13px;
+}
+
+.tour-item b {
+  color: #334155;
+  font-weight: 700;
+}
+
+.tour-description {
+  display: -webkit-box;
+  overflow: hidden;
+  color: #64748b;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+}
+
+.transport-chip {
+  flex: 0 0 auto;
+  padding: 4px 8px;
+  border-radius: 999px;
+  background: #eef2ff;
+  color: #3730a3;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.route-line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  margin: 10px 0;
+  color: #334155;
+  font-size: 13px;
+  font-weight: 650;
+}
+
+.route-line span:not(.route-arrow) {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.route-arrow {
+  color: #94a3b8;
+}
+
+.tour-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+
+.tour-meta span {
+  padding: 5px 8px;
+  border: 1px solid #e2e8f0;
+  border-radius: 6px;
+  background: #f8fafc;
+  color: #475569;
+  font-size: 12px;
+  font-weight: 650;
+}
+
+hr {
+  display: none;
 }
 
 .mobile-details {
-  margin-top: 10px;
-  padding: 10px;
-  background: #f9f9f9;
+  margin-top: 12px;
+  padding: 12px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
   border-radius: 8px;
 }
 
@@ -28,7 +116,7 @@
   display: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   .mobile-only {
     display: block;
   }
@@ -36,6 +124,6 @@
 
 @media (max-width: 600px) {
   .tour-item {
-    padding: 8px;
+    padding: 0;
   }
 }

@@ -1,43 +1,81 @@
 <div class="container">
-
   <!-- LEFT: LIST -->
   <div class="left">
     <div class="list-header">
       <h2>My Tours</h2>
       <div class="icons">
-        <button type="button" (click)="goToCreate()">＋</button>
-        <button>★</button>
+        <button type="button" (click)="openCreateChoice()">＋</button>
       </div>
     </div>
-     <!-- LIST -->
-    <app-tour-list></app-tour-list>
+
+    @if (importExportMessage) {
+      <p class="import-export-message">{{ importExportMessage }}</p>
+    }
+
+    <!-- SEARCH BAR -->
+    <!-- Typing updates the query signal. Clicking Search calls GET /api/tours/search?q=... -->
+    <div class="search-bar">
+      <input
+        type="text"
+        placeholder="Search tours..."
+        [value]="service.searchQuery()"
+        (input)="onSearchInput($event)"
+      />
+      <button type="button" (click)="onSearchSubmit()">Search</button>
+    </div>
+
+    <!-- This part scrolls — header and search bar stay fixed above -->
+    <div class="tour-list-scroll">
+
+      @if (service.isLoading()) {
+        <p>Loading tours...</p>
+      }
+      @if (service.errorMessage()) {
+        <p class="error">{{ service.errorMessage() }}</p>
+      }
+
+      <app-tour-list></app-tour-list>
+
+    </div>
   </div>
 
   <!-- RIGHT: DETAILS -->
   <div class="right">
-
-    <!-- DETAILS -->
     @if (service.selectedTour(); as tour) {
       <app-card>
         <app-tour-details [tour]="tour"></app-tour-details>
       </app-card>
     } @else {
-        <div class="empty-state">
+      <div class="detail-empty">
+        <h3>Select a tour</h3>
+        <p>Choose a tour from the list to view the map, route details, logs, and export actions.</p>
+      </div>
+    }
+  </div>
+</div>
 
-          <img src="assets/images/map-icon.png" />
+@if (showCreateChoice) {
+  <div class="modal-backdrop" (click)="closeCreateChoice()">
+    <div class="create-choice-dialog" (click)="$event.stopPropagation()">
+      <h3>Create tour</h3>
+      <p>Choose how you want to add a tour.</p>
 
-          <h3>No tour selected</h3>
-
-          <p>Select a tour from the list to see details.</p>
-
-          <p class="hint">
-            or
-            <a routerLink="/create" class="create-link">create a new tour</a>
-          </p>
-
-        </div>
+      @if (importExportMessage) {
+        <p class="dialog-message">{{ importExportMessage }}</p>
       }
 
-  </div>
+      <div class="create-choice-actions">
+        <button type="button" class="manual" (click)="goToCreate()">
+          Manual
+        </button>
 
-</div>
+        <label class="import">
+          Import
+          <input type="file" accept="application/json,application/xml,.json,.xml" (change)="importTours($event)" />
+        </label>
+      </div>
+
+      <button type="button" class="cancel" (click)="closeCreateChoice()">Cancel</button>
+    </div>
+  </div>
+}

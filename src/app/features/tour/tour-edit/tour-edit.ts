@@ -1,18 +1,27 @@
-import { Component, inject, signal, effect, computed } from '@angular/core';
+import { Component, inject, signal, computed, DestroyRef } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { TourService } from '../tour.service';
-import { Tour, TransportType } from '../tour.model';
-import { CardComponent } from '../../../shared/card/card';
+import { Tour, TransportType } from '../models/tour.model';
+import { RouteService } from '../../route/route.service';
+import { GeocodeFeature } from '../../route/geocode.model';
+import { Subject, catchError, debounceTime, distinctUntilChanged, filter, of, switchMap } from 'rxjs';
 
 @Component({
   selector: 'app-tour-edit',
   standalone: true,
+  imports: [],
   templateUrl: './tour-edit.html',
   styleUrl: '../tour-creation/tour.css',
 })
 export class TourEditComponent {
   private _service = inject(TourService);
+  private routeService = inject(RouteService);
   private router = inject(Router);
+  private destroyRef = inject(DestroyRef);
+
+  private fromAutocomplete = new Subject<string>();
+  private toAutocomplete = new Subject<string>();
 
   selectedTour = this._service.selectedTour;
 
@@ -20,27 +29,26 @@ export class TourEditComponent {
   description = signal('');
   from = signal('');
   to = signal('');
-  transportType = signal('');
-  routeInformation = signal('');
+  transportType = signal<TransportType | ''>('');
   distance = signal<number | null>(null);
   time = signal<number | null>(null);
+  fromResults = signal<GeocodeFeature[]>([]);
+  toResults = signal<GeocodeFeature[]>([]);
+  selectedFrom = signal<GeocodeFeature | null>(null);
+  selectedTo = signal<GeocodeFeature | null>(null);
 
   isValid = computed(() =>
-    this.name().trim() != '' &&
-    this.description().trim() != '' &&
-    this.from().trim() != '' &&
-    this.to().trim() != '' &&
-    this.transportType().trim() != '' &&
-    this.routeInformation().trim() != '' &&
-    this.distance() != null &&
-    this.time() != null &&
-    this.distance()! > 0 &&
-    this.time()! > 0 &&
-    this.from().trim() != this.to().trim(),
+      this.name().trim() != '' &&
+      this.description().trim() != '' &&
+      this.from().trim() != '' &&
+      this.to().trim() != '' &&
+      this.transportType().trim() != '' &&
+      this.from().trim() != this.to().trim(),
   );
 
   constructor() {
     this.initFormFromTour();
+    this.setupAutocomplete();
   }
 
   initFormFromTour() {
@@ -49,25 +57,12 @@ export class TourEditComponent {
 
     this.name.set(tour.name);
     this.description.set(tour.description);
-    this.from.set(tour.from);
-    this.to.set(tour.to);
+    this.from.set(tour.fromLocation);
+    this.to.set(tour.toLocation);
     this.transportType.set(tour.transportType);
-    this.routeInformation.set(tour.routeInformation);
     this.distance.set(tour.distance);
-    this.time.set(tour.time);
+    this.time.set(tour.estimatedTime);
   }
-
-  logEffect = effect(() => {
-    console.log('Form changed:', {
-      description: this.description(),
-      from: this.from(),
-      to: this.to(),
-    });
-  });
-
-  Effect = effect(() => {
-    console.log('Editing tour is:', this._service.selectedTour());
-  });
 
   onNameInput(event: Event): void {
     this.name.set((event.target as HTMLInputElement).value);
@@ -78,19 +73,81 @@ export class TourEditComponent {
   }
 
   onFromInput(event: Event): void {
-    this.from.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.from.set(value);
+    this.selectedFrom.set(null);
+    this.fromResults.set([]);
+    this.fromAutocomplete.next(value);
   }
 
   onToInput(event: Event): void {
-    this.to.set((event.target as HTMLInputElement).value);
+    const value = (event.target as HTMLInputElement).value;
+    this.to.set(value);
+    this.selectedTo.set(null);
+    this.toResults.set([]);
+    this.toAutocomplete.next(value);
   }
 
   onTransportInput(event: Event): void {
     this.transportType.set((event.target as HTMLSelectElement).value as TransportType);
   }
 
-  onRouteInput(event: Event): void {
-    this.routeInformation.set((event.target as HTMLInputElement).value);
+  searchFrom(): void {
+    if (this.from().trim() == '') return;
+
+    this.routeService.geocode(this.from()).subscribe(results => {
+      this.fromResults.set(results);
+    });
+  }
+
+  searchTo(): void {
+    if (this.to().trim() == '') return;
+
+    this.routeService.geocode(this.to()).subscribe(results => {
+      this.toResults.set(results);
+    });
+  }
+
+  selectFrom(result: GeocodeFeature): void {
+    this.selectedFrom.set(result);
+    this.from.set(result.label);
+    this.fromResults.set([]);
+  }
+
+  selectTo(result: GeocodeFeature): void {
+    this.selectedTo.set(result);
+    this.to.set(result.label);
+    this.toResults.set([]);
+  }
+
+  private setupAutocomplete(): void {
+    this.fromAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.fromResults.set(results);
+    });
+
+    this.toAutocomplete.pipe(
+      debounceTime(500),
+      distinctUntilChanged(),
+      filter(value => value.trim().length >= 3),
+      switchMap(value =>
+        this.routeService.geocode(value.trim()).pipe(
+          catchError(() => of([]))
+        )
+      ),
+      takeUntilDestroyed(this.destroyRef)
+    ).subscribe(results => {
+      this.toResults.set(results);
+    });
   }
 
   onDistanceInput(event: Event): void {
@@ -125,20 +182,28 @@ export class TourEditComponent {
     const tour = this._service.selectedTour();
     if (!tour) return;
 
-    const updated_tour: Tour = {
+    const updatedTour: Tour = {
       id: tour.id,
       name: this.name(),
       description: this.description(),
-      from: this.from(),
-      to: this.to(),
+      fromLocation: this.from(),
+      toLocation: this.to(),
       transportType: this.transportType() as TransportType,
-      routeInformation: this.routeInformation(),
-      distance: this.distance()!,
-      time: this.time()!,
+      fromLongitude: this.selectedFrom()?.coordinates[0] ?? tour.fromLongitude,
+      fromLatitude: this.selectedFrom()?.coordinates[1] ?? tour.fromLatitude,
+      toLongitude: this.selectedTo()?.coordinates[0] ?? tour.toLongitude,
+      toLatitude: this.selectedTo()?.coordinates[1] ?? tour.toLatitude,
+      fromFeatureJson: this.selectedFrom() ? JSON.stringify(this.selectedFrom()) : tour.fromFeatureJson,
+      toFeatureJson: this.selectedTo() ? JSON.stringify(this.selectedTo()) : tour.toFeatureJson,
+      routeInformation: tour.routeInformation,
+      distance: tour.distance,
+      estimatedTime: tour.estimatedTime,
+      popularity: tour.popularity,
+      childFriendliness: tour.childFriendliness,
     };
 
-    this._service.update(updated_tour);
-
-    this.router.navigate(['/tours']);
+    this._service.update(updatedTour).subscribe(() => {
+      this.router.navigate(['/tours']);
+    });
   }
 }

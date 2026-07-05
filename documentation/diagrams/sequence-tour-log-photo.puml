@@ -1,0 +1,62 @@
+@startuml
+title TourPlanner - Create Tour Log With Optional Photo
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam titleFontSize 20
+skinparam sequence {
+  ArrowColor #334155
+  LifeLineBorderColor #CBD5E1
+  LifeLineBackgroundColor #F8FAFC
+  ParticipantBorderColor #94A3B8
+  ParticipantBackgroundColor #FFFFFF
+  ActorBorderColor #334155
+  ActorBackgroundColor #F8FAFC
+  BoxBorderColor #CBD5E1
+  BoxBackgroundColor #F8FAFC
+}
+
+actor "User" as User
+
+box "Angular Frontend" #EFF6FF
+  participant "Log Form" as Form
+  participant "TourLogService" as FrontendService
+end box
+
+box "Spring Boot Backend" #F8FAFC
+  participant "TourLogController" as Controller
+  participant "TourLogServiceImpl" as BackendService
+  participant "TourLogRepository" as Repository
+end box
+
+database "PostgreSQL" as DB
+
+User -> Form : enters log values
+User -> Form : selects optional photo
+Form -> Form : validate image type and max size
+Form -> Form : convert image to Base64 data URL
+
+Form -> FrontendService : createLog(tourId, request)
+FrontendService -> Controller : POST /api/tours/{tourId}/logs
+Controller -> BackendService : createLog(tourId, request)
+
+BackendService -> BackendService : validate photo data URL
+BackendService -> BackendService : validate Base64 and decoded size
+BackendService -> Repository : save log entity
+Repository -> DB : insert tour log
+DB --> Repository : saved row
+Repository --> BackendService : saved log
+
+BackendService --> Controller : TourLogResponseDTO
+Controller --> FrontendService : created log
+FrontendService --> Form : update log list
+
+note right of BackendService
+The backend validates the photo again,
+even if the frontend already checked it.
+end note
+
+@enduml

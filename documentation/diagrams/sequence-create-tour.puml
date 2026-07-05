@@ -1,0 +1,66 @@
+@startuml
+title TourPlanner - Create Tour With OpenRouteService
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam titleFontSize 20
+skinparam sequence {
+  ArrowColor #334155
+  LifeLineBorderColor #CBD5E1
+  LifeLineBackgroundColor #F8FAFC
+  ParticipantBorderColor #94A3B8
+  ParticipantBackgroundColor #FFFFFF
+  ActorBorderColor #334155
+  ActorBackgroundColor #F8FAFC
+}
+
+actor "User" as User
+participant "Tour Form\n(Angular)" as Form
+participant "RouteService\n(Frontend)" as RouteService
+participant "TourService\n(Frontend)" as TourService
+participant "RouteController" as RouteController
+participant "TourController" as TourController
+participant "OpenRouteServiceAgent" as Agent
+participant "OpenRouteClient\n(Feign)" as Client
+participant "OpenRouteService API" as ORS
+database "PostgreSQL" as DB
+
+== Address Search ==
+User -> Form : enters start/end address
+Form -> RouteService : geocode(text)
+RouteService -> RouteController : GET /api/routes/geocode
+RouteController -> Agent : geocode(text)
+Agent -> Client : geocode(apiKey, text)
+Client -> ORS : external REST call
+ORS --> Client : matching address features
+Client --> Agent : mapped response
+Agent --> RouteController : GeocodeFeatureDTO list
+RouteController --> RouteService : address suggestions
+RouteService --> Form : show selectable results
+
+== Route Calculation ==
+User -> Form : selects address results
+Form -> RouteService : calculateRoute(start, end, profile)
+RouteService -> RouteController : POST /api/routes/calculate
+RouteController -> Agent : calculateRoute(...)
+Agent -> Client : directions(request)
+Client -> ORS : external REST call
+ORS --> Client : geometry, distance, duration
+Client --> Agent : mapped response
+Agent --> RouteController : RouteInfoDTO
+RouteController --> RouteService : route info
+RouteService --> Form : fill computed route values
+
+== Persist Tour ==
+User -> Form : saves tour
+Form -> TourService : create(tour request)
+TourService -> TourController : POST /api/tours
+TourController -> DB : save tour for current user
+DB --> TourController : saved tour
+TourController --> TourService : TourResponseDTO
+TourService --> Form : update tour list
+
+@enduml

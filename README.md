@@ -1,59 +1,86 @@
-# Tourplanner
+# Tour Planner - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 20.3.22.
+This is the frontend for the Tour Planner project. It is built with Angular 20, using standalone components and Signals instead of NgModules or a separate state management library.
 
-## Development server
+The frontend talks to a Spring Boot backend over a REST API. It needs the backend to be running to work correctly, since it has no local mock data anymore.
 
-To start a local development server, run:
+---
 
-```bash
-ng serve
-```
+## What this app can do
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+- Register and log in with a username and password (JWT-based authentication)
+- Create, edit, delete, and search tours
+- Get live address suggestions while typing a location (geocoding)
+- See the real route drawn on a map, with distance and estimated time calculated automatically
+- Add, edit, and delete tour logs, including an optional photo
+- Export tours as JSON or XML, and import them again
 
-## Code scaffolding
+---
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+## How to run the project
 
-```bash
-ng generate component component-name
-```
-
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
+### Step 1 - Install dependencies
 
 ```bash
-ng build
+npm install
 ```
 
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
+### Step 2 - Start the backend first
 
-## Running unit tests
+This frontend needs the backend to be running at `http://localhost:8080`. See the backend's own README for setup steps.
 
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
+### Step 3 - Start the frontend
 
 ```bash
-ng test
+npm start
 ```
 
-## Running end-to-end tests
+The app runs at `http://localhost:4200`.
 
-For end-to-end (e2e) testing, run:
+### Demo login
+
+If the backend was started with its demo data, you can log in directly with:
+
+| Username    | Password |
+|-------------|---|
+| `testuser1` | `password123` |
+| `testuser2` | `password123` |
+
+---
+
+## Configuration
+
+The backend URL is set in the environment files, not hardcoded everywhere:
+
+- `src/environments/environment.ts` (production)
+- `src/environments/environment.development.ts` (local development)
+
+Both currently point to `http://localhost:8080`.
+
+---
+
+## Project structure
+
+```
+src/app/
+  features/
+    auth/login       -> login and register page
+    tour/            -> create, edit, list, and view tours
+    tour-log/        -> create, edit, and list tour logs
+    map/tour-map     -> shows the route on a Leaflet map
+    route/           -> address search and route calculation
+  shared/
+    api.ts                -> backend base URL
+    auth.service.ts       -> stores the login token
+    auth.guard.ts         -> blocks pages if the user is not logged in
+    auth.interceptor.ts   -> adds the login token to every request
+    navbar, card, confirm-dialog -> reusable UI parts
+```
+
+---
+
+## Running tests
 
 ```bash
-ng e2e
+npm test
 ```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.

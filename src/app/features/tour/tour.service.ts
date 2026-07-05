@@ -34,7 +34,7 @@ export class TourService {
   readonly searchQuery = this._searchQuery.asReadonly();
 
   // Holds the tours returned by the backend search endpoint.
-  // null means no search has been run — show all tours instead.
+  // null means no search has been run - show all tours instead.
   private _searchResults = signal<TourResponse[] | null>(null);
 
   // True while a backend request is in progress
@@ -74,11 +74,11 @@ export class TourService {
     const searchResults = this._searchResults();
 
     if (searchResults !== null) {
-      // A backend search has been run — show only its results
+      // A backend search has been run - show only its results
       return searchResults;
     }
 
-    // No search active — show all tours
+    // No search active - show all tours
     return this._tours();
   });
 
@@ -100,7 +100,7 @@ export class TourService {
     this._searchQuery.set(query);
 
     if (query.trim() == '') {
-      // Query cleared — go back to showing all tours
+      // Query cleared - go back to showing all tours
       this._searchResults.set(null);
     }
   }
@@ -111,7 +111,7 @@ export class TourService {
     this._searchQuery.set(query);
 
     if (query.trim() == '') {
-      // Empty query — reset to all tours, no backend call needed
+      // Empty query - reset to all tours, no backend call needed
       this._searchResults.set(null);
       return;
     }
@@ -157,7 +157,7 @@ export class TourService {
   // Sends a new tour to the backend and adds the returned tour to the list.
   // Returns the Observable so the component can subscribe and navigate on success.
   create(tour: TourRequest): Observable<TourResponse> {
-    // tap() lets us update the local signal WITHOUT stopping the observable chain.
+    // tap() lets us update the local signal without stopping the observable chain.
     // The component still receives the createdTour in its own .subscribe() call.
     return this.http.post<TourResponse>(this.apiUrl, tour).pipe(
       tap((createdTour: TourResponse) => {

@@ -224,13 +224,17 @@
   background: #b91c1c;
 }
 
-@media (max-width: 700px) {
+@media (max-width: 1000px) {
   .logs-page {
     padding: 18px;
   }
 
   .logs-header {
     flex-direction: column;
+  }
+
+  .log-grid {
+    grid-template-columns: 1fr;
   }
 
   .btn.create {

@@ -116,7 +116,7 @@ hr {
   display: none;
 }
 
-@media (max-width: 800px) {
+@media (max-width: 1000px) {
   .mobile-only {
     display: block;
   }

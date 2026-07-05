@@ -1,0 +1,75 @@
+@startuml
+title TourPlanner - Layered Architecture
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 12
+skinparam componentStyle rectangle
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam titleFontSize 20
+skinparam ArrowColor #334155
+skinparam ActorBorderColor #334155
+skinparam ActorBackgroundColor #F8FAFC
+
+skinparam package {
+  BorderColor #CBD5E1
+  BackgroundColor #F8FAFC
+  FontColor #0F172A
+}
+
+skinparam component {
+  BorderColor #94A3B8
+  BackgroundColor #FFFFFF
+  FontColor #0F172A
+}
+
+skinparam database {
+  BorderColor #15803D
+  BackgroundColor #DCFCE7
+}
+
+left to right direction
+
+actor "User" as User
+
+package "Angular Frontend" #EFF6FF {
+  [UI Components] as UI
+  [Services / Facades] as FE_Service
+  [Signals State] as Signals
+  [Leaflet Map] as Leaflet
+}
+
+package "Spring Boot Backend" #F8FAFC {
+  [REST Controllers] as Controller
+  [Business Services] as Service
+  [Repositories] as Repository
+  [DTOs / Mappers] as DTO
+  [JPA Entities] as Entity
+}
+
+package "External API Layer" #FFF7ED {
+  [OpenRouteService Agent] as Agent
+  [Feign Client] as Feign
+}
+
+database "PostgreSQL\nTour, User, TourLog" as DB
+cloud "OpenRouteService API\nGeocoding + Directions" as ORS
+
+User --> UI
+UI --> FE_Service
+UI --> Signals
+UI --> Leaflet
+
+FE_Service --> Controller : REST / JSON
+Controller --> Service
+Service --> Repository
+Service --> DTO
+Repository --> Entity
+Repository --> DB
+
+Service --> Agent : local method call
+Agent --> Feign
+Feign --> ORS : REST request
+
+@enduml

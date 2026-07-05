@@ -1,0 +1,105 @@
+@startuml
+title TourPlanner - Use Case Diagram
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 14
+skinparam defaultFontName Arial
+skinparam defaultFontSize 13
+skinparam titleFontSize 20
+skinparam linetype polyline
+skinparam ArrowColor #334155
+skinparam ArrowThickness 1.2
+skinparam ActorBorderColor #334155
+skinparam ActorBackgroundColor #F8FAFC
+skinparam package {
+  BorderColor #CBD5E1
+  BackgroundColor #F8FAFC
+}
+skinparam usecase {
+  BorderColor #64748B
+  BackgroundColor #FFFFFF
+  FontColor #0F172A
+}
+
+left to right direction
+
+actor " " as TopSpacer
+actor "User" as User
+actor " " as BottomSpacer
+
+hide TopSpacer
+hide BottomSpacer
+
+TopSpacer -[hidden]down- User
+User -[hidden]down- BottomSpacer
+
+rectangle "TourPlanner" #F8FAFC {
+  usecase "Authenticate" as Authenticate
+  usecase "Manage Tours" as ManageTours
+  usecase "Manage Tour Logs" as ManageLogs
+  usecase "Import / Export" as ImportExport
+
+  package "Authentication" #EFF6FF {
+    usecase "Register" as Register
+    usecase "Login" as Login
+  }
+
+  package "Tours" #F0FDF4 {
+    usecase "Create Tour" as CreateTour
+    usecase "Edit Tour" as EditTour
+    usecase "Delete Tour" as DeleteTour
+    usecase "Search Tours" as SearchTours
+    usecase "View Tour Details" as ViewTour
+    usecase "Find Route" as FindRoute
+    usecase "View Map" as ViewMap
+  }
+
+  package "Tour Logs" #FDF2F8 {
+    usecase "Create Log" as CreateLog
+    usecase "Edit Log" as EditLog
+    usecase "Delete Log" as DeleteLog
+    usecase "Attach Photo" as AttachPhoto
+  }
+
+  package "Import / Export Details" #F5F3FF {
+    usecase "Export Tour" as ExportTour
+    usecase "Import Tour" as ImportTour
+    usecase "Choose Format\n(JSON / XML)" as ChooseFormat
+  }
+}
+
+TopSpacer -[hidden]right- Authenticate
+User -[hidden]right- ManageLogs
+BottomSpacer -[hidden]right- ImportExport
+
+' The actor only connects to the main use cases to keep the diagram readable.
+User -right-> Authenticate
+User -right-> ManageTours
+User -right-> ManageLogs
+User -right-> ImportExport
+
+Authenticate ..> Register : <<include>>
+Authenticate ..> Login : <<include>>
+
+ManageTours ..> CreateTour : <<include>>
+ManageTours ..> EditTour : <<include>>
+ManageTours ..> DeleteTour : <<include>>
+ManageTours ..> SearchTours : <<include>>
+ManageTours ..> ViewTour : <<include>>
+CreateTour ..> FindRoute : <<include>>
+EditTour ..> FindRoute : <<include>>
+ViewTour ..> ViewMap : <<include>>
+
+ManageLogs ..> CreateLog : <<include>>
+ManageLogs ..> EditLog : <<include>>
+ManageLogs ..> DeleteLog : <<include>>
+AttachPhoto ..> CreateLog : <<extend>>
+AttachPhoto ..> EditLog : <<extend>>
+
+ImportExport ..> ExportTour : <<include>>
+ImportExport ..> ImportTour : <<include>>
+ExportTour ..> ChooseFormat : <<include>>
+ImportTour ..> ChooseFormat : <<include>>
+
+@enduml

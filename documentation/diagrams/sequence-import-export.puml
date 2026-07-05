@@ -1,0 +1,65 @@
+@startuml
+title TourPlanner - JSON/XML Import And Export
+
+skinparam backgroundColor #FFFFFF
+skinparam shadowing false
+skinparam roundcorner 10
+skinparam defaultFontName Arial
+skinparam defaultFontSize 12
+skinparam titleFontSize 20
+skinparam sequence {
+  ArrowColor #334155
+  LifeLineBorderColor #CBD5E1
+  LifeLineBackgroundColor #F8FAFC
+  ParticipantBorderColor #94A3B8
+  ParticipantBackgroundColor #FFFFFF
+  ActorBorderColor #334155
+  ActorBackgroundColor #F8FAFC
+  BoxBorderColor #CBD5E1
+  BoxBackgroundColor #F8FAFC
+}
+
+actor "User" as User
+
+box "Angular Frontend" #EFF6FF
+  participant "Tour Details" as Frontend
+  participant "File Service" as FileService
+  participant "TourService" as FrontendService
+end box
+
+box "Spring Boot Backend" #F8FAFC
+  participant "TourController" as Controller
+  participant "ImportExportService" as BackendService
+  participant "ImportExportMapper" as Mapper
+end box
+
+database "PostgreSQL" as DB
+
+== Export selected tour ==
+User -> Frontend : chooses JSON or XML
+Frontend -> FrontendService : exportTour(id, format)
+FrontendService -> Controller : GET /api/tours/{id}/export
+Controller -> BackendService : exportTour(id, username)
+BackendService -> DB : load tour with logs
+DB --> BackendService : entity data
+BackendService -> Mapper : map entity to export DTO
+Mapper --> BackendService : serializable export model
+BackendService --> Controller : export data
+Controller --> FrontendService : file response
+FrontendService -> FileService : download file
+
+== Import tour file ==
+User -> Frontend : selects JSON or XML file
+Frontend -> FileService : read and parse file
+FileService --> Frontend : import data
+Frontend -> FrontendService : importTours(data)
+FrontendService -> Controller : POST /api/tours/import
+Controller -> BackendService : importTours(data, username)
+BackendService -> Mapper : map import DTO to entities
+BackendService -> DB : save imported tours for user
+DB --> BackendService : saved tours
+BackendService --> Controller : imported tour list
+Controller --> FrontendService : response
+FrontendService --> Frontend : refresh displayed tours
+
+@enduml

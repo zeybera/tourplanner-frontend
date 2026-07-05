@@ -1,5 +1,6 @@
-import { computed, Injectable, signal } from '@angular/core';
+import { computed, inject, Injectable, signal } from '@angular/core';
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import { Router } from '@angular/router';
 import { firstValueFrom } from 'rxjs';
 
 export interface AuthResult {
@@ -17,17 +18,31 @@ interface LoginResponse {
 })
 export class AuthService {
 
+  private router = inject(Router);
+
   private readonly tokenStorageKey = 'token';
   private readonly usernameStorageKey = 'username';
+  private readonly expiresAtStorageKey = 'authExpiresAt';
+  // Keep the frontend session short so users are not logged in forever on shared devices.
+  private readonly sessionDurationMs = 30 * 60 * 1000;
+  private logoutTimer: ReturnType<typeof setTimeout> | null = null;
 
-  private _token = signal(localStorage.getItem(this.tokenStorageKey) ?? '');
-  private _username = signal(localStorage.getItem(this.usernameStorageKey) ?? '');
+  private _token = signal('');
+  private _username = signal('');
 
   readonly token = this._token.asReadonly();
   readonly username = this._username.asReadonly();
   readonly isLoggedIn = computed(() => this._token() !== '');
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient) {
+    // Remove old persistent login data from the previous localStorage implementation.
+    localStorage.removeItem(this.tokenStorageKey);
+    localStorage.removeItem(this.usernameStorageKey);
+    localStorage.removeItem(this.expiresAtStorageKey);
+
+    // Restore only valid sessionStorage data after a page reload.
+    this.restoreSession();
+  }
 
   async login(username: string, password: string): Promise<AuthResult> {
     try {
@@ -54,8 +69,10 @@ export class AuthService {
   }
 
   logout() {
-    localStorage.removeItem(this.tokenStorageKey);
-    localStorage.removeItem(this.usernameStorageKey);
+    this.clearLogoutTimer();
+    sessionStorage.removeItem(this.tokenStorageKey);
+    sessionStorage.removeItem(this.usernameStorageKey);
+    sessionStorage.removeItem(this.expiresAtStorageKey);
     this._token.set('');
     this._username.set('');
   }
@@ -81,9 +98,48 @@ export class AuthService {
   }
 
   private saveSession(token: string, username: string): void {
-    localStorage.setItem(this.tokenStorageKey, token);
-    localStorage.setItem(this.usernameStorageKey, username);
+    const expiresAt = Date.now() + this.sessionDurationMs;
+
+    // sessionStorage is cleared by the browser when the tab/session ends.
+    sessionStorage.setItem(this.tokenStorageKey, token);
+    sessionStorage.setItem(this.usernameStorageKey, username);
+    sessionStorage.setItem(this.expiresAtStorageKey, expiresAt.toString());
     this._token.set(token);
     this._username.set(username);
+    this.startLogoutTimer(expiresAt);
+  }
+
+  private restoreSession(): void {
+    // A reload should keep the user logged in only until the stored expiry time.
+    const token = sessionStorage.getItem(this.tokenStorageKey) ?? '';
+    const username = sessionStorage.getItem(this.usernameStorageKey) ?? '';
+    const expiresAt = Number(sessionStorage.getItem(this.expiresAtStorageKey) ?? '0');
+
+    if (token == '' || username == '' || expiresAt <= Date.now()) {
+      this.logout();
+      return;
+    }
+
+    this._token.set(token);
+    this._username.set(username);
+    this.startLogoutTimer(expiresAt);
+  }
+
+  private startLogoutTimer(expiresAt: number): void {
+    this.clearLogoutTimer();
+
+    // Automatically logout once the stored session expiry time is reached.
+    const remainingMs = expiresAt - Date.now();
+    this.logoutTimer = setTimeout(() => {
+      this.logout();
+      this.router.navigate(['/login']);
+    }, remainingMs);
+  }
+
+  private clearLogoutTimer(): void {
+    if (this.logoutTimer !== null) {
+      clearTimeout(this.logoutTimer);
+      this.logoutTimer = null;
+    }
   }
 }
